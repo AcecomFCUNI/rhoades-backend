@@ -5,4 +5,8 @@ enum ErrorMessagesForUsers {
   userHasNotMail = 'Ud. no tiene un correo registrado en el padrón electoral.\n Se ha notificado al CEUNI, se comunicarán con Ud. lo antes posible. Disculpe las molestias.'
 }
 
-export { ErrorMessagesForUsers as EFU }
+enum MessagesForUsers {
+  updateAndNotifySuccess = 'Se ha generado su contraseña correctamente y ha sido enviada a su correo.'
+}
+
+export { ErrorMessagesForUsers as EFU, MessagesForUsers as MFU }

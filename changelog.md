@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.3.0
+
+- Implemented:
+  - The responses from the server are now encoded.
+
 ## Version 0.2.1
 
 - Fixed:

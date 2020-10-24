@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import firestore from '@google-cloud/firestore'
+// import firestore from '@google-cloud/firestore'
 import { CustomNodeJSGlobal } from '../custom/global'
 import { DtoUser } from '../dto-interfaces/user.dto'
 import { IUser } from '../interfaces/user'
-import { EFU } from './utils/error.messages'
-import { generatePassword } from '../utils/security'
+import { EFU, MFU } from './utils/user.messages'
+import { encryptMessage, generatePassword } from '../utils/security'
 import { mail } from '../utils/mailer'
 import { MFME } from '../utils/messages'
 
@@ -29,7 +29,7 @@ class User {
     this._result = []
   }
 
-  public process (type: string): unknown {
+  public process (type: string): Promise<string> | undefined {
     switch (type) {
       case 'notifyStudent':
         return this._notify('student')
@@ -44,7 +44,7 @@ class User {
     }
   }
 
-  private async _notify (condition: string): Promise<unknown> {
+  private async _notify (condition: string): Promise<string> {
     let result: any
 
     try {
@@ -69,15 +69,15 @@ class User {
 
       // Updating password
       if (condition === 'teacher')
-        result = await this._teachersRef
+        await this._teachersRef
           .doc(this._args.id as string)
           .update({ password: newPassword.ePassword })
       else
-        result = await this._studentsRef
+        await this._studentsRef
           .doc(this._args.id as string)
           .update({ password: newPassword.ePassword })
 
-      return result
+      return encryptMessage(MFU.updateAndNotifySuccess, KEY_JSON)
     } catch (error) {
       console.log(error)
       if (error.message === MFME.generic)
@@ -87,7 +87,7 @@ class User {
     }
   }
 
-  private async _verifyUser (condition: string): Promise<IUser> {
+  private async _verifyUser (condition: string): Promise<string> {
     const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
     let result: any
 
@@ -112,7 +112,7 @@ class User {
         } as IUser)
       })
 
-      return this._result[0]
+      return encryptMessage(JSON.stringify(this._result[0]), KEY_JSON)
     } catch (error) {
       if (
         error.message === EFU.teacherNotFound ||
