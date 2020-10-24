@@ -3,6 +3,7 @@ export interface IUser {
   documentNumber?: string
   documentType?  : string
   faculty?       : string
+  id?            : string
   lastName?      : string
   mail?          : string
   names?         : string

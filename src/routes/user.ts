@@ -20,6 +20,21 @@ User.route('/:code')
       const result = await uc.process(process)
       response(false, { result }, res, 200)
     } catch (error) {
+      console.log(error)
+      response(true, error.message, res, 500)
+    }
+  })
+
+User.route('/notify')
+  .patch(async (req: Request, res: Response): Promise<void> => {
+    const { body: { args }, query: { condition } } = req
+    const uc = new UserC(args)
+    const process = condition === 'student' ? 'notifyStudent' : 'notifyTeacher'
+
+    try {
+      const result = await uc.process(process)
+      response(false, { result }, res, 200)
+    } catch (error) {
       response(true, error.message, res, 500)
     }
   })

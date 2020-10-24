@@ -1,4 +1,5 @@
 import { Request } from 'express'
+import { DtoUser } from '../dto-interfaces/user.dto'
 
 /*
  * With this piece of code we ca personalize the attributes of the request,
@@ -6,9 +7,9 @@ import { Request } from 'express'
  */
 
 interface CustomRequest extends Request {
-  // body: {
-  //   args: DtoTasks | DtoProjects | DtoJobOffers
-  // },
+  body: {
+    args: DtoUser
+  },
   query: {
     condition?   : string,
     documentType?: string
