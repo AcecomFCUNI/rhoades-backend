@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.2.1
+
+- Fixed:
+  - Access control allow methods.
+
 ## Version 0.2.0
 
 - Implemented:
