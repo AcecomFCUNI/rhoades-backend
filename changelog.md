@@ -1,5 +1,11 @@
 # Rhoades Backend
 
+## Version 0.3.1
+
+- Fixed:
+  - Removed `cipher.final('hex')`.
+  - Test content.
+
 ## Version 0.3.0
 
 - Implemented:
