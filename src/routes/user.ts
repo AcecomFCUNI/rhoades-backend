@@ -42,13 +42,17 @@ User.route('/user/notify')
 
 User.route('/user/enroll/:code')
   .post(async (req: Request, res: Response) => {
-    const { body: { args }, params: { code }, query: { documentType } } = req
+    const {
+      body  : { args },
+      params: { code },
+      query : { condition, documentType }
+    } = req
     const uc = new UserC({
       documentNumber: code as string,
       documentType  : documentType as string
     } as DtoUser)
-    const { id, type } = args as DtoList
-    const process = type === 'teacher' ? 'enrollTeacher' : 'enrollStudent'
+    const { id } = args as DtoList
+    const process = condition === 'teacher' ? 'enrollTeacher' : 'enrollStudent'
 
     try {
       const result = await uc.process(process, id as string)

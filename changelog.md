@@ -1,5 +1,11 @@
 # Rhoades Backend
 
+## Version 0.4.1
+
+- Fixed:
+  - Endpoint to create lists, type is no longer required as argument in the body, instead a new query param (condition) has been added.
+  - Endpoint to enroll users, type is no longer required as argument in the body, instead a new query param (condition) has been added.
+
 ## Version 0.4.0
 
 - Implemented:

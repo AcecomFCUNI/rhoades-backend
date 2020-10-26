@@ -108,14 +108,13 @@ There are sixteen endpoints implemented:
      Se ha generado su contraseña correctamente y ha sido enviada a su correo
      ```
 
-4. Enroll user in a list: `/user/enroll/:code?documentType=`, it has a post method which will enroll a user into a list, if he is able to postulate.
+4. Enroll user in a list: `/user/enroll/:code?condition=&documentType=`, it has a post method which will enroll a user into a list, if he is able to postulate.
 
    - The body of the request must be as follows:
 
      ```json
      {
-       "id": "xiaphgU3T9Atd1OlrCfm (id list)",
-       "type": "student or teacher"
+       "id": "xiaphgU3T9Atd1OlrCfm (id list)"
      }
      ```
 
@@ -135,14 +134,13 @@ There are sixteen endpoints implemented:
      }
      ```
 
-5. Create a list: `/list/createList`, it has a post method which will create a list that will be represented by the spokesperson who has performed the request.
+5. Create a list: `/list/createList?condition=`, it has a post method which will create a list that will be represented by the spokesperson who has performed the request.
 
    - The body of the request must be as follows:
 
      ```json
      {
-       "owner": "QnYUvCKk74N3vfJZSHxW (id user)",
-       "type": "universitary-third"
+       "owner": "QnYUvCKk74N3vfJZSHxW (id user)"
      }
      ```
 

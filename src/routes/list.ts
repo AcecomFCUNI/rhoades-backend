@@ -1,4 +1,3 @@
-// TODO: Create endpoint for lists
 import { Router } from 'express'
 import { Request } from '../custom/express.request'
 import { Response } from '../custom/express.response'
@@ -10,8 +9,11 @@ const List = Router()
 
 List.route('/list/createList')
   .post (async (req: Request, res: Response) => {
-    const { body: { args } } = req
-    const lc = new ListC(args as DtoList)
+    const { body: { args }, query: { condition } } = req
+    const lc = new ListC({
+      ...args,
+      type: condition
+    } as DtoList)
 
     try {
       const result = await lc.process('createList')
