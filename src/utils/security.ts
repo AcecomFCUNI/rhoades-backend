@@ -17,7 +17,7 @@ const generateCryptoKey = (password: string): Buffer => {
 const encryptMessage = (message: string, password: string): string => {
   const cryptoKey = generateCryptoKey(password)
   const cipher = crypto.createCipheriv(ALGORITHM, cryptoKey, Buffer.from(IV, 'hex'))
-  const messageEncrypted = cipher.update(message, 'utf8', 'hex')
+  const messageEncrypted = cipher.update(message, 'utf8', 'hex') + cipher.final('hex')
 
   return messageEncrypted
 }
@@ -25,7 +25,7 @@ const encryptMessage = (message: string, password: string): string => {
 const decryptMessage = (message: string, password: string): string => {
   const cryptoKey = generateCryptoKey(password)
   const decipher = crypto.createDecipheriv(ALGORITHM, cryptoKey, Buffer.from(IV, 'hex'))
-  const messageDecrypted = decipher.update(message, 'hex', 'utf8')
+  const messageDecrypted = decipher.update(message, 'hex', 'utf8') + decipher.final('utf8')
 
   return messageDecrypted
 }

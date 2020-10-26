@@ -1,4 +1,5 @@
 import { Request } from 'express'
+import { DtoList } from '../dto-interfaces/list.dto'
 import { DtoUser } from '../dto-interfaces/user.dto'
 
 /*
@@ -8,11 +9,12 @@ import { DtoUser } from '../dto-interfaces/user.dto'
 
 interface CustomRequest extends Request {
   body: {
-    args: DtoUser
+    args: DtoUser | DtoList
   },
   query: {
-    condition?   : string,
-    documentType?: string
+    condition?     : string,
+    documentNumber?: string,
+    documentType?  : string
   }
 }
 

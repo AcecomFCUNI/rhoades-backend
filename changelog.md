@@ -1,5 +1,13 @@
 # Rhoades Backend
 
+## Version 0.4.0
+
+- Implemented:
+  - `cipher.final('hex')`.
+  - [Documentation](https://github.com/AcecomFCUNI/rhoades-backend#readme).
+  - Endpoint to create lists.
+  - Endpoint to enroll users.
+
 ## Version 0.3.1
 
 - Fixed:

@@ -30,7 +30,7 @@ class Server {
         )
         res.header(
           'Access-Control-Allow-Methods',
-          'GET, PATCH'
+          'GET, PATCH, POST'
         )
         next()
       }

@@ -1,10 +1,11 @@
 import { Application, Router } from 'express'
 import {
   Home,
+  List,
   User
 } from '../routes/index'
 
-const routers = [User]
+const routers = [ List, User ]
 
 const applyRoutes = (app: Application): void => {
   app.use('/', Home)
