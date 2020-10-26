@@ -23,11 +23,16 @@ class Server {
         res: express.Response,
         next: express.NextFunction
       ) => {
-        res.header('Access-Control-Allow-Origin', '*')
+        if (process.env.MODE && process.env.MODE === 'dev')
+          res.header('Access-Control-Allow-Origin', '*')
+        else
+          res.header('Access-Control-Allow-Origin', process.env.RHOADES_FRONT_URL as string)
+
         res.header(
           'Access-Control-Allow-Headers',
           'Authorization, Content-Type'
         )
+
         res.header(
           'Access-Control-Allow-Methods',
           'GET, PATCH, POST'

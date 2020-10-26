@@ -131,7 +131,6 @@ class User {
 
     try {
       const newPassword = generatePassword(KEY_PASSWORD)
-      // Verify if the user has email
       if (condition === 'teacher')
         result = await this._teachersRef.doc(this._args.id as string).get()
       else
@@ -142,6 +141,7 @@ class User {
         id: this._args.id
       } as IUser
 
+      // Verify if the user has email
       if ('mail' in data && data.mail !== '')
         await mail(data.mail as string, newPassword.password)
       else if ('optionalMail' in data && data.optionalMail !== '')

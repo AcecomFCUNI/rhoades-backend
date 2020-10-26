@@ -151,29 +151,82 @@ There are sixteen endpoints implemented:
        "applicants": [],
        "id": "RqezH0q4leKxysebcfwa",
        "owner": "QnYUvCKk74N3vfJZSHxW",
-       "type": "universitary-third"
+       "type": "third-of-faculty"
      }
      ```
+
+6. Get lists of a user: `/list/getListsOfUser/:id`, it has a get method which will return you all the lists that the requested user has inscribed.
+
+   - The encrypted response will contains the following `JSON`:
+
+     ```json
+     {
+       "students": {
+         "owner": "QnYUvCKk74N3vfJZSHxW",
+         "applicants": [
+           {
+             "UNICode": "20140118I",
+             "documentType": "DNI",
+             "lastName": "LUZQUIÑOS",
+             "documentNumber": "77073848",
+             "specialty": "N6",
+             "names": "STEVE ANTHONY",
+             "postulating": true,
+             "secondLastName": "AGAMA",
+             "list": "xiaphgU3T9Atd1OlrCfm",
+             "optionalMail": "",
+             "faculty": "FC",
+             "mail": "sluzquinosa@uni.pe",
+             "id": "cFNUGLxWH8MpGLzv6FBk"
+           }
+         ],
+         "type": "university-third-assembly",
+         "id": "xiaphgU3T9Atd1OlrCfm"
+       },
+       "teachers": {
+         "owner": "QnYUvCKk74N3vfJZSHxW",
+         "applicants": [
+           {
+             "documentType": "DNI",
+             "optionalMail": "",
+             "documentNumber": "06686041",
+             "lastName": "ACRUTA",
+             "specialty": "",
+             "UNICode": "19918003I",
+             "faculty": "FIA",
+             "secondLastName": "SANCHEZ",
+             "mail": "aacrutas@uni.edu.pe",
+             "names": "ALFREDO",
+             "id": "07bEwbinesBRgmidYSSl"
+           }
+         ],
+         "type": "faculty-council",
+         "id": "h8hqCv0pbyAynn20vBxp"
+       }
+     }
+     ```
+
+     Note: There may be an empty object, or a object with only one key (students or teachers).
 
 ### Notes
 
 - <a id="success"></a>In case of success you will get a generic success response as follows, with a 200 code:
 
-```json
-{
-  "error": false,
-  "message": "encrypted-response-message"
-}
-```
+  ```json
+  {
+    "error": false,
+    "message": "encrypted-response-message"
+  }
+  ```
 
 - <a id="error"></a>In case of error you will get a generic error response as follows, with a 500 error code:
 
-```json
-{
-  "error": true,
-  "message": "Error message"
-}
-```
+  ```json
+  {
+    "error": true,
+    "message": "Error message"
+  }
+  ```
 
 ## Authors:
 

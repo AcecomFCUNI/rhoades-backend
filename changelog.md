@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.5.0
+
+- Implemented:
+  - Get lists of a user endpoint.
+
 ## Version 0.4.1
 
 - Fixed:

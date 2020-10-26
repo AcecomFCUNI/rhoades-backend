@@ -8,7 +8,7 @@ import { DtoList } from '../dto-interfaces/list.dto'
 const List = Router()
 
 List.route('/list/createList')
-  .post (async (req: Request, res: Response) => {
+  .post(async (req: Request, res: Response) => {
     const { body: { args }, query: { condition } } = req
     const lc = new ListC({
       ...args,
@@ -18,6 +18,21 @@ List.route('/list/createList')
     try {
       const result = await lc.process('createList')
       response(false, result as string, res, 200)
+    } catch (error) {
+      response(true, error.message, res, 500)
+    }
+  })
+
+List.route('/list/getListsOfUser/:id')
+  .get(async (req: Request, res: Response) => {
+    const { params: { id } } = req
+    const lc = new ListC({
+      owner: id as string
+    })
+
+    try {
+      const result = await lc.process('getListsOfUser')
+      response(false, { result }, res, 200)
     } catch (error) {
       response(true, error.message, res, 500)
     }
