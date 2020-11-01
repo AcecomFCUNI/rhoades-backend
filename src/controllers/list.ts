@@ -5,12 +5,10 @@ import { DtoList } from '../dto-interfaces/list.dto'
 import { IList } from '../interfaces/list'
 import { EFL } from './utils/list.messages'
 import { CFU } from './utils/user.messages'
-import { encryptMessage } from '../utils/security'
 import { PATA } from '../utils/constants'
 import { IUser } from '../interfaces/user'
 
 declare const global: CustomNodeJSGlobal
-const KEY_JSON = process.env.KEY_JSON as string
 
 class List {
   private _args: DtoList
@@ -23,7 +21,15 @@ class List {
     this._listRef = global.firestoreDB.collection('lists')
   }
 
-  public process (type: string): Promise<unknown> | undefined {
+  public process (
+    type: string
+  ):
+    | Promise<IList>
+    | Promise<{
+        students: IList
+        teachers: IList
+      }>
+    | undefined {
     switch (type) {
       case 'createList':
         return this._createList()
@@ -34,21 +40,20 @@ class List {
     }
   }
 
-  private async _createList (): Promise<string> {
+  private async _createList (): Promise<IList> {
     try {
-      const list = await this._listRef
-        .add({
-          applicants: [],
-          owner     : this._args.owner,
-          type      : this._args.type
-        })
+      const list = await this._listRef.add({
+        applicants: [],
+        owner     : this._args.owner,
+        type      : this._args.type
+      })
 
       const dataList = {
         ...(await list.get()).data(),
         id: list.id
-      }
+      } as IList
 
-      return encryptMessage(JSON.stringify(dataList), KEY_JSON)
+      return dataList
     } catch (error) {
       console.error(error)
 
@@ -56,9 +61,14 @@ class List {
     }
   }
 
-  private async _getListsOfUser (): Promise<unknown> {
+  private async _getListsOfUser (): Promise<{
+    students: IList
+    teachers: IList
+  }> {
     try {
-      const lists = await this._listRef.where('owner', '==', this._args.owner as string).get()
+      const lists = await this._listRef
+        .where('owner', '==', this._args.owner as string)
+        .get()
       const listsData = lists.docs.map(doc => {
         return {
           ...doc.data(),
@@ -108,7 +118,6 @@ class List {
       }
 
       return finalResult
-      // return encryptMessage(JSON.stringify(finalResult), KEY_JSON)
     } catch (error) {
       console.error(error)
 
@@ -119,9 +128,9 @@ class List {
   // eslint-disable-next-line class-methods-use-this
   private async _getDetailUserData (
     condition: string,
-    iList    : IList
+    iList: IList
   ): Promise<IUser[]> {
-    const collectionRef =  global.firestoreDB.collection(condition)
+    const collectionRef = global.firestoreDB.collection(condition)
     const length = iList?.applicants?.length as number
     const users: IUser[] = []
     let user: firestore.DocumentSnapshot<firestore.DocumentData>
@@ -147,15 +156,11 @@ class List {
     }
   }
 
-  public async enroll (
-    idUser   : string,
-    condition: string
-  ): Promise<void> {
+  public async enroll (idUser: string, condition: string): Promise<void> {
     try {
       await this._listRef.doc(this._args.id as string).update({
         applicants: firestore.FieldValue.arrayUnion(idUser)
       })
-
     } catch (error) {
       console.error(error)
 

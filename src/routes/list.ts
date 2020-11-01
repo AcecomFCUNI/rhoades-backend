@@ -17,9 +17,9 @@ List.route('/list/createList')
 
     try {
       const result = await lc.process('createList')
-      response(false, result as string, res, 200)
+      response(false, { result }, res, 200)
     } catch (error) {
-      response(true, error.message, res, 500)
+      response(true, { result: error.message }, res, 500)
     }
   })
 
@@ -34,7 +34,7 @@ List.route('/list/getListsOfUser/:id')
       const result = await lc.process('getListsOfUser')
       response(false, { result }, res, 200)
     } catch (error) {
-      response(true, error.message, res, 500)
+      response(true, { result: error.message }, res, 500)
     }
   })
 

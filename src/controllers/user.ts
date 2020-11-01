@@ -6,14 +6,12 @@ import { DtoUser } from '../dto-interfaces/user.dto'
 import { DtoList } from '../dto-interfaces/list.dto'
 import { IUser } from '../interfaces/user'
 import { CFU, EFU, MFU } from './utils/user.messages'
-import { encryptMessage, generatePassword } from '../utils/security'
+import { generatePassword } from '../utils/security'
 import { mail } from '../utils/mailer'
 import { MFME } from '../utils/messages'
 
 declare const global: CustomNodeJSGlobal
 const KEY_PASSWORD = process.env.KEY_PASSWORD as string
-const KEY_JSON = process.env.KEY_JSON as string
-
 class User {
   private _args: DtoUser
   private _studentsRef: FirebaseFirestore.CollectionReference<
@@ -34,7 +32,7 @@ class User {
   public process (
     type   : string,
     listId?: string,
-  ): Promise<string> | undefined {
+  ): Promise<IUser> | Promise<string> | undefined {
     switch (type) {
       case 'enrollStudent':
         return this._enroll('student', listId as string)
@@ -56,7 +54,7 @@ class User {
   private async _enroll (
     condition: string,
     listId   : string,
-  ): Promise<string> {
+  ): Promise<IUser> {
     const document = this._args?.documentType === '0'? 'documentNumber' : 'UNICode'
     let user: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 
@@ -74,7 +72,7 @@ class User {
         return {
           ...doc.data(),
           id: doc.id
-        }
+        } as IUser
       })[0]
 
       if ('postulating' in userData && userData.postulating)
@@ -82,7 +80,7 @@ class User {
           ? new Error(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}`)
           : new Error(`${CFU.article}${CFU.student}${EFU.errorEnrolling1}`)
 
-      if ('password' in userData && userData.password)
+      if ('registered' in userData && userData.registered)
         throw condition === 'teacher'
           ? new Error(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}`)
           : new Error(`${CFU.article}${CFU.student}${EFU.errorEnrolling2}`)
@@ -110,7 +108,7 @@ class User {
 
       await l.enroll(userData.id as string, condition)
 
-      return encryptMessage(JSON.stringify(userData), KEY_JSON)
+      return userData
     } catch (error) {
       console.error(error)
 
@@ -168,7 +166,7 @@ class User {
         password: newPassword.password
       })
 
-      return encryptMessage(MFU.updateAndNotifySuccess, KEY_JSON)
+      return MFU.updateAndNotifySuccess
     } catch (error) {
       console.log(error)
 
@@ -179,7 +177,7 @@ class User {
     }
   }
 
-  private async _verifyUser (condition: string): Promise<string> {
+  private async _verifyUser (condition: string): Promise<IUser> {
     const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
     let result: any
 
@@ -204,7 +202,7 @@ class User {
         } as IUser)
       })
 
-      return encryptMessage(JSON.stringify(this._result[0]), KEY_JSON)
+      return this._result[0]
     } catch (error) {
       console.error(error)
 

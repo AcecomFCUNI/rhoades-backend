@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.7.0
+
+- Implemented:
+  - Returning responses without encryption.
+
 ## Version 0.6.0
 
 - Implemented:

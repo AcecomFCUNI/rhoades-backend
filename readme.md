@@ -215,7 +215,9 @@ There are sixteen endpoints implemented:
   ```json
   {
     "error": false,
-    "message": "encrypted-response-message"
+    "message": {
+      "result": "An object with the corresponding result"
+    }
   }
   ```
 

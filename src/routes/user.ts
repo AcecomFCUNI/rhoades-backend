@@ -19,10 +19,10 @@ User.route('/user/verify/:code')
 
     try {
       const result = await uc.process(process)
-      response(false, result as string, res, 200)
+      response(false, { result }, res, 200)
     } catch (error) {
       console.log(error)
-      response(true, error.message, res, 500)
+      response(true, { result: error.message }, res, 500)
     }
   })
 
@@ -34,9 +34,9 @@ User.route('/user/notify')
 
     try {
       const result = await uc.process(process)
-      response(false, result as string, res, 200)
+      response(false, { result }, res, 200)
     } catch (error) {
-      response(true, error.message, res, 500)
+      response(true, { result: error.message }, res, 500)
     }
   })
 
@@ -58,7 +58,7 @@ User.route('/user/enroll/:code')
       const result = await uc.process(process, id as string)
       response(true, { result }, res, 200)
     } catch (error) {
-      response(true, error.message, res, 500)
+      response(true, { result: error.message }, res, 500)
     }
   })
 
