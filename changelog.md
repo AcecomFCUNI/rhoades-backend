@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.6.0
+
+- Implemented:
+  - Users now are registered into `Firebase Authentication`.
+
 ## Version 0.5.0
 
 - Implemented:

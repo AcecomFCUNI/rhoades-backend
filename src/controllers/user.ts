@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import firestore from '@google-cloud/firestore'
+import admin from 'firebase-admin'
 import { CustomNodeJSGlobal } from '../custom/global'
 import { List } from './list'
 import { DtoUser } from '../dto-interfaces/user.dto'
@@ -58,7 +58,7 @@ class User {
     listId   : string,
   ): Promise<string> {
     const document = this._args?.documentType === '0'? 'documentNumber' : 'UNICode'
-    let user: any
+    let user: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 
     try {
       if (condition === 'teacher')
@@ -127,7 +127,9 @@ class User {
   }
 
   private async _notify (condition: string): Promise<string> {
-    let result: any
+    // eslint-disable-next-line max-len
+    let result: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>
+    let hasEmail = false
 
     try {
       const newPassword = generatePassword(KEY_PASSWORD)
@@ -142,22 +144,29 @@ class User {
       } as IUser
 
       // Verify if the user has email
-      if ('mail' in data && data.mail !== '')
+      if ('mail' in data && data.mail !== '') {
+        hasEmail = true
         await mail(data.mail as string, newPassword.password)
-      else if ('optionalMail' in data && data.optionalMail !== '')
+      } else if ('optionalMail' in data && data.optionalMail !== '')
         await mail(data.optionalMail as string, newPassword.password)
       else
         throw new Error(EFU.userHasNotMail)
 
-      // Updating password
+      // Updating that the user is registered
       if (condition === 'teacher')
         await this._teachersRef
           .doc(data.id as string)
-          .update({ password: newPassword.ePassword })
+          .update({ registered: true })
       else
         await this._studentsRef
           .doc(data.id as string)
-          .update({ password: newPassword.ePassword })
+          .update({ registered: true })
+
+      // Registering the user into Firebase Authentication
+      await admin.auth().createUser({
+        email   : hasEmail ? data.mail: data.optionalMail,
+        password: newPassword.password
+      })
 
       return encryptMessage(MFU.updateAndNotifySuccess, KEY_JSON)
     } catch (error) {

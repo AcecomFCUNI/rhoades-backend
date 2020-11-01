@@ -8,8 +8,8 @@ export interface IUser {
   mail?          : string
   names?         : string
   optionalMail?  : string
-  password?      : string
   postulating?   : boolean
+  registered?    : boolean
   secondLastName?: string
   specialty?     : string
 }
