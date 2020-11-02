@@ -31,7 +31,7 @@ class User {
 
   public process (
     type   : string,
-    listId?: string,
+    listId?: string
   ): Promise<IUser> | Promise<string> | undefined {
     switch (type) {
       case 'enrollStudent':
@@ -51,11 +51,8 @@ class User {
     }
   }
 
-  private async _enroll (
-    condition: string,
-    listId   : string,
-  ): Promise<IUser> {
-    const document = this._args?.documentType === '0'? 'documentNumber' : 'UNICode'
+  private async _enroll (condition: string, listId: string): Promise<IUser> {
+    const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
     let user: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 
     try {
@@ -86,19 +83,15 @@ class User {
           : new Error(`${CFU.article}${CFU.student}${EFU.errorEnrolling2}`)
 
       if (condition === 'teacher')
-        await this._teachersRef
-          .doc(userData.id as string)
-          .update({
-            list       : listId,
-            postulating: true
-          })
+        await this._teachersRef.doc(userData.id as string).update({
+          list       : listId,
+          postulating: true
+        })
       else
-        await this._studentsRef
-          .doc(userData.id as string)
-          .update({
-            list       : listId,
-            postulating: true
-          })
+        await this._studentsRef.doc(userData.id as string).update({
+          list       : listId,
+          postulating: true
+        })
 
       const l = new List({
         id   : listId,
@@ -118,9 +111,9 @@ class User {
       )
         throw error
 
-        throw condition === 'teacher'
-          ? new Error(`${EFU.errorEnrolling}${CFU.pTeacher}`)
-          : new Error(`${EFU.errorEnrolling}${CFU.pStudent}`)
+      throw condition === 'teacher'
+        ? new Error(`${EFU.errorEnrolling}${CFU.pTeacher}`)
+        : new Error(`${EFU.errorEnrolling}${CFU.pStudent}`)
     }
   }
 
@@ -170,8 +163,7 @@ class User {
     } catch (error) {
       console.log(error)
 
-      if (error.message === MFME.generic)
-        throw error
+      if (error.message === MFME.generic) throw error
 
       throw new Error(EFU.errorNotifying)
     }
@@ -179,7 +171,7 @@ class User {
 
   private async _verifyUser (condition: string): Promise<IUser> {
     const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
-    let result: any
+    let result: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 
     try {
       if (condition === 'teacher')
@@ -195,12 +187,25 @@ class User {
         if (condition === 'teacher') throw new Error(EFU.teacherNotFound)
         else throw new Error(EFU.studentNotFound)
 
-      result.docs.forEach((doc: any) => {
-        this._result.push({
-          ...doc.data(),
-          id: doc.id
-        } as IUser)
-      })
+      result.docs.forEach(
+        (
+          doc: FirebaseFirestore.QueryDocumentSnapshot<
+            FirebaseFirestore.DocumentData
+          >
+        ) => {
+          this._result.push({
+            id        : doc.id,
+            lastName  : doc.data().lastName,
+            mail      : doc.data().mail || doc.data().optionalMail || '',
+            names     : doc.data().names,
+            registered:
+              doc.data().registered === undefined
+                ? false
+                : doc.data().registered,
+            secondLastName: doc.data().secondLastName
+          } as IUser)
+        }
+      )
 
       return this._result[0]
     } catch (error) {

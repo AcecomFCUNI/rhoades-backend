@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.7.1
+
+- Fixed:
+  - The return of the `verify endpoint`.
+
 ## Version 0.7.0
 
 - Implemented:
