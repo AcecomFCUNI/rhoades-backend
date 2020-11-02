@@ -74,23 +74,19 @@ There are sixteen endpoints implemented:
 
    - If everything is correct you will get a [success response](#success), if not, an [error response](#error). Also, consider this for all the incoming endpoints.
 
-   - The encrypted response will contains the following `JSON`:
+   - The result key of the `JSON` response will contain:
      ```json
      {
+       "id": "cFNUGLxWH8MpGLzv6FBk",
        "lastName": "LUZQUIÑOS",
-       "specialty": "N6",
-       "names": "STEVE ANTHONY",
-       "secondLastName": "AGAMA",
        "mail": "sluzquinosa@uni.pe",
-       "optionalMail": "",
-       "documentNumber": "77073848",
-       "faculty": "FC",
-       "UNICode": "20140118I",
-       "documentType": "DNI"
+       "names": "STEVE ANTHONY",
+       "registered": false,
+       "secondLastName": "AGAMA"
      }
      ```
 
-3. Notify user: `/user/notify?condition=`, is has a patch method which will create a password for the user and send it to the user's email.
+3. Notify user: `/user/notify`, is has a patch method which will create a password for the user and send it to the user's email.
 
    - The body of the request must be as follows:
 
@@ -102,7 +98,7 @@ There are sixteen endpoints implemented:
      }
      ```
 
-   - The encrypted response will contains the following message:
+   - The result key of the `JSON` response will contain:
 
      ```
      Se ha generado su contraseña correctamente y ha sido enviada a su correo
@@ -118,7 +114,7 @@ There are sixteen endpoints implemented:
      }
      ```
 
-   - The encrypted response will contains the following `JSON`:
+   - The result key of the `JSON` response will contain:
      ```json
      {
        "id": "LUZQUIÑOS",
@@ -144,7 +140,7 @@ There are sixteen endpoints implemented:
      }
      ```
 
-   - The encrypted response will contains the following `JSON`:
+   - The result key of the `JSON` response will contain::
 
      ```json
      {
@@ -157,7 +153,7 @@ There are sixteen endpoints implemented:
 
 6. Get lists of a user: `/list/getListsOfUser/:id`, it has a get method which will return you all the lists that the requested user has inscribed.
 
-   - The encrypted response will contains the following `JSON`:
+   - The result key of the `JSON` response will contain:
 
      ```json
      {
