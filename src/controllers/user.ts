@@ -131,7 +131,7 @@ class User {
 
       const data = {
         ...result.data(),
-        id: this._args.id
+        id: this._args.id as string
       } as IUser
 
       // Verify if the user has email
@@ -156,7 +156,8 @@ class User {
       // Registering the user into Firebase Authentication
       await admin.auth().createUser({
         email   : hasEmail ? data.mail: data.optionalMail,
-        password: newPassword.password
+        password: newPassword.password,
+        uid     : data.id as string
       })
 
       return MFU.updateAndNotifySuccess

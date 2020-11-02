@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.7.2
+
+- Fixed:
+  - Custom `uid` int he user auth creation.
+
 ## Version 0.7.1
 
 - Fixed:
