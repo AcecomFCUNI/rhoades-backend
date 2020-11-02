@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.9.0
+
+- Implemented:
+  - Documentation in its own route using [`Swagger`](https://swagger.io/).
+
 ## Version 0.8.0
 
 - Implemented:

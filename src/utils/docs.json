@@ -1,0 +1,500 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Rhoades backend",
+    "description": "This is documentation of Rhoades backend.",
+    "contact": {
+      "email": "acecom.soporte@gmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "version": "0.9.0"
+  },
+  "servers": [
+    {
+      "url": "https://acecom-rhoades.herokuapp.com/api/",
+      "description": "Rhoades prod API"
+    },
+    {
+      "url": "https://acecom-rhoades-dev.herokuapp.com/",
+      "description": "Rhoades dev API"
+    }
+  ],
+  "tags": [
+    {
+      "name": "user",
+      "description": "Operations about a teacher or student that belongs to the CEUNI's pattern"
+    },
+    {
+      "name": "list",
+      "description": "Operations about a list performed by a registered user"
+    }
+  ],
+  "paths": {
+    "/user/verify/{code}": {
+      "get": {
+        "tags": ["user"],
+        "summary": "Create user",
+        "operationId": "verifyUser",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "The user code or document number.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "condition",
+            "in": "query",
+            "description": "Either teacher or student.",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": ["teacher", "student"]
+            }
+          },
+          {
+            "name": "documentType",
+            "in": "query",
+            "description": "0 for documentNumber or 1 for UNI code.",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "enum": [0, 1]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Whether the user belongs to the patten.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyUserResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/notify": {
+      "patch": {
+        "tags": ["user"],
+        "summary": "Sends the corresponding password to the user that has been registered.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SimpleDtoUser"
+        },
+        "responses": {
+          "200": {
+            "description": "The user has been successfully registered and notified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultSuccess"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/enroll/{code}": {
+      "post": {
+        "tags": ["user"],
+        "summary": "Enrolls a user into a list.",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "The user code or document number.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "example": "20201001A"
+            }
+          },
+          {
+            "name": "condition",
+            "in": "query",
+            "description": "Either teacher or student.",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": ["teacher", "student"]
+            }
+          },
+          {
+            "name": "documentType",
+            "in": "query",
+            "description": "0 for documentNumber or 1 for UNI code.",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "enum": [0, 1]
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SimpleDtoUser"
+        },
+        "responses": {
+          "200": {
+            "description": "The user has been successfully registered and notified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list/createList": {
+      "post": {
+        "tags": ["list"],
+        "summary": "Create a list to postulate.",
+        "parameters": [
+          {
+            "name": "condition",
+            "in": "query",
+            "description": "Either teacher or student.",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "enum": ["teacher", "student"]
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SimpleDtoList"
+        },
+        "responses": {
+          "200": {
+            "description": "The list has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmptyList"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list/getListOfUser/{id}": {
+      "get": {
+        "tags": ["list"],
+        "summary": "Get all the list that a user has registered.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Firebase user id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The user has been successfully registered and notified.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/List"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "UNICode": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string",
+            "description": "Number of DNI, CE or others"
+          },
+          "documentType": {
+            "type": "string",
+            "description": "DNI, CE or others"
+          },
+          "faculty": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "Firestore id."
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "mail": {
+            "type": "string",
+            "description": "UNI mail registered in the pattern"
+          },
+          "names": {
+            "type": "string"
+          },
+          "optionalMail": {
+            "type": "string"
+          },
+          "postulating": {
+            "type": "boolean"
+          },
+          "registered": {
+            "type": "boolean",
+            "description": "Whether the user is registered in the platform.",
+            "default": false
+          },
+          "secondLastName": {
+            "type": "string"
+          },
+          "specialty": {
+            "type": "string"
+          }
+        }
+      },
+      "List": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "applicants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "owner": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "EmptyList": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "applicants": {
+            "type": "array",
+            "items": {},
+            "default": []
+          },
+          "owner": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "VerifyUserResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "default": false
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Firestore id."
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "mail": {
+                    "type": "string",
+                    "description": "UNI mail or optional mail registered in the pattern"
+                  },
+                  "names": {
+                    "type": "string"
+                  },
+                  "registered": {
+                    "type": "boolean",
+                    "description": "Whether the user is registered in the platform.",
+                    "default": false
+                  },
+                  "secondLastName": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DefaultSuccess": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "default": false
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "DefaultError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "SimpleDtoUser": {
+        "description": "id of users",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Firebase id"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": true
+      },
+      "SimpleDtoList": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "owner": {
+                      "type": "string",
+                      "description": "Firestore id"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
