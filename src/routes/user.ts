@@ -15,10 +15,9 @@ User.route('/user/verify/:code')
       documentNumber: code,
       documentType
     } as DtoUser)
-    const process = condition === 'student' ? 'verifyStudent' : 'verifyTeacher'
 
     try {
-      const result = await uc.process(process)
+      const result = await uc.process('verify', condition)
       response(false, { result }, res, 200)
     } catch (error) {
       console.log(error)
@@ -28,12 +27,11 @@ User.route('/user/verify/:code')
 
 User.route('/user/notify')
   .patch(async (req: Request, res: Response): Promise<void> => {
-    const { body: { args }, query: { condition } } = req
-    const uc = new UserC(args)
-    const process = condition === 'student' ? 'notifyStudent' : 'notifyTeacher'
+    const { body: { args } } = req
+    const uc = new UserC(args as DtoUser)
 
     try {
-      const result = await uc.process(process)
+      const result = await uc.process('notify')
       response(false, { result }, res, 200)
     } catch (error) {
       response(true, { result: error.message }, res, 500)
@@ -55,7 +53,7 @@ User.route('/user/enroll/:code')
     const process = condition === 'teacher' ? 'enrollTeacher' : 'enrollStudent'
 
     try {
-      const result = await uc.process(process, id as string)
+      const result = await uc.process(process, undefined, id as string)
       response(true, { result }, res, 200)
     } catch (error) {
       response(true, { result: error.message }, res, 500)

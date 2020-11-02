@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.8.0
+
+- Implemented:
+  - Reworked the way to get data from the database, now everything will be obtained just from one collection, `users`.
+
 ## Version 0.7.2
 
 - Fixed:

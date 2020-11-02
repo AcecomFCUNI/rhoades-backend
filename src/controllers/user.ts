@@ -14,38 +14,31 @@ declare const global: CustomNodeJSGlobal
 const KEY_PASSWORD = process.env.KEY_PASSWORD as string
 class User {
   private _args: DtoUser
-  private _studentsRef: FirebaseFirestore.CollectionReference<
-    FirebaseFirestore.DocumentData
-  >
-  private _teachersRef: FirebaseFirestore.CollectionReference<
+  private _usersRef: FirebaseFirestore.CollectionReference<
     FirebaseFirestore.DocumentData
   >
   private _result: IUser[]
 
   constructor (args: DtoUser) {
     this._args = args
-    this._studentsRef = global.firestoreDB.collection('students')
-    this._teachersRef = global.firestoreDB.collection('teachers')
+    this._usersRef = global.firestoreDB.collection('users')
     this._result = []
   }
 
   public process (
-    type   : string,
-    listId?: string
+    type      : string,
+    condition?: string,
+    listId?   : string
   ): Promise<IUser> | Promise<string> | undefined {
     switch (type) {
       case 'enrollStudent':
         return this._enroll('student', listId as string)
       case 'enrollTeacher':
         return this._enroll('teacher', listId as string)
-      case 'notifyStudent':
-        return this._notify('student')
-      case 'notifyTeacher':
-        return this._notify('teacher')
-      case 'verifyStudent':
-        return this._verifyUser('student')
-      case 'verifyTeacher':
-        return this._verifyUser('teacher')
+      case 'notify':
+        return this._notify()
+      case 'verify':
+        return this._verify(condition as string)
       default:
         return undefined
     }
@@ -56,14 +49,9 @@ class User {
     let user: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 
     try {
-      if (condition === 'teacher')
-        user = await this._teachersRef
-          .where(document, '==', `${this._args?.documentNumber}`)
-          .get()
-      else
-        user = await this._studentsRef
-          .where(document, '==', `${this._args?.documentNumber}`)
-          .get()
+      user = await this._usersRef
+        .where(document, '==', `${this._args?.documentNumber}`)
+        .get()
 
       const userData = user.docs.map((doc: any) => {
         return {
@@ -82,16 +70,10 @@ class User {
           ? new Error(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}`)
           : new Error(`${CFU.article}${CFU.student}${EFU.errorEnrolling2}`)
 
-      if (condition === 'teacher')
-        await this._teachersRef.doc(userData.id as string).update({
-          list       : listId,
-          postulating: true
-        })
-      else
-        await this._studentsRef.doc(userData.id as string).update({
-          list       : listId,
-          postulating: true
-        })
+      await this._usersRef.doc(userData.id as string).update({
+        list       : listId,
+        postulating: true
+      })
 
       const l = new List({
         id   : listId,
@@ -117,17 +99,14 @@ class User {
     }
   }
 
-  private async _notify (condition: string): Promise<string> {
+  private async _notify (): Promise<string> {
     // eslint-disable-next-line max-len
     let result: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>
     let hasEmail = false
 
     try {
       const newPassword = generatePassword(KEY_PASSWORD)
-      if (condition === 'teacher')
-        result = await this._teachersRef.doc(this._args.id as string).get()
-      else
-        result = await this._studentsRef.doc(this._args.id as string).get()
+      result = await this._usersRef.doc(this._args.id as string).get()
 
       const data = {
         ...result.data(),
@@ -144,14 +123,9 @@ class User {
         throw new Error(EFU.userHasNotMail)
 
       // Updating that the user is registered
-      if (condition === 'teacher')
-        await this._teachersRef
-          .doc(data.id as string)
-          .update({ registered: true })
-      else
-        await this._studentsRef
-          .doc(data.id as string)
-          .update({ registered: true })
+      await this._usersRef
+        .doc(data.id as string)
+        .update({ registered: true })
 
       // Registering the user into Firebase Authentication
       await admin.auth().createUser({
@@ -170,19 +144,14 @@ class User {
     }
   }
 
-  private async _verifyUser (condition: string): Promise<IUser> {
+  private async _verify (condition: string): Promise<IUser> {
     const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
     let result: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 
     try {
-      if (condition === 'teacher')
-        result = await this._teachersRef
-          .where(document, '==', `${this._args?.documentNumber}`)
-          .get()
-      else
-        result = await this._studentsRef
-          .where(document, '==', `${this._args?.documentNumber}`)
-          .get()
+      result = await this._usersRef
+        .where(document, '==', `${this._args?.documentNumber}`)
+        .get()
 
       if (result.docs.length === 0)
         if (condition === 'teacher') throw new Error(EFU.teacherNotFound)
