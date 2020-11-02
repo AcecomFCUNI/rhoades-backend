@@ -5,7 +5,7 @@ import { firebaseConnection } from '../database/firebase'
 
 class Server {
   public app                 : express.Application
-  private _firebaseConnection: (() => void) |undefined
+  private _firebaseConnection: (() => void) | undefined
 
   constructor () {
     this.app = express()
