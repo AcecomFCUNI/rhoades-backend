@@ -26,7 +26,10 @@ class Server {
         if (process.env.MODE && process.env.MODE === 'dev')
           res.header('Access-Control-Allow-Origin', '*')
         else
-          res.header('Access-Control-Allow-Origin', process.env.RHOADES_FRONT_URL as string)
+          res.header(
+            'Access-Control-Allow-Origin',
+            process.env.RHOADES_FRONT_URL as string
+          )
 
         res.header(
           'Access-Control-Allow-Headers',

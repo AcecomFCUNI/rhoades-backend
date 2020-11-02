@@ -6,7 +6,7 @@ COPY package.json ./
 
 RUN yarn install --prod
 
-RUN yarn build
+# RUN yarn build
 
 copy dist /app/dist
 
