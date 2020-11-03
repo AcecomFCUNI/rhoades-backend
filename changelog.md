@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.10.0
+
+- Implemented:
+  - Handling 404 error.
+
 ## Version 0.9.0
 
 - Implemented:
