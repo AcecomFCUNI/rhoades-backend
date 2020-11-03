@@ -1,5 +1,11 @@
 # Rhoades Backend
 
+## Version 0.11.0
+
+- Implemented:
+  - New way to handle 404 error.
+  - Route file to auth.
+
 ## Version 0.10.0
 
 - Implemented:
