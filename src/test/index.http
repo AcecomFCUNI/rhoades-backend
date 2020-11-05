@@ -1,2 +1,12 @@
-// Route that does not exist
-GET http://localhost:3000/xd
+### Testing 404 error route
+GET http://localhost:3000/auth/refresh-token
+
+### Testing auth route
+POST http://localhost:3000/auth/refresh-token
+Content-Type: application/json
+
+{
+  "args": {
+    "id": 1
+  }
+}

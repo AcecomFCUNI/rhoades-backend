@@ -2,13 +2,14 @@ import swaggerUi from 'swagger-ui-express'
 import httpErrors from 'http-errors'
 import { Application, Response, Request, Router, NextFunction } from 'express'
 import docs from '../utils/docs.json'
-import { Home, List, User } from '../routes/index'
+import { Auth, Home, List, User } from '../routes/index'
 import { response } from './response'
 
 const routers = [List, User]
 
 const applyRoutes = (app: Application): void => {
   app.use('/', Home)
+  app.use('/auth', Auth)
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(docs))
   routers.forEach((router: Router): Application => app.use('/api', router))
 
@@ -22,7 +23,7 @@ const applyRoutes = (app: Application): void => {
     res  : Response,
     next : NextFunction
   ) => {
-    if (error.status === 404) response(true, error.message, res, error.status)
+    response(true, error.message, res, error.status)
 
     next()
   })
