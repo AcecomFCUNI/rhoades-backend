@@ -1,5 +1,15 @@
 # Rhoades Backend
 
+## Version 0.13.0
+
+- Implemented:
+  - `ìndex.ts` file in almost each folder to standardize imports.
+- Fixed:
+  - Error handle.
+- TODO:
+  - To implement [`http-errors`](https://www.npmjs.com/package/http-errors) in every single route improve our error handle.
+  - To implement [`joi`](https://www.npmjs.com/package/joi) to validate requests.
+
 ## Version 0.12.0
 
 - Implemented:

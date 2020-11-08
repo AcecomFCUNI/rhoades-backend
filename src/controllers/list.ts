@@ -1,12 +1,10 @@
 /* eslint-disable no-extra-parens */
 import firestore from '@google-cloud/firestore'
-import { CustomNodeJSGlobal } from '../custom/global'
-import { DtoList } from '../dto-interfaces/list.dto'
-import { IList } from '../interfaces/list'
-import { EFL } from './utils/list.messages'
-import { CFU } from './utils/user.messages'
+import { CustomNodeJSGlobal } from '../custom/index'
+import { DtoList } from '../dto-interfaces/index'
+import { CFU, EFL } from './utils/index'
 import { PATA } from '../utils/constants'
-import { IUser } from '../interfaces/user'
+import { IList, IUser } from '../interfaces/index'
 
 declare const global: CustomNodeJSGlobal
 

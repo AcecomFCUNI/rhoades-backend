@@ -1,3 +1,3 @@
-import { Server } from './network/server'
+import { Server } from './network/index'
 
 Server.start()

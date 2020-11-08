@@ -1,7 +1,7 @@
 import swaggerUi from 'swagger-ui-express'
 import httpErrors from 'http-errors'
 import { Application, Response, Request, Router, NextFunction } from 'express'
-import docs from '../utils/docs.json'
+import { docs } from '../utils/index'
 import { Auth, Home, List, User } from '../routes/index'
 import { response } from './response'
 

@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request, Router } from 'express'
 import httpErrors from 'http-errors'
-import { response } from '../network/response'
+import { response } from '../network/index'
 
 const Auth = Router()
 

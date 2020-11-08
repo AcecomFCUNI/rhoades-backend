@@ -1,9 +1,8 @@
 import { Router } from 'express'
-import { Request } from '../custom/express.request'
-import { Response } from '../custom/express.response'
-import { response } from '../network/response'
-import { List as ListC } from '../controllers/list'
-import { DtoList } from '../dto-interfaces/list.dto'
+import { Request, Response } from '../custom/index'
+import { response } from '../network/index'
+import { List as ListC } from '../controllers/index'
+import { DtoList } from '../dto-interfaces/index'
 
 const List = Router()
 

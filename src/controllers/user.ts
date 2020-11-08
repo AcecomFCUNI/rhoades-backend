@@ -1,14 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import admin from 'firebase-admin'
-import { CustomNodeJSGlobal } from '../custom/global'
+import { CustomNodeJSGlobal } from '../custom/index'
+import { DtoList, DtoUser } from '../dto-interfaces/index'
+import { IUser } from '../interfaces/index'
 import { List } from './list'
-import { DtoUser } from '../dto-interfaces/user.dto'
-import { DtoList } from '../dto-interfaces/list.dto'
-import { IUser } from '../interfaces/user'
-import { CFU, EFU, MFU } from './utils/user.messages'
-import { generatePassword } from '../utils/security'
-import { mail } from '../utils/mailer'
-import { MFME } from '../utils/messages'
+import { CFU, EFU, MFU } from './utils/index'
+import { mail, MFME, generatePassword } from '../utils/index'
 
 declare const global: CustomNodeJSGlobal
 const KEY_PASSWORD = process.env.KEY_PASSWORD as string

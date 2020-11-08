@@ -1,10 +1,8 @@
 import { Router } from 'express'
-import { Request } from '../custom/express.request'
-import { Response } from '../custom/express.response'
-import { User as UserC } from '../controllers/user'
-import { response } from '../network/response'
-import { DtoUser } from '../dto-interfaces/user.dto'
-import { DtoList } from '../dto-interfaces/list.dto'
+import { Request, Response } from '../custom/index'
+import { User as UserC } from '../controllers/index'
+import { response } from '../network/index'
+import { DtoList, DtoUser } from '../dto-interfaces/index'
 
 const User = Router()
 
