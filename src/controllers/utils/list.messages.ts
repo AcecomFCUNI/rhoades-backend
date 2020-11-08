@@ -1,6 +1,7 @@
 enum ErrorMessagesForLists {
   errorCreating = 'Hubo un error creando la lista.',
-  errorEnrolling = 'Hubo un problema inscribiendo al '
+  errorEnrolling = 'Hubo un problema inscribiendo al ',
+  errorGettingLists = 'Hubo un error tratando de obtener las listas registradas. '
 }
 
 enum MessagesForLists {

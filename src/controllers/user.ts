@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import admin from 'firebase-admin'
+import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom/index'
+import { List } from './list'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
 import { IUser } from '../interfaces/index'
-import { List } from './list'
 import { CFU, EFU, MFU } from './utils/index'
 import { mail, MFME, generatePassword } from '../utils/index'
 
@@ -59,13 +60,13 @@ class User {
 
       if ('postulating' in userData && userData.postulating)
         throw condition === 'teacher'
-          ? new Error(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}`)
-          : new Error(`${CFU.article}${CFU.student}${EFU.errorEnrolling1}`)
+          ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}`)
+          : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling1}`)
 
       if ('registered' in userData && userData.registered)
         throw condition === 'teacher'
-          ? new Error(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}`)
-          : new Error(`${CFU.article}${CFU.student}${EFU.errorEnrolling2}`)
+          ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}`)
+          : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling2}`)
 
       await this._usersRef.doc(userData.id as string).update({
         list       : listId,
@@ -91,8 +92,8 @@ class User {
         throw error
 
       throw condition === 'teacher'
-        ? new Error(`${EFU.errorEnrolling}${CFU.pTeacher}`)
-        : new Error(`${EFU.errorEnrolling}${CFU.pStudent}`)
+        ? new httpErrors.InternalServerError(`${EFU.errorEnrolling}${CFU.pTeacher}`)
+        : new httpErrors.InternalServerError(`${EFU.errorEnrolling}${CFU.pStudent}`)
     }
   }
 
@@ -117,7 +118,7 @@ class User {
       } else if ('optionalMail' in data && data.optionalMail !== '')
         await mail(data.optionalMail as string, newPassword.password)
       else
-        throw new Error(EFU.userHasNotMail)
+        throw new httpErrors.Conflict(EFU.userHasNotMail)
 
       // Updating that the user is registered
       await this._usersRef
@@ -137,7 +138,7 @@ class User {
 
       if (error.message === MFME.generic) throw error
 
-      throw new Error(EFU.errorNotifying)
+      throw new httpErrors.InternalServerError(EFU.errorNotifying)
     }
   }
 
@@ -151,8 +152,9 @@ class User {
         .get()
 
       if (result.docs.length === 0)
-        if (condition === 'teacher') throw new Error(EFU.teacherNotFound)
-        else throw new Error(EFU.studentNotFound)
+        if (condition === 'teacher')
+          throw new httpErrors.BadRequest(EFU.teacherNotFound)
+        else throw new httpErrors.BadRequest(EFU.studentNotFound)
 
       result.docs.forEach(
         (
@@ -185,8 +187,8 @@ class User {
         throw error
 
       throw condition === 'teacher'
-        ? new Error(`${EFU.errorVerifying}${CFU.pTeacher}`)
-        : new Error(`${EFU.errorVerifying}${CFU.pStudent}`)
+        ? new httpErrors.InternalServerError(`${EFU.errorVerifying}${CFU.pTeacher}`)
+        : new httpErrors.InternalServerError(`${EFU.errorVerifying}${CFU.pStudent}`)
     }
   }
 }

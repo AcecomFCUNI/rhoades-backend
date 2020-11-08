@@ -4,7 +4,7 @@ import { response } from '../network/index'
 const Home = Router()
 
 Home.route('')
-  .get((req: Request, res: Response) => {
+  .get((req: Request, res: Response): void => {
     response(
       false,
       'Welcome to Rhoades\'s backend!',

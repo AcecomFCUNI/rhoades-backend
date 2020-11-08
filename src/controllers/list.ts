@@ -1,8 +1,9 @@
 /* eslint-disable no-extra-parens */
 import firestore from '@google-cloud/firestore'
+import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom/index'
 import { DtoList } from '../dto-interfaces/index'
-import { CFU, EFL } from './utils/index'
+import { CFU, EFL, EFU } from './utils/index'
 import { PATA } from '../utils/constants'
 import { IList, IUser } from '../interfaces/index'
 
@@ -55,7 +56,7 @@ class List {
     } catch (error) {
       console.error(error)
 
-      throw new Error(EFL.errorCreating)
+      throw new httpErrors.InternalServerError(EFL.errorCreating)
     }
   }
 
@@ -89,7 +90,7 @@ class List {
 
       if (teacherLists.length > 0)
         teacherLists[0].applicants = await this._getDetailUserData(
-          'teachers',
+          'teacher',
           teacherLists[0]
         )
 
@@ -106,7 +107,7 @@ class List {
 
       if (studentLists.length > 0)
         studentLists[0].applicants = await this._getDetailUserData(
-          'students',
+          'student',
           studentLists[0]
         )
 
@@ -126,9 +127,9 @@ class List {
   // eslint-disable-next-line class-methods-use-this
   private async _getDetailUserData (
     condition: string,
-    iList: IList
+    iList    : IList
   ): Promise<IUser[]> {
-    const collectionRef = global.firestoreDB.collection(condition)
+    const collectionRef = global.firestoreDB.collection('users')
     const length = iList?.applicants?.length as number
     const users: IUser[] = []
     let user: firestore.DocumentSnapshot<firestore.DocumentData>
@@ -150,7 +151,10 @@ class List {
       return users
     } catch (error) {
       console.error(error)
-      throw new Error('User does not exists')
+
+      throw condition === 'teacher'
+        ? new httpErrors.BadRequest(EFU.teacherNotFound)
+        : new httpErrors.BadRequest(EFU.studentNotFound)
     }
   }
 
@@ -163,8 +167,8 @@ class List {
       console.error(error)
 
       throw condition === 'teacher'
-        ? new Error(`${EFL.errorEnrolling}${CFU.pTeacher}`)
-        : new Error(`${EFL.errorEnrolling}${CFU.pStudent}`)
+        ? new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pTeacher}`)
+        : new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pStudent}`)
     }
   }
 }

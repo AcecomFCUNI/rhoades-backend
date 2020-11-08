@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.13.0"
+    "version": "0.14.0"
   },
   "servers": [
     {
@@ -18,14 +18,14 @@
       "description": "Rhoades prod API"
     },
     {
-      "url": "https://acecom-rhoades-dev.herokuapp.com/",
+      "url": "https://acecom-rhoades-dev.herokuapp.com/api/",
       "description": "Rhoades dev API"
     }
   ],
   "tags": [
     {
       "name": "user",
-      "description": "Operations about a teacher or student that belongs to the CEUNI's pattern"
+      "description": "Operations about a teacher or student that belongs to the CEUNI's electoral roll"
     },
     {
       "name": "list",
