@@ -171,9 +171,7 @@ class User {
         .get()
 
       if (result.docs.length === 0)
-        throw this._args.condition === 'teacher'
-          ? new httpErrors.NotFound(EFU.teacherNotFound)
-          : new httpErrors.NotFound(EFU.studentNotFound)
+        throw new httpErrors.NotFound(EFU.userNotFound)
 
       result.docs.forEach(
         (
@@ -199,15 +197,10 @@ class User {
     } catch (error) {
       console.error(error)
 
-      if (
-        error.message === EFU.teacherNotFound ||
-        error.message === EFU.studentNotFound
-      )
+      if (error.message === EFU.userNotFound)
         throw error
 
-      throw this._args?.condition === 'teacher'
-        ? new httpErrors.InternalServerError(`${EFU.errorVerifying}${CFU.pTeacher}`)
-        : new httpErrors.InternalServerError(`${EFU.errorVerifying}${CFU.pStudent}`)
+      throw new httpErrors.InternalServerError(EFU.errorVerifyingUser)
     }
   }
 }

@@ -10,9 +10,8 @@ const User = Router()
 User.route('/user/verify/:code')
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const { params: { code }, query: { condition, documentType } } = req
+      const { params: { code }, query: { documentType } } = req
       const user = {
-        condition,
         documentNumber: code,
         documentType
       } as DtoUser
@@ -20,7 +19,7 @@ User.route('/user/verify/:code')
       try {
         await userSchema.validateAsync(user)
         const uc = new UserC(user)
-        const result = await uc.process('verify', condition)
+        const result = await uc.process('verify')
 
         response(false, { result }, res, 200)
       } catch (error) {

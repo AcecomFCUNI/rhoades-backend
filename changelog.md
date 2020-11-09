@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.15.1
+
+- Fixed:
+  - Removed `condition` from query params in the `verify endpoint`.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.15.0
 
 - Implemented:

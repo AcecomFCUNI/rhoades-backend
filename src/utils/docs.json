@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.15.0"
+    "version": "0.15.1"
   },
   "servers": [
     {
@@ -25,7 +25,7 @@
   "tags": [
     {
       "name": "user",
-      "description": "Operations about a teacher or student that belongs to the CEUNIs electoral roll"
+      "description": "Operations about a teacher or student that belongs to the CEUNI's electoral roll"
     },
     {
       "name": "list",
@@ -48,18 +48,6 @@
             "explode": false,
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "condition",
-            "in": "query",
-            "description": "Either teacher or student.",
-            "required": true,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string",
-              "enum": ["teacher", "student"]
             }
           },
           {
