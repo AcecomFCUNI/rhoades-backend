@@ -3,6 +3,7 @@ import { mail } from './mailer'
 import { MFE, MFME } from './messages'
 import { PATA } from './constants'
 import { decryptMessage, encryptMessage, generatePassword } from './security'
+import { response } from './response'
 
 export {
   docs,
@@ -12,5 +13,6 @@ export {
   PATA,
   decryptMessage,
   encryptMessage,
-  generatePassword
+  generatePassword,
+  response
 }

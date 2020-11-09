@@ -25,31 +25,35 @@ class User {
 
   public process (
     type      : string,
-    condition?: string,
     listId?   : string
   ): Promise<IUser> | Promise<string> | undefined {
     switch (type) {
-      case 'enrollStudent':
-        return this._enroll('student', listId as string)
-      case 'enrollTeacher':
-        return this._enroll('teacher', listId as string)
+      case 'enroll':
+        return this._enroll(listId as string)
       case 'notify':
         return this._notify()
       case 'verify':
-        return this._verify(condition as string)
+        return this._verify()
       default:
         return undefined
     }
   }
 
-  private async _enroll (condition: string, listId: string): Promise<IUser> {
+  private async _enroll (listId: string): Promise<IUser> {
     const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
     let user: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 
     try {
+      console.log(this._args)
       user = await this._usersRef
-        .where(document, '==', `${this._args?.documentNumber}`)
+        .where(document, '==', this._args?.documentNumber as string)
+        .where('condition', '==', this._args?.condition as string)
         .get()
+
+      if (user.docs.length === 0)
+        throw this._args?.condition === 'teacher'
+          ? new httpErrors.NotFound(EFU.teacherNotFound)
+          : new httpErrors.NotFound(EFU.studentNotFound)
 
       const userData = user.docs.map((doc: any) => {
         return {
@@ -59,12 +63,12 @@ class User {
       })[0]
 
       if ('postulating' in userData && userData.postulating)
-        throw condition === 'teacher'
+        throw this._args?.condition === 'teacher'
           ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}`)
           : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling1}`)
 
       if ('registered' in userData && userData.registered)
-        throw condition === 'teacher'
+        throw this._args?.condition === 'teacher'
           ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}`)
           : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling2}`)
 
@@ -76,22 +80,26 @@ class User {
       const l = new List({
         id   : listId,
         owner: userData.id as string,
-        type : condition
+        type : this._args?.condition as string
       } as DtoList)
 
-      await l.enroll(userData.id as string, condition)
+      await l.enroll(userData.id as string, this._args?.condition as string)
 
       return userData
     } catch (error) {
       console.error(error)
 
       if (
+        error.message === EFU.teacherNotFound ||
+        error.message === EFU.studentNotFound ||
         error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}` ||
-        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling1}`
+        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling1}` ||
+        error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}` ||
+        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling2}`
       )
         throw error
 
-      throw condition === 'teacher'
+      throw this._args?.condition === 'teacher'
         ? new httpErrors.InternalServerError(`${EFU.errorEnrolling}${CFU.pTeacher}`)
         : new httpErrors.InternalServerError(`${EFU.errorEnrolling}${CFU.pStudent}`)
     }
@@ -105,6 +113,11 @@ class User {
     try {
       const newPassword = generatePassword(KEY_PASSWORD)
       result = await this._usersRef.doc(this._args.id as string).get()
+
+      if (!result.data())
+        throw this._args.condition === 'teacher'
+          ? new httpErrors.NotFound(EFU.teacherNotFound)
+          : new httpErrors.NotFound(EFU.studentNotFound)
 
       const data = {
         ...result.data(),
@@ -136,13 +149,19 @@ class User {
     } catch (error) {
       console.log(error)
 
-      if (error.message === MFME.generic) throw error
+      if (
+        error.message === MFME.generic ||
+        error.message === EFU.userHasNotMail ||
+        error.message === EFU.studentNotFound ||
+        error.message === EFU.teacherNotFound
+      )
+        throw error
 
       throw new httpErrors.InternalServerError(EFU.errorNotifying)
     }
   }
 
-  private async _verify (condition: string): Promise<IUser> {
+  private async _verify (): Promise<IUser> {
     const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
     let result: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 
@@ -152,9 +171,9 @@ class User {
         .get()
 
       if (result.docs.length === 0)
-        if (condition === 'teacher')
-          throw new httpErrors.BadRequest(EFU.teacherNotFound)
-        else throw new httpErrors.BadRequest(EFU.studentNotFound)
+        throw this._args.condition === 'teacher'
+          ? new httpErrors.NotFound(EFU.teacherNotFound)
+          : new httpErrors.NotFound(EFU.studentNotFound)
 
       result.docs.forEach(
         (
@@ -186,7 +205,7 @@ class User {
       )
         throw error
 
-      throw condition === 'teacher'
+      throw this._args?.condition === 'teacher'
         ? new httpErrors.InternalServerError(`${EFU.errorVerifying}${CFU.pTeacher}`)
         : new httpErrors.InternalServerError(`${EFU.errorVerifying}${CFU.pStudent}`)
     }

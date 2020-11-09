@@ -3,7 +3,7 @@ import firestore from '@google-cloud/firestore'
 import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom/index'
 import { DtoList } from '../dto-interfaces/index'
-import { CFU, EFL, EFU } from './utils/index'
+import { CFU, EFL } from './utils/index'
 import { PATA } from '../utils/constants'
 import { IList, IUser } from '../interfaces/index'
 
@@ -21,7 +21,8 @@ class List {
   }
 
   public process (
-    type: string
+    type      : string,
+    condition?: string
   ):
     | Promise<IList>
     | Promise<{
@@ -33,7 +34,7 @@ class List {
       case 'createList':
         return this._createList()
       case 'getListsOfUser':
-        return this._getListsOfUser()
+        return this._getListsOfUser(condition as string)
       default:
         return undefined
     }
@@ -60,7 +61,7 @@ class List {
     }
   }
 
-  private async _getListsOfUser (): Promise<{
+  private async _getListsOfUser (condition: string): Promise<{
     students: IList
     teachers: IList
   }> {
@@ -68,6 +69,12 @@ class List {
       const lists = await this._listRef
         .where('owner', '==', this._args.owner as string)
         .get()
+
+      if (lists.docs.length === 0)
+        throw condition === 'teacher'
+          ? new httpErrors.NotFound(`${CFU.article}${CFU.teacher}${EFL.noList}`)
+          : new httpErrors.NotFound(`${CFU.article}${CFU.student}${EFL.noList}`)
+
       const listsData = lists.docs.map(doc => {
         return {
           ...doc.data(),
@@ -77,11 +84,11 @@ class List {
 
       const teacherLists = listsData.filter(list => {
         if (
-          list.type === PATA.au ||
-          list.type === PATA.fc ||
-          list.type === PATA.cu ||
           list.type === PATA.d ||
-          list.type === PATA.r
+          list.type === PATA.fc ||
+          list.type === PATA.r ||
+          list.type === PATA.ua ||
+          list.type === PATA.uc
         )
           return list
 
@@ -90,15 +97,14 @@ class List {
 
       if (teacherLists.length > 0)
         teacherLists[0].applicants = await this._getDetailUserData(
-          'teacher',
           teacherLists[0]
         )
 
       const studentLists = listsData.filter(list => {
         if (
           list.type === PATA.tof ||
-          list.type === PATA.tua ||
-          list.type === PATA.tuc
+          list.type === PATA.uta ||
+          list.type === PATA.utc
         )
           return list
 
@@ -107,7 +113,6 @@ class List {
 
       if (studentLists.length > 0)
         studentLists[0].applicants = await this._getDetailUserData(
-          'student',
           studentLists[0]
         )
 
@@ -125,10 +130,7 @@ class List {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private async _getDetailUserData (
-    condition: string,
-    iList    : IList
-  ): Promise<IUser[]> {
+  private async _getDetailUserData (iList: IList): Promise<IUser[]> {
     const collectionRef = global.firestoreDB.collection('users')
     const length = iList?.applicants?.length as number
     const users: IUser[] = []
@@ -152,9 +154,7 @@ class List {
     } catch (error) {
       console.error(error)
 
-      throw condition === 'teacher'
-        ? new httpErrors.BadRequest(EFU.teacherNotFound)
-        : new httpErrors.BadRequest(EFU.studentNotFound)
+      throw new httpErrors.InternalServerError(EFL.errorGettingLists)
     }
   }
 

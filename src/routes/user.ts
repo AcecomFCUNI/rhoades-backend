@@ -1,8 +1,9 @@
 import { NextFunction, Router } from 'express'
 import { Request, Response } from '../custom/index'
 import { User as UserC } from '../controllers/index'
-import { response } from '../network/index'
+import { response } from '../utils/index'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
+import { userSchema } from '../schemas/user'
 
 const User = Router()
 
@@ -10,15 +11,20 @@ User.route('/user/verify/:code')
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { code }, query: { condition, documentType } } = req
-      const uc = new UserC({
+      const user = {
+        condition,
         documentNumber: code,
         documentType
-      } as DtoUser)
+      } as DtoUser
 
       try {
+        await userSchema.validateAsync(user)
+        const uc = new UserC(user)
         const result = await uc.process('verify', condition)
+
         response(false, { result }, res, 200)
       } catch (error) {
+        if (error.isJoi) error.status = 422
         next(error)
       }
     }
@@ -27,13 +33,20 @@ User.route('/user/verify/:code')
 User.route('/user/notify')
   .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const { body: { args } } = req
-      const uc = new UserC(args as DtoUser)
+      const { body: { args }, query: { condition } } = req
+      const user = {
+        condition: condition as string,
+        id       : args?.id as string
+      } as DtoUser
 
       try {
+        await userSchema.validateAsync(user)
+        const uc = new UserC(user)
         const result = await uc.process('notify')
+
         response(false, { result }, res, 200)
       } catch (error) {
+        if (error.isJoi) error.status = 422
         next(error)
       }
     }
@@ -47,17 +60,21 @@ User.route('/user/enroll/:code')
         params: { code },
         query : { condition, documentType }
       } = req
-      const uc = new UserC({
+      const user = {
+        condition     : condition as string,
         documentNumber: code as string,
         documentType  : documentType as string
-      } as DtoUser)
-      const { id } = args as DtoList
-      const process = condition === 'teacher' ? 'enrollTeacher' : 'enrollStudent'
+      } as DtoUser
 
       try {
-        const result = await uc.process(process, undefined, id as string)
+        await userSchema.validateAsync(user)
+        const uc = new UserC(user)
+        const { id } = args as DtoList
+        const result = await uc.process('enroll', id as string)
+
         response(true, { result }, res, 200)
       } catch (error) {
+        if (error.isJoi) error.status = 422
         next(error)
       }
     }

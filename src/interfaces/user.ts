@@ -1,5 +1,6 @@
 export interface IUser {
   UNICode?       : string
+  condition      : string
   documentNumber?: string
   documentType?  : string
   faculty?       : string

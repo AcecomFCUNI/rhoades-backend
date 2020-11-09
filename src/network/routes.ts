@@ -3,7 +3,7 @@ import httpErrors from 'http-errors'
 import { Application, Response, Request, Router, NextFunction } from 'express'
 import { docs } from '../utils/index'
 import { Auth, Home, List, User } from '../routes/index'
-import { response } from './response'
+import { response } from '../utils/response'
 
 const routers = [List, User]
 
