@@ -7,7 +7,7 @@ Home.route('')
   .get((req: Request, res: Response): void => {
     response(
       false,
-      'Welcome to Rhoades\'s backend!',
+      { result: 'Welcome to Rhoades\'s backend!' },
       res,
       200
     )

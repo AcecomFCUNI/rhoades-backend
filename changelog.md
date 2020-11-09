@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.15.2
+
+- Fixed:
+  - Standardization of response objects, strings are no longer allowed.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.15.1
 
 - Fixed:
