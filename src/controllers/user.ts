@@ -44,23 +44,24 @@ class User {
 
     try {
       let userData = await this._getUserData(document)
+      const listData = await new List(list).getListData()
 
-      const isATeacherList = list.type === PATA.d ||
-        list.type === PATA.fc ||
-        list.type === PATA.r ||
-        list.type === PATA. ua ||
-        list.type === PATA.uc
+      const isATeacherList = listData.type === PATA.d ||
+        listData.type === PATA.fc ||
+        listData.type === PATA.r ||
+        listData.type === PATA. ua ||
+        listData.type === PATA.uc
 
       if (userData.condition === 'teacher')
         if (isATeacherList)
-          await this._validateAndEnroll(userData, list)
+          await this._validateAndEnroll(userData, new List(list))
         else
-          throw new httpErrors.BadRequest(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling4}`)
+          throw new httpErrors.BadRequest(`${CFU.indefiniteArticle}${CFU.teacher}${EFU.errorEnrolling4}${CFU.student}s.`)
       else
         if (isATeacherList)
-          throw new httpErrors.BadRequest(`${CFU.article}${CFU.student}${EFU.errorEnrolling4}`)
+          throw new httpErrors.BadRequest(`${CFU.indefiniteArticle}${CFU.student}${EFU.errorEnrolling4}${CFU.teacher}s.`)
         else
-          await this._validateAndEnroll(userData, list)
+          await this._validateAndEnroll(userData, new List(list))
 
       userData = await this._getUserData(document)
 
@@ -71,14 +72,14 @@ class User {
       if (
         error.message === EFU.teacherNotFound ||
         error.message === EFU.studentNotFound ||
-        error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}` ||
-        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling1}` ||
-        error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}` ||
-        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling2}` ||
-        error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling3}` ||
-        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling3}` ||
-        error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling4}` ||
-        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling4}`
+        error.message === `${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling1}` ||
+        error.message === `${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling1}` ||
+        error.message === `${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling2}` ||
+        error.message === `${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling2}` ||
+        error.message === `${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling3}` ||
+        error.message === `${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling3}` ||
+        error.message === `${CFU.indefiniteArticle}${CFU.teacher}${EFU.errorEnrolling4}${CFU.student}s.` ||
+        error.message === `${CFU.indefiniteArticle}${CFU.student}${EFU.errorEnrolling4}${CFU.teacher}s.`
       )
         throw error
 
@@ -157,25 +158,29 @@ class User {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private async _validateAndEnroll (userData: IUser, list: DtoList) {
-    if ('postulation' in userData || userData.postulating)
+  private async _validateAndEnroll (userData: IUser, list: List) {
+    if ('postulating' in userData || userData.postulating)
       throw userData.condition === 'teacher'
-        ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}`)
-        : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling1}`)
+        ? new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling1}`)
+        : new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling1}`)
 
     if ('registered' in userData || userData.registered)
       throw userData.condition === 'teacher'
-        ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}`)
-        : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling2}`)
+        ? new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling2}`)
+        : new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling2}`)
 
     if ('committeeMember' in userData || userData.committeeMember)
       throw userData.condition === 'teacher'
-        ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling3}`)
-        : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling3}`)
+        ? new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling3}`)
+        : new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling3}`)
 
-    const l = new List(list)
+    await this._usersRef
+      .doc(userData.id as string)
+      .update({ postulating: true })
 
-    await l.enroll(userData)
+    // const l = new List(list)
+
+    await list.enroll(userData)
   }
 
   private async _getUserData (document?: string): Promise<IUser> {

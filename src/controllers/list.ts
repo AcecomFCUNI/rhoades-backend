@@ -72,8 +72,8 @@ class List {
 
       if (lists.docs.length === 0)
         throw condition === 'teacher'
-          ? new httpErrors.NotFound(`${CFU.article}${CFU.teacher}${EFL.noList}`)
-          : new httpErrors.NotFound(`${CFU.article}${CFU.student}${EFL.noList}`)
+          ? new httpErrors.NotFound(`${CFU.definiteArticle}${CFU.teacher}${EFL.noList}`)
+          : new httpErrors.NotFound(`${CFU.definiteArticle}${CFU.student}${EFL.noList}`)
 
       const listsData = lists.docs.map(doc => {
         return {
@@ -170,6 +170,12 @@ class List {
         ? new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pTeacher}`)
         : new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pStudent}`)
     }
+  }
+
+  public async getListData (): Promise<IList> {
+    const list = await this._listRef.doc(this._args.id as string).get()
+
+    return list
   }
 }
 

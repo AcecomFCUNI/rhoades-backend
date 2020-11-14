@@ -1,16 +1,23 @@
 # Rhoades Backend
 
+## Version 0.15.6
+
+- Fixed:
+  - Removed type from body of `user/enroll:code` route.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.15.5
 
 - Fixed:
-  - Removed condition from the `user/enroll:code` route.
+  - Removed condition from from query of `user/enroll:code` route.
 - TODO:
   - Implement single use token.
 
 ## Version 0.15.4
 
 - Fixed:
-  - Removed condition from the `user/notify` route.
+  - Removed condition from query of the `user/notify` route.
 - TODO:
   - Implement single use token.
 

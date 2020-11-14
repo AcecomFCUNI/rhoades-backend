@@ -1,5 +1,6 @@
 enum ConstantsForUsers {
-  article = 'El ',
+  definiteArticle = 'El ',
+  indefiniteArticle = 'Un ',
   pStudent = 'estudiante.',
   pTeacher = 'docente.',
   student = 'estudiante',
@@ -11,7 +12,7 @@ enum ErrorMessagesForUsers {
   errorEnrolling1 = ' ya se encuentra postulando.',
   errorEnrolling2 = ' es personero y por lo tanto no puede postular.',
   errorEnrolling3 = ' es miembro del comité y por lo tanto no puede postular.',
-  errorEnrolling4 = ' no puede postular a una lista que no es de su estamento.',
+  errorEnrolling4 = ' no puede postular con una lista de ',
   errorNotifying = 'Hubo un error generando la contraseña del usuario.',
   errorVerifying = 'Hubo un error mientras se intentaba verificar el ',
   errorVerifyingUser = 'Hubo un error verificando al usuario.',

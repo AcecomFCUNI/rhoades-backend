@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.15.4"
+    "version": "0.15.6"
   },
   "servers": [
     {
@@ -251,8 +251,9 @@
       "post": {
         "tags": ["list"],
         "summary": "Create a list to postulate.",
+        "operationId": "createList",
         "requestBody": {
-          "$ref": "#/components/requestBodies/SimpleDtoList"
+          "$ref": "#/components/requestBodies/DtoListWithoutId"
         },
         "responses": {
           "200": {
@@ -292,6 +293,7 @@
       "get": {
         "tags": ["list"],
         "summary": "Get all the list that a user has registered.",
+        "operationId": "getListsOfUser",
         "parameters": [
           {
             "name": "id",
@@ -531,7 +533,7 @@
         "required": true
       },
       "SimpleDtoList": {
-        "description": "Id and type of the list",
+        "description": "List id from Firebase",
         "content": {
           "application/json": {
             "schema": {
@@ -543,19 +545,6 @@
                     "id": {
                       "type": "string",
                       "description": "Firebase id"
-                    },
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "dean",
-                        "faculty-council",
-                        "rector",
-                        "university-assembly",
-                        "university-council",
-                        "third-of-faculty",
-                        "university-third-assembly",
-                        "university-third-council"
-                      ]
                     }
                   }
                 }
@@ -597,7 +586,6 @@
             }
           }
         }
-
       }
     }
   }

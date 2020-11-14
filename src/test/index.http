@@ -23,3 +23,24 @@ Content-Type: application/json
     "id": "DpLrOXMgtDnRkDAqU2U2"
   }
 }
+
+### Testing list/createList
+POST http://localhost:3000/api/list/createList
+Content-Type: application/json
+
+{
+  "args": {
+    "owner": "pTA0tyvx3NjgGhic27k5",
+    "type": "third-of-faculty"
+  }
+}
+
+### Testing user/enrollList
+POST http://localhost:3000/api/user/enroll/19968665E?documentType=1
+Content-Type: application/json
+
+{
+  "args": {
+    "id": "Ko2C6skVaA6Teog0dliY"
+  }
+}
