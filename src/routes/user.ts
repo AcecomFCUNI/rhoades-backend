@@ -4,6 +4,7 @@ import { User as UserC } from '../controllers/index'
 import { response } from '../utils/index'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
 import { userSchema } from '../schemas/user'
+import { listSchema } from '../schemas'
 
 const User = Router()
 
@@ -56,19 +57,19 @@ User.route('/user/enroll/:code')
       const {
         body  : { args },
         params: { code },
-        query : { condition, documentType }
+        query : { documentType }
       } = req
       const user = {
-        condition     : condition as string,
         documentNumber: code as string,
         documentType  : documentType as string
       } as DtoUser
 
       try {
         await userSchema.validateAsync(user)
+        await listSchema.validateAsync(args as DtoList)
+
         const uc = new UserC(user)
-        const { id } = args as DtoList
-        const result = await uc.process('enroll', id as string)
+        const result = await uc.process('enroll', args as DtoList)
 
         response(true, { result }, res, 200)
       } catch (error) {

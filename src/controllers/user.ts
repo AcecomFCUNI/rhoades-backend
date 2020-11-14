@@ -6,7 +6,7 @@ import { List } from './list'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
 import { IUser } from '../interfaces/index'
 import { CFU, EFU, MFU } from './utils/index'
-import { mail, MFME, generatePassword } from '../utils/index'
+import { mail, MFME, generatePassword, PATA } from '../utils/index'
 
 declare const global: CustomNodeJSGlobal
 const KEY_PASSWORD = process.env.KEY_PASSWORD as string
@@ -24,12 +24,12 @@ class User {
   }
 
   public process (
-    type      : string,
-    listId?   : string
+    type : string,
+    list?: DtoList
   ): Promise<IUser> | Promise<string> | undefined {
     switch (type) {
       case 'enroll':
-        return this._enroll(listId as string)
+        return this._enroll(list as DtoList)
       case 'notify':
         return this._notify()
       case 'verify':
@@ -39,51 +39,30 @@ class User {
     }
   }
 
-  private async _enroll (listId: string): Promise<IUser> {
+  private async _enroll (list: DtoList): Promise<IUser> {
     const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
-    let user: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
 
     try {
-      console.log(this._args)
-      user = await this._usersRef
-        .where(document, '==', this._args?.documentNumber as string)
-        .where('condition', '==', this._args?.condition as string)
-        .get()
+      let userData = await this._getUserData(document)
 
-      if (user.docs.length === 0)
-        throw this._args?.condition === 'teacher'
-          ? new httpErrors.NotFound(EFU.teacherNotFound)
-          : new httpErrors.NotFound(EFU.studentNotFound)
+      const isATeacherList = list.type === PATA.d ||
+        list.type === PATA.fc ||
+        list.type === PATA.r ||
+        list.type === PATA. ua ||
+        list.type === PATA.uc
 
-      const userData = user.docs.map((doc: any) => {
-        return {
-          ...doc.data(),
-          id: doc.id
-        } as IUser
-      })[0]
+      if (userData.condition === 'teacher')
+        if (isATeacherList)
+          await this._validateAndEnroll(userData, list)
+        else
+          throw new httpErrors.BadRequest(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling4}`)
+      else
+        if (isATeacherList)
+          throw new httpErrors.BadRequest(`${CFU.article}${CFU.student}${EFU.errorEnrolling4}`)
+        else
+          await this._validateAndEnroll(userData, list)
 
-      if ('postulating' in userData && userData.postulating)
-        throw this._args?.condition === 'teacher'
-          ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}`)
-          : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling1}`)
-
-      if ('registered' in userData && userData.registered)
-        throw this._args?.condition === 'teacher'
-          ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}`)
-          : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling2}`)
-
-      await this._usersRef.doc(userData.id as string).update({
-        list       : listId,
-        postulating: true
-      })
-
-      const l = new List({
-        id   : listId,
-        owner: userData.id as string,
-        type : this._args?.condition as string
-      } as DtoList)
-
-      await l.enroll(userData.id as string, this._args?.condition as string)
+      userData = await this._getUserData(document)
 
       return userData
     } catch (error) {
@@ -95,7 +74,11 @@ class User {
         error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}` ||
         error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling1}` ||
         error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}` ||
-        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling2}`
+        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling2}` ||
+        error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling3}` ||
+        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling3}` ||
+        error.message === `${CFU.article}${CFU.teacher}${EFU.errorEnrolling4}` ||
+        error.message === `${CFU.article}${CFU.student}${EFU.errorEnrolling4}`
       )
         throw error
 
@@ -106,41 +89,31 @@ class User {
   }
 
   private async _notify (): Promise<string> {
-    // eslint-disable-next-line max-len
-    let result: FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>
     let hasEmail = false
 
     try {
       const newPassword = generatePassword(KEY_PASSWORD)
-      result = await this._usersRef.doc(this._args.id as string).get()
-
-      if (!result.data())
-        throw new httpErrors.NotFound(EFU.userNotFound)
-
-      const data = {
-        ...result.data(),
-        id: this._args.id as string
-      } as IUser
+      const user = await this._getUserData()
 
       // Verify if the user has email
-      if ('mail' in data && data.mail !== '') {
+      if ('mail' in user && user.mail !== '') {
         hasEmail = true
-        await mail(data.mail as string, newPassword.password)
-      } else if ('optionalMail' in data && data.optionalMail !== '')
-        await mail(data.optionalMail as string, newPassword.password)
+        await mail(user.mail as string, newPassword.password)
+      } else if ('optionalMail' in user && user.optionalMail !== '')
+        await mail(user.optionalMail as string, newPassword.password)
       else
         throw new httpErrors.Conflict(EFU.userHasNotMail)
 
       // Updating that the user is registered
       await this._usersRef
-        .doc(data.id as string)
+        .doc(user.id as string)
         .update({ registered: true })
 
       // Registering the user into Firebase Authentication
       await admin.auth().createUser({
-        email   : hasEmail ? data.mail: data.optionalMail,
+        email   : hasEmail ? user.mail: user.optionalMail,
         password: newPassword.password,
-        uid     : data.id as string
+        uid     : user.id as string
       })
 
       return MFU.updateAndNotifySuccess
@@ -160,37 +133,19 @@ class User {
 
   private async _verify (): Promise<IUser> {
     const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
-    let result: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+    let user: IUser
 
     try {
-      result = await this._usersRef
-        .where(document, '==', `${this._args?.documentNumber}`)
-        .get()
+      user = await this._getUserData(document)
 
-      if (result.docs.length === 0)
-        throw new httpErrors.NotFound(EFU.userNotFound)
-
-      result.docs.forEach(
-        (
-          doc: FirebaseFirestore.QueryDocumentSnapshot<
-            FirebaseFirestore.DocumentData
-          >
-        ) => {
-          this._result.push({
-            id        : doc.id,
-            lastName  : doc.data().lastName,
-            mail      : doc.data().mail || doc.data().optionalMail || '',
-            names     : doc.data().names,
-            registered:
-              doc.data().registered === undefined
-                ? false
-                : doc.data().registered,
-            secondLastName: doc.data().secondLastName
-          } as IUser)
-        }
-      )
-
-      return this._result[0]
+      return {
+        id            : user.id,
+        lastName      : user.lastName,
+        mail          : user.mail || user.optionalMail || '',
+        names         : user.names,
+        registered    : !user.registered ? false : user.registered,
+        secondLastName: user.secondLastName
+      } as IUser
     } catch (error) {
       console.error(error)
 
@@ -199,6 +154,60 @@ class User {
 
       throw new httpErrors.InternalServerError(EFU.errorVerifyingUser)
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private async _validateAndEnroll (userData: IUser, list: DtoList) {
+    if ('postulation' in userData || userData.postulating)
+      throw userData.condition === 'teacher'
+        ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling1}`)
+        : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling1}`)
+
+    if ('registered' in userData || userData.registered)
+      throw userData.condition === 'teacher'
+        ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling2}`)
+        : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling2}`)
+
+    if ('committeeMember' in userData || userData.committeeMember)
+      throw userData.condition === 'teacher'
+        ? new httpErrors.Conflict(`${CFU.article}${CFU.teacher}${EFU.errorEnrolling3}`)
+        : new httpErrors.Conflict(`${CFU.article}${CFU.student}${EFU.errorEnrolling3}`)
+
+    const l = new List(list)
+
+    await l.enroll(userData)
+  }
+
+  private async _getUserData (document?: string): Promise<IUser> {
+    let user:
+      | FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
+      | FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>
+
+    if (document) {
+      user = await this._usersRef
+        .where(document as string, '==', this._args?.documentNumber as string)
+        .get()
+
+      if (user.docs.length === 0)
+        throw new httpErrors.NotFound(EFU.userNotFound)
+
+      return user.docs.map(doc => {
+        return {
+          ...doc.data(),
+          id: doc.id
+        } as IUser
+      })[0]
+    }
+
+    user = await this._usersRef.doc(this._args?.id as string).get()
+
+    if (!user.data())
+      throw new httpErrors.NotFound(EFU.userNotFound)
+
+    return {
+      ...user.data(),
+      id: this._args.id as string
+    } as IUser
   }
 }
 

@@ -10,6 +10,8 @@ enum ErrorMessagesForUsers {
   errorEnrolling = 'Hubo un error inscribiendo al ',
   errorEnrolling1 = ' ya se encuentra postulando.',
   errorEnrolling2 = ' es personero y por lo tanto no puede postular.',
+  errorEnrolling3 = ' es miembro del comité y por lo tanto no puede postular.',
+  errorEnrolling4 = ' no puede postular a una lista que no es de su estamento.',
   errorNotifying = 'Hubo un error generando la contraseña del usuario.',
   errorVerifying = 'Hubo un error mientras se intentaba verificar el ',
   errorVerifyingUser = 'Hubo un error verificando al usuario.',

@@ -158,15 +158,15 @@ class List {
     }
   }
 
-  public async enroll (idUser: string, condition: string): Promise<void> {
+  public async enroll (userData: IUser): Promise<void> {
     try {
       await this._listRef.doc(this._args.id as string).update({
-        applicants: firestore.FieldValue.arrayUnion(idUser)
+        applicants: firestore.FieldValue.arrayUnion(userData.id as string)
       })
     } catch (error) {
       console.error(error)
 
-      throw condition === 'teacher'
+      throw userData.condition === 'teacher'
         ? new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pTeacher}`)
         : new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pStudent}`)
     }

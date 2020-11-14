@@ -111,6 +111,7 @@
       "patch": {
         "tags": ["user"],
         "summary": "Sends the corresponding password to the user that has been registered.",
+        "operationId": "notifyUser",
         "requestBody": {
           "$ref": "#/components/requestBodies/SimpleDtoUser"
         },
@@ -162,6 +163,7 @@
       "post": {
         "tags": ["user"],
         "summary": "Enrolls a user into a list.",
+        "operationId": "enrollUser",
         "parameters": [
           {
             "name": "code",
@@ -173,18 +175,6 @@
             "schema": {
               "type": "string",
               "example": "20201001A"
-            }
-          },
-          {
-            "name": "condition",
-            "in": "query",
-            "description": "Either teacher or student.",
-            "required": true,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string",
-              "enum": ["teacher", "student"]
             }
           },
           {
@@ -201,7 +191,7 @@
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/SimpleDtoUser"
+          "$ref": "#/components/requestBodies/SimpleDtoList"
         },
         "responses": {
           "200": {
@@ -503,7 +493,8 @@
         "type": "object",
         "properties": {
           "error": {
-            "type": "boolean"
+            "type": "boolean",
+            "default": true
           },
           "message": {
             "type": "object",
@@ -540,6 +531,41 @@
         "required": true
       },
       "SimpleDtoList": {
+        "description": "Id and type of the list",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Firebase id"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "dean",
+                        "faculty-council",
+                        "rector",
+                        "university-assembly",
+                        "university-council",
+                        "third-of-faculty",
+                        "university-third-assembly",
+                        "university-third-council"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DtoListWithoutId": {
+        "description": "Owner and type of the list",
         "content": {
           "application/json": {
             "schema": {
@@ -571,6 +597,7 @@
             }
           }
         }
+
       }
     }
   }

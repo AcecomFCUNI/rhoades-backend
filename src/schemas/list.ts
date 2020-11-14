@@ -1,8 +1,8 @@
 import joi from 'joi'
 
 const listSchema = joi.object({
-  id   : joi.string(),
-  owner: joi.string(),
+  id   : joi.string().length(20),
+  owner: joi.string().length(20),
   type : joi
     .string()
     .valid(

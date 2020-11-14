@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.15.5
+
+- Fixed:
+  - Removed condition from the `user/enroll:code` route.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.15.4
 
 - Fixed:
