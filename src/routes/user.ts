@@ -32,10 +32,9 @@ User.route('/user/verify/:code')
 User.route('/user/notify')
   .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const { body: { args }, query: { condition } } = req
+      const { body: { args } } = req
       const user = {
-        condition: condition as string,
-        id       : args?.id as string
+        id: args?.id as string
       } as DtoUser
 
       try {

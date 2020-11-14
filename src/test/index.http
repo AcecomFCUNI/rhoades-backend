@@ -13,3 +13,13 @@ Content-Type: application/json
 
 ### Testing users/verify/:code route
 GET http://localhost:3000/api/user/verify/20140118I?documentType=2
+
+### Testing users/notify
+PATCH http://localhost:3000/api/user/notify
+Content-Type: application/json
+
+{
+  "args": {
+    "id": "DpLrOXMgtDnRkDAqU2U2"
+  }
+}

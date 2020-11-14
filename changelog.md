@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.15.4
+
+- Fixed:
+  - Removed condition from the `user/notify` route.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.15.3
 
 - Fixed:

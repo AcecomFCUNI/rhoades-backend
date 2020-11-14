@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.15.3"
+    "version": "0.15.4"
   },
   "servers": [
     {
@@ -111,20 +111,6 @@
       "patch": {
         "tags": ["user"],
         "summary": "Sends the corresponding password to the user that has been registered.",
-        "parameters": [
-          {
-            "name": "condition",
-            "in": "query",
-            "description": "Either teacher or student.",
-            "required": true,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string",
-              "enum": ["teacher", "student"]
-            }
-          }
-        ],
         "requestBody": {
           "$ref": "#/components/requestBodies/SimpleDtoUser"
         },
@@ -532,7 +518,7 @@
     },
     "requestBodies": {
       "SimpleDtoUser": {
-        "description": "id of users",
+        "description": "User id from Firebase",
         "content": {
           "application/json": {
             "schema": {

@@ -115,9 +115,7 @@ class User {
       result = await this._usersRef.doc(this._args.id as string).get()
 
       if (!result.data())
-        throw this._args.condition === 'teacher'
-          ? new httpErrors.NotFound(EFU.teacherNotFound)
-          : new httpErrors.NotFound(EFU.studentNotFound)
+        throw new httpErrors.NotFound(EFU.userNotFound)
 
       const data = {
         ...result.data(),
@@ -152,8 +150,7 @@ class User {
       if (
         error.message === MFME.generic ||
         error.message === EFU.userHasNotMail ||
-        error.message === EFU.studentNotFound ||
-        error.message === EFU.teacherNotFound
+        error.message === EFU.userNotFound
       )
         throw error
 
