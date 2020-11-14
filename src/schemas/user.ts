@@ -3,7 +3,7 @@ import joi from 'joi'
 const userSchema = joi.object({
   condition     : joi.string().valid('student', 'teacher'),
   documentNumber: joi.string(),
-  documentType  : joi.string().min(1).max(1),
+  documentType  : joi.string().min(1).max(1).valid('0', '1'),
   id            : joi.string()
 })
 

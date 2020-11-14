@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.15.3
+
+- Fixed:
+  - Error 422 in the route `user/verify/:code?documentType=[0,1]`.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.15.2
 
 - Fixed:
