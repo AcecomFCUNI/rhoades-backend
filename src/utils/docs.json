@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.15.6"
+    "version": "0.15.7"
   },
   "servers": [
     {
@@ -199,7 +199,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/EnrollUserResponse"
                 }
               }
             }
@@ -261,7 +261,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EmptyList"
+                  "$ref": "#/components/schemas/CreateListResponse"
                 }
               }
             }
@@ -313,7 +313,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/List"
+                  "$ref": "#/components/schemas/GetListOfUserResponse"
                 }
               }
             }
@@ -467,6 +467,65 @@
                   },
                   "secondLastName": {
                     "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "EnrollUserResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "default": false
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      },
+      "CreateListResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "default": false
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "$ref": "#/components/schemas/EmptyList"
+              }
+            }
+          }
+        }
+      },
+      "GetListOfUserResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "default": false
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "type": "object",
+                "properties": {
+                  "students": {
+                    "$ref": "#/components/schemas/List"
+                  },
+                  "teachers": {
+                    "$ref": "#/components/schemas/List"
                   }
                 }
               }

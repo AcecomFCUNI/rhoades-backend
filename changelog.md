@@ -1,16 +1,24 @@
 # Rhoades Backend
 
+## Version 0.15.7
+
+- Fixed:
+  - Documentation from the following endpoints: `user/enroll/:code`, `list/createList` and `list/getListsOfUser/:id`.
+  - `changelog.md` file.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.15.6
 
 - Fixed:
-  - Removed type from body of `user/enroll:code` route.
+  - Removed type from body of `user/enroll/:code` route.
 - TODO:
   - Implement single use token.
 
 ## Version 0.15.5
 
 - Fixed:
-  - Removed condition from from query of `user/enroll:code` route.
+  - Removed condition from from query of `user/enroll/:code` route.
 - TODO:
   - Implement single use token.
 
