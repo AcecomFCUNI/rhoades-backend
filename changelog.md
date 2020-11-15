@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.15.8
+
+- Fixed:
+  - Removed condition from query of `list/getListsOfUser/:id` route.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.15.7
 
 - Fixed:

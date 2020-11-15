@@ -21,20 +21,16 @@ class List {
   }
 
   public process (
-    type      : string,
-    condition?: string
+    type: string
   ):
     | Promise<IList>
-    | Promise<{
-        students: IList
-        teachers: IList
-      }>
+    | Promise<Record<string, unknown>>
     | undefined {
     switch (type) {
       case 'createList':
         return this._createList()
       case 'getListsOfUser':
-        return this._getListsOfUser(condition as string)
+        return this._getListsOfUser()
       default:
         return undefined
     }
@@ -61,19 +57,13 @@ class List {
     }
   }
 
-  private async _getListsOfUser (condition: string): Promise<{
-    students: IList
-    teachers: IList
-  }> {
+  private async _getListsOfUser (): Promise<Record<string, unknown>> {
     try {
       const lists = await this._listRef
         .where('owner', '==', this._args.owner as string)
         .get()
 
-      if (lists.docs.length === 0)
-        throw condition === 'teacher'
-          ? new httpErrors.NotFound(`${CFU.definiteArticle}${CFU.teacher}${EFL.noList}`)
-          : new httpErrors.NotFound(`${CFU.definiteArticle}${CFU.student}${EFL.noList}`)
+      if (lists.docs.length === 0) return {}
 
       const listsData = lists.docs.map(doc => {
         return {
@@ -167,8 +157,12 @@ class List {
       console.error(error)
 
       throw userData.condition === 'teacher'
-        ? new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pTeacher}`)
-        : new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pStudent}`)
+        ? new httpErrors.InternalServerError(
+            `${EFL.errorEnrolling}${CFU.pTeacher}`
+          )
+        : new httpErrors.InternalServerError(
+            `${EFL.errorEnrolling}${CFU.pStudent}`
+          )
     }
   }
 

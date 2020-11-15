@@ -33,7 +33,7 @@ List.route('/list/createList')
 List.route('/list/getListsOfUser/:id')
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const { params: { id }, query: { condition } } = req
+      const { params: { id } } = req
       const list = {
         owner: id as string
       } as DtoList
@@ -41,7 +41,7 @@ List.route('/list/getListsOfUser/:id')
       try {
         await listSchema.validateAsync(list)
         const lc = new ListC(list)
-        const result = await lc.process('getListsOfUser', condition as string)
+        const result = await lc.process('getListsOfUser')
 
         response(false, { result }, res, 200)
       } catch (error) {

@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.15.7"
+    "version": "0.15.8"
   },
   "servers": [
     {
@@ -35,7 +35,9 @@
   "paths": {
     "/user/verify/{code}": {
       "get": {
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "summary": "Create user",
         "operationId": "verifyUser",
         "parameters": [
@@ -59,7 +61,10 @@
             "explode": true,
             "schema": {
               "type": "integer",
-              "enum": [0, 1]
+              "enum": [
+                0,
+                1
+              ]
             }
           }
         ],
@@ -109,7 +114,9 @@
     },
     "/user/notify": {
       "patch": {
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "summary": "Sends the corresponding password to the user that has been registered.",
         "operationId": "notifyUser",
         "requestBody": {
@@ -161,7 +168,9 @@
     },
     "/user/enroll/{code}": {
       "post": {
-        "tags": ["user"],
+        "tags": [
+          "user"
+        ],
         "summary": "Enrolls a user into a list.",
         "operationId": "enrollUser",
         "parameters": [
@@ -186,7 +195,10 @@
             "explode": true,
             "schema": {
               "type": "integer",
-              "enum": [0, 1]
+              "enum": [
+                0,
+                1
+              ]
             }
           }
         ],
@@ -249,7 +261,9 @@
     },
     "/list/createList": {
       "post": {
-        "tags": ["list"],
+        "tags": [
+          "list"
+        ],
         "summary": "Create a list to postulate.",
         "operationId": "createList",
         "requestBody": {
@@ -291,7 +305,9 @@
     },
     "/list/getListsOfUser/{id}": {
       "get": {
-        "tags": ["list"],
+        "tags": [
+          "list"
+        ],
         "summary": "Get all the list that a user has registered.",
         "operationId": "getListsOfUser",
         "parameters": [
