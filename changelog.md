@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.16.0
+
+- Implemented:
+  - Access token
+- TODO:
+  - Implement single use token.
+
 ## Version 0.15.8
 
 - Fixed:
