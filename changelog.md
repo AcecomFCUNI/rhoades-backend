@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.18.0
+
+- Implemented:
+  - One route has been secured for testing purposes.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.17.0
 
 - Implemented:

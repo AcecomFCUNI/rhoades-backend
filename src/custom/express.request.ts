@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Request } from 'express'
 import { DtoList } from '../dto-interfaces/list.dto'
 import { DtoUser } from '../dto-interfaces/user.dto'
@@ -11,6 +12,7 @@ interface CustomRequest extends Request {
   body: {
     args: DtoUser | DtoList
   },
+  payload?: object,
   query: {
     condition?     : string,
     documentNumber?: string,

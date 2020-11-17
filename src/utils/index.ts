@@ -4,7 +4,7 @@ import { MFE, MFME } from './messages'
 import { PATA } from './constants'
 import { decryptMessage, encryptMessage, generatePassword } from './security'
 import { response } from './response'
-import { signAccessToken } from './jwt.helper'
+import { signAccessToken, verifyAccessToken } from './jwt.helper'
 
 export {
   docs,
@@ -16,5 +16,6 @@ export {
   encryptMessage,
   generatePassword,
   response,
-  signAccessToken
+  signAccessToken,
+  verifyAccessToken
 }

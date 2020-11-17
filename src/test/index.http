@@ -1,6 +1,10 @@
 ### Testing 404 error route
 GET http://localhost:3000/auth/refresh-token
 
+### Testing protected route
+GET http://localhost:3000/auth/test
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiWW91cnMgdHJ1bHkiLCJpYXQiOjE2MDU2NDI1MjYsImV4cCI6MTYwNTY0MzEyNiwiYXVkIjoiMSIsImlzcyI6Imh0dHBzOi8vaW5zY3JpcGNpb25lcy1lbGVjY2lvbmVzLXVuaS0yMDIwLm5ldGxpZnkuYXBwIn0.Tb8DZDW08tKvK3TBaOjyy58EFZpscSHQ_yoxKvuB2m0
+
 ### Testing auth route
 POST http://localhost:3000/auth/register
 Content-Type: application/json

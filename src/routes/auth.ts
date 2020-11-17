@@ -3,7 +3,7 @@
 import joi from 'joi'
 import { NextFunction, Response, Router } from 'express'
 import { Request } from '../custom/index'
-import { response, signAccessToken } from '../utils/index'
+import { response, signAccessToken, verifyAccessToken } from '../utils/index'
 import { DtoUser } from '../dto-interfaces'
 
 const validationSchema = joi.object({
@@ -12,6 +12,16 @@ const validationSchema = joi.object({
 const Auth = Router()
 
 // TODO: Encrypt responses for the client
+
+Auth.route('/test')
+  .get(
+    verifyAccessToken,
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { headers: { authorization } } = req
+      console.log(authorization)
+      res.send('Hello world')
+    }
+  )
 
 Auth.route('/register')
   .post(
