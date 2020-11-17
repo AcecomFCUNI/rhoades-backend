@@ -1,9 +1,16 @@
 # Rhoades Backend
 
+## Version 0.17.0
+
+- Implemented:
+  - Access token on login.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.16.0
 
 - Implemented:
-  - Access token
+  - Access token on registration.
 - TODO:
   - Implement single use token.
 

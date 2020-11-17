@@ -1,6 +1,6 @@
 {
   "name": "rhoades-backend",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "main": "src/index.ts",
   "description": "Backend for the application to automatize the registration of lists",
   "scripts": {
@@ -9,7 +9,7 @@
     "lint": "eslint src/* --ext .ts",
     "service": "nodemon",
     "start": "node dist/index.js",
-    "test": "ts-node src/test/index"
+    "test": "ts-node src/utils/generate.key"
   },
   "author": "AnthonyLzq <sluzquinosa@uni.pe>",
   "license": "MIT",
