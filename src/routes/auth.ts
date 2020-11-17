@@ -1,9 +1,15 @@
-/* eslint-disable no-extra-parens */
-// import httpErrors from 'http-errors'
+/* eslint-disable no-extra-parens, max-len */
+import httpErrors from 'http-errors'
 import joi from 'joi'
 import { NextFunction, Response, Router } from 'express'
 import { Request } from '../custom/index'
-import { response, signAccessToken, verifyAccessToken } from '../utils/index'
+import {
+  response,
+  signAccessToken,
+  signRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken
+} from '../utils/index'
 import { DtoUser } from '../dto-interfaces'
 
 const validationSchema = joi.object({
@@ -29,10 +35,10 @@ Auth.route('/register')
       const { body: { args } } = req
       try {
         await validationSchema.validateAsync(args)
-        // eslint-disable-next-line max-len
         const accessToken = await signAccessToken((args as DtoUser).id as string)
+        const refreshToken = await signRefreshToken((args as DtoUser).id as string)
 
-        response(false, { result: accessToken }, res, 200)
+        response(false, { result: { accessToken, refreshToken } }, res, 200)
       } catch (error) {
         if (error.isJoi) error.status = 422
         next(error)
@@ -46,12 +52,30 @@ Auth.route('/login')
       const { body: { args } } = req
       try {
         await validationSchema.validateAsync(args)
-        // eslint-disable-next-line max-len
         const accessToken = await signAccessToken((args as DtoUser).id as string)
+        const refreshToken = await signRefreshToken((args as DtoUser).id as string)
 
-        response(false, { result: accessToken }, res, 200 )
+        response(false, { result: { accessToken, refreshToken } }, res, 200 )
       } catch (error) {
         if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
+Auth.route('/refresh-token')
+  .post(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { body: { args: { refreshToken } } } = req
+      try {
+        if (!refreshToken) throw new httpErrors.BadRequest()
+
+        const userId = await verifyRefreshToken(refreshToken)
+        const accessToken = await signAccessToken(userId as string)
+        const newRefreshToken = await signRefreshToken(userId as string)
+
+        response(false, { result: { accessToken, newRefreshToken } }, res, 200 )
+      } catch (error) {
         next(error)
       }
     }

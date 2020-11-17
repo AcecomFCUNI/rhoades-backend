@@ -1,9 +1,9 @@
 ### Testing 404 error route
-GET http://localhost:3000/auth/refresh-token
+GET http://localhost:3000/route/that/doesNotExists
 
 ### Testing protected route
 GET http://localhost:3000/auth/test
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiWW91cnMgdHJ1bHkiLCJpYXQiOjE2MDU2NDI1MjYsImV4cCI6MTYwNTY0MzEyNiwiYXVkIjoiMSIsImlzcyI6Imh0dHBzOi8vaW5zY3JpcGNpb25lcy1lbGVjY2lvbmVzLXVuaS0yMDIwLm5ldGxpZnkuYXBwIn0.Tb8DZDW08tKvK3TBaOjyy58EFZpscSHQ_yoxKvuB2m0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDU2NTY0NzcsImV4cCI6MTYwNTY1NzA3NywiYXVkIjoiMSIsImlzcyI6Imh0dHBzOi8vaW5zY3JpcGNpb25lcy1lbGVjY2lvbmVzLXVuaS0yMDIwLm5ldGxpZnkuYXBwIn0.6Zx2l4eqCc3_BjpU0fub9zebezhp_GhsQ3WtqucQ7Eo
 
 ### Testing auth route
 POST http://localhost:3000/auth/register
@@ -22,6 +22,16 @@ Content-Type: application/json
 {
   "args": {
     "id": "1"
+  }
+}
+
+###Testing refresh token
+POST http://localhost:3000/auth/refresh-token
+Content-Type: application/json
+
+{
+  "args": {
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDU2NTY0MjcsImV4cCI6MTYwNTc0MjgyNywiYXVkIjoiMSIsImlzcyI6Imh0dHBzOi8vaW5zY3JpcGNpb25lcy1lbGVjY2lvbmVzLXVuaS0yMDIwLm5ldGxpZnkuYXBwIn0.zDPQQ17cxnEKjD9Yro-t0mE0WCsVppvwJclBJ02tkWo"
   }
 }
 

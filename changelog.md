@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.20.0
+
+- Implemented:
+  - Refresh token.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.19.0
 
 - Implemented:
