@@ -42,11 +42,9 @@ const verifyAccessToken = (
     (error, payload): void => {
       if (error) {
         console.error(error)
-
-        next(new httpErrors.Unauthorized())
+        next(new httpErrors.Unauthorized(error.name === 'JsonWebTokenError' ? undefined : error.message))
       }
       req.payload = payload
-
       next()
     }
   )

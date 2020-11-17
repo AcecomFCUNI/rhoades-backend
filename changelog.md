@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.19.0
+
+- Implemented:
+  - Securing error messages.
+- TODO:
+  - Implement single use token.
+
 ## Version 0.18.0
 
 - Implemented:
