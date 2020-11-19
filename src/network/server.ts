@@ -1,11 +1,12 @@
 import express from 'express'
 import morgan from 'morgan'
 import { applyRoutes } from './routes'
-import { firebaseConnection } from '../database/firebase'
+import { firebaseConnection, redisConnection } from '../database/index'
 
 class Server {
   public app                 : express.Application
-  private _firebaseConnection: (() => void) |undefined
+  private _firebaseConnection: (() => void) | undefined
+  private _redisConnection   : (() => void) | undefined
 
   constructor () {
     this.app = express()
@@ -23,7 +24,7 @@ class Server {
         res: express.Response,
         next: express.NextFunction
       ) => {
-        if (process.env.MODE && process.env.MODE === 'dev')
+        if (process.env.MODE === 'dev')
           res.header('Access-Control-Allow-Origin', '*')
         else
           res.header(
@@ -51,6 +52,11 @@ class Server {
     this._firebaseConnection()
   }
 
+  private _redis (): void {
+    this._redisConnection = redisConnection
+    this._redisConnection()
+  }
+
   public start (): void {
     this.app.listen(this.app.get('port'), () =>
       console.log(`Server running at port ${this.app.get('port')}.`)
@@ -58,6 +64,7 @@ class Server {
 
     try {
       this._firebase()
+      this._redis()
     } catch (error) {
       console.error(error)
     }

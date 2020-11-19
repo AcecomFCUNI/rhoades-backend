@@ -43,8 +43,8 @@ const signRefreshToken = (id: string): Promise<unknown> => {
 }
 
 const verifyAccessToken = (
-  req: Request,
-  res: Response,
+  req : Request,
+  res : Response,
   next: NextFunction
 ): void => {
   const {

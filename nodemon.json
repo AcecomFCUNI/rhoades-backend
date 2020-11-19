@@ -3,7 +3,7 @@
     ".env",
     "src"
   ],
-  "ext": "ts | json",
+  "ext": "ts json",
   "ignore": [
     "src/**/*.test.ts"
   ],

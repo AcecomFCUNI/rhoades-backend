@@ -1,5 +1,13 @@
 # Rhoades Backend
 
+## Version 0.21.0
+
+- Implemented:
+  - Implement single use token.
+  - Redis connection for local and development.
+- TODO:
+  - Secure all the private routes.
+
 ## Version 0.20.0
 
 - Implemented:

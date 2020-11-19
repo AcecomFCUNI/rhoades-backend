@@ -1,6 +1,6 @@
 {
   "name": "rhoades-backend",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "main": "src/index.ts",
   "description": "Backend for the application to automatize the registration of lists",
   "scripts": {
@@ -8,8 +8,7 @@
     "build": "webpack --mode production",
     "lint": "eslint src/* --ext .ts",
     "service": "nodemon",
-    "start": "node dist/index.js",
-    "test": "ts-node src/utils/generate.key"
+    "start": "node dist/index.js"
   },
   "author": "AnthonyLzq <sluzquinosa@uni.pe>",
   "license": "MIT",
@@ -24,6 +23,7 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "nodemailer": "^6.4.14",
+    "redis": "^3.0.2",
     "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
@@ -32,6 +32,7 @@
     "@types/morgan": "^1.9.1",
     "@types/node": "^14.14.2",
     "@types/nodemailer": "^6.4.0",
+    "@types/redis": "^2.8.28",
     "@types/swagger-ui-express": "^4.1.2",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
