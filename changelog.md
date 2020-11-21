@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.22.0
+
+- Implemented:
+  - Removing redis database temporally.
+- TODO:
+  - Implement notifications.
+
 ## Version 0.21.0
 
 - Implemented:

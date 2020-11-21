@@ -64,7 +64,7 @@ class Server {
 
     try {
       this._firebase()
-      this._redis()
+      // this._redis()
     } catch (error) {
       console.error(error)
     }
