@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.26.0
+
+- Implemented:
+  - Added field `gender` to the verify endpoint, it will be null if there is no gender registered.
+- TODO:
+  - Implement notifications when a completes its registration.
+
 ## Version 0.25.0
 
 - Implemented:

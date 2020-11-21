@@ -156,6 +156,7 @@ class User {
       user = await this._getUserData(document)
 
       return {
+        gender        : user.gender || null,
         id            : user.id,
         lastName      : user.lastName,
         mail          : user.mail || user.optionalMail || '',

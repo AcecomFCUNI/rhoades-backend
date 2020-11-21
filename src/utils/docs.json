@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.25.0"
+    "version": "0.26.0"
   },
   "servers": [
     {
@@ -462,6 +462,13 @@
               "result": {
                 "type": "object",
                 "properties": {
+                  "gender": {
+                    "type": "string",
+                    "enum": [
+                      "F",
+                      "M"
+                    ]
+                  },
                   "id": {
                     "type": "string",
                     "description": "Firestore id."
