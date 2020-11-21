@@ -4,7 +4,7 @@ import { Request, Response } from '../custom/index'
 import { response } from '../utils/index'
 import { List as ListC } from '../controllers/index'
 import { DtoList } from '../dto-interfaces/index'
-import { listSchema } from '../schemas/list'
+import { listCreationSchema, listOwnerSchema } from '../schemas/index'
 
 const List = Router()
 
@@ -12,14 +12,10 @@ List.route('/list/createList')
   .post(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args } } = req
-      const list = {
-        owner: (args as DtoList).owner,
-        type : (args as DtoList).type
-      } as DtoList
 
       try {
-        await listSchema.validateAsync(list)
-        const lc = new ListC(list)
+        await listCreationSchema.validateAsync(args as DtoList)
+        const lc = new ListC(args as DtoList)
         const result = await lc.process('createList')
 
         response(false, { result }, res, 200)
@@ -39,7 +35,7 @@ List.route('/list/getListsOfUser/:id')
       } as DtoList
 
       try {
-        await listSchema.validateAsync(list)
+        await listOwnerSchema.validateAsync(list)
         const lc = new ListC(list)
         const result = await lc.process('getListsOfUser')
 

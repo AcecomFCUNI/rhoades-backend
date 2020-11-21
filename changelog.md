@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.24.0
+
+- Implemented:
+  - Specifics `joi` validation schemas for the requests content.
+- TODO:
+  - Implement notifications when a list is registered and when a list completes its registration.
+
 ## Version 0.23.0
 
 - Implemented:

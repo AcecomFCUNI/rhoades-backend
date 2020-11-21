@@ -3,8 +3,11 @@ import { Request, Response } from '../custom/index'
 import { User as UserC } from '../controllers/index'
 import { response } from '../utils/index'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
-import { userSchema } from '../schemas/user'
-import { listSchema } from '../schemas'
+import {
+  listIdSchema,
+  userNotifySchema,
+  userVerifySchema
+} from '../schemas/index'
 
 const User = Router()
 
@@ -18,7 +21,7 @@ User.route('/user/verify/:code')
       } as DtoUser
 
       try {
-        await userSchema.validateAsync(user)
+        await userVerifySchema.validateAsync(user)
         const uc = new UserC(user)
         const result = await uc.process('verify')
 
@@ -36,7 +39,7 @@ User.route('/user/notify')
       const { body: { args } } = req
 
       try {
-        await userSchema.validateAsync(args as DtoUser)
+        await userNotifySchema.validateAsync(args as DtoUser)
         const uc = new UserC(args as DtoUser)
         const result = await uc.process('notify')
 
@@ -62,8 +65,8 @@ User.route('/user/enroll/:code')
       } as DtoUser
 
       try {
-        await userSchema.validateAsync(user)
-        await listSchema.validateAsync(args as DtoList)
+        await userVerifySchema.validateAsync(user)
+        await listIdSchema.validateAsync(args as DtoList)
 
         const uc = new UserC(user)
         const result = await uc.process('enroll', args as DtoList)

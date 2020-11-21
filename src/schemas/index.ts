@@ -1,7 +1,10 @@
-import { listSchema } from './list'
-import { userSchema } from './user'
+import { listCreationSchema, listIdSchema, listOwnerSchema } from './list'
+import { userNotifySchema, userVerifySchema } from './user'
 
 export {
-  listSchema,
-  userSchema
+  listCreationSchema,
+  listIdSchema,
+  listOwnerSchema,
+  userNotifySchema,
+  userVerifySchema
 }

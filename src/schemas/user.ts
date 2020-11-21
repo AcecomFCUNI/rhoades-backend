@@ -1,11 +1,16 @@
 import joi from 'joi'
 
-const userSchema = joi.object({
-  condition     : joi.string().valid('student', 'teacher'),
-  documentNumber: joi.string().min(8).max(16),
-  documentType  : joi.string().length(1).valid('0', '1'),
-  gender        : joi.string().length(1).valid('F', 'M'),
-  id            : joi.string().length(20)
+const userNotifySchema = joi.object({
+  gender: joi.string().valid('F', 'M').required(),
+  id    : joi.string().length(20).required()
 })
 
-export { userSchema }
+const userVerifySchema = joi.object({
+  documentNumber: joi.string().min(8).max(16).required(),
+  documentType  : joi.string().valid('0', '1').required()
+})
+
+export {
+  userNotifySchema,
+  userVerifySchema
+}
