@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.25.0
+
+- Implemented:
+  - Added field `closed` to the list, it is false if the list is not completely registered (more users can be registered on it).
+- TODO:
+  - Implement notifications when a completes its registration.
+
 ## Version 0.24.0
 
 - Implemented:

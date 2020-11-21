@@ -47,8 +47,11 @@ class User {
     const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
 
     try {
-      let userData = await this._getUserData(document)
       const listData = await new List(list).getListData()
+
+      if (listData.closed) throw new httpErrors.Conflict(EFU.errorEnrolling5)
+
+      let userData = await this._getUserData(document)
 
       const isATeacherList = listData.type === PATA.d ||
         listData.type === PATA.fc ||
@@ -83,7 +86,8 @@ class User {
         error.message === `${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling3}` ||
         error.message === `${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling3}` ||
         error.message === `${CFU.indefiniteArticle}${CFU.teacher}${EFU.errorEnrolling4}${CFU.student}s.` ||
-        error.message === `${CFU.indefiniteArticle}${CFU.student}${EFU.errorEnrolling4}${CFU.teacher}s.`
+        error.message === `${CFU.indefiniteArticle}${CFU.student}${EFU.errorEnrolling4}${CFU.teacher}s.` ||
+        error.message === EFU.errorEnrolling5
       )
         throw error
 

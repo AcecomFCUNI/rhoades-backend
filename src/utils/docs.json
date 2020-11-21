@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.24.0"
+    "version": "0.25.0"
   },
   "servers": [
     {
@@ -227,7 +227,7 @@
             }
           },
           "409": {
-            "description": "The teacher or student is already registered or postulating.",
+            "description": "The user is already registered or postulating, or the list is closed.",
             "content": {
               "application/json": {
                 "schema": {

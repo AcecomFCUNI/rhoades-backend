@@ -40,6 +40,7 @@ class List {
     try {
       const list = await this._listRef.add({
         applicants: [],
+        closed    : false,
         owner     : this._args.owner,
         type      : this._args.type
       })
