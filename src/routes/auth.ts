@@ -63,22 +63,22 @@ Auth.route('/login')
     }
   )
 
-Auth.route('/refresh-token')
-  .post(
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const { body: { args: { refreshToken } } } = req
-      try {
-        if (!refreshToken) throw new httpErrors.BadRequest()
+// Auth.route('/refresh-token')
+//   .post(
+//     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+//       const { body: { args: { refreshToken } } } = req
+//       try {
+//         if (!refreshToken) throw new httpErrors.BadRequest()
 
-        const userId = await verifyRefreshToken(refreshToken)
-        const accessToken = await signAccessToken(userId as string)
-        const newRefreshToken = await signRefreshToken(userId as string)
+//         const userId = await verifyRefreshToken(refreshToken)
+//         const accessToken = await signAccessToken(userId as string)
+//         const newRefreshToken = await signRefreshToken(userId as string)
 
-        response(false, { result: { accessToken, newRefreshToken } }, res, 200 )
-      } catch (error) {
-        next(error)
-      }
-    }
-  )
+//         response(false, { result: { accessToken, newRefreshToken } }, res, 200 )
+//       } catch (error) {
+//         next(error)
+//       }
+//     }
+//   )
 
 export { Auth }

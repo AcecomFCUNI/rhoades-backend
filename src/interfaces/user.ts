@@ -5,6 +5,7 @@ export interface IUser {
   documentNumber? : string
   documentType?   : string
   faculty?        : string
+  gender?         : string
   id?             : string
   lastName?       : string
   mail?           : string

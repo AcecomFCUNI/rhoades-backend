@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.22.0"
+    "version": "0.23.0"
   },
   "servers": [
     {
@@ -120,7 +120,7 @@
         "summary": "Sends the corresponding password to the user that has been registered.",
         "operationId": "notifyUser",
         "requestBody": {
-          "$ref": "#/components/requestBodies/SimpleDtoUser"
+          "$ref": "#/components/requestBodies/DtoUserWithGender"
         },
         "responses": {
           "200": {
@@ -606,6 +606,35 @@
           }
         },
         "required": true
+      },
+      "DtoUserWithGender": {
+        "description": "Payload to notify the user",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Firebase id"
+                    },
+                    "gender": {
+                      "type": "string",
+                      "description": "User gender",
+                      "enum": [
+                        "F",
+                        "M"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       "SimpleDtoList": {
         "description": "List id from Firebase",

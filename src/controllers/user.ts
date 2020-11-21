@@ -6,7 +6,13 @@ import { List } from './list'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
 import { IUser } from '../interfaces/index'
 import { CFU, EFU, MFU } from './utils/index'
-import { mail, MFME, generatePassword, PATA } from '../utils/index'
+import {
+  deliverPassword,
+  MFME,
+  generatePassword,
+  notifyProcuratorRegistered,
+  PATA
+} from '../utils/index'
 
 declare const global: CustomNodeJSGlobal
 const KEY_PASSWORD = process.env.KEY_PASSWORD as string
@@ -15,12 +21,10 @@ class User {
   private _usersRef: FirebaseFirestore.CollectionReference<
     FirebaseFirestore.DocumentData
   >
-  private _result: IUser[]
 
   constructor (args: DtoUser) {
     this._args = args
     this._usersRef = global.firestoreDB.collection('users')
-    this._result = []
   }
 
   public process (
@@ -99,16 +103,19 @@ class User {
       // Verify if the user has email
       if ('mail' in user && user.mail !== '') {
         hasEmail = true
-        await mail(user.mail as string, newPassword.password)
+        await deliverPassword(user.mail as string, newPassword.password)
       } else if ('optionalMail' in user && user.optionalMail !== '')
-        await mail(user.optionalMail as string, newPassword.password)
+        await deliverPassword(user.optionalMail as string, newPassword.password)
       else
         throw new httpErrors.Conflict(EFU.userHasNotMail)
 
       // Updating that the user is registered
       await this._usersRef
         .doc(user.id as string)
-        .update({ registered: true })
+        .update({
+          gender    : this._args?.gender,
+          registered: true
+        })
 
       // Registering the user into Firebase Authentication
       await admin.auth().createUser({
@@ -116,6 +123,11 @@ class User {
         password: newPassword.password,
         uid     : user.id as string
       })
+
+      await notifyProcuratorRegistered({
+        ...user,
+        gender: this._args.gender
+      } as IUser)
 
       return MFU.updateAndNotifySuccess
     } catch (error) {
@@ -157,7 +169,6 @@ class User {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
   private async _validateAndEnroll (userData: IUser, list: List) {
     if ('postulating' in userData || userData.postulating)
       throw userData.condition === 'teacher'
@@ -177,8 +188,6 @@ class User {
     await this._usersRef
       .doc(userData.id as string)
       .update({ postulating: true })
-
-    // const l = new List(list)
 
     await list.enroll(userData)
   }

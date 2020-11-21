@@ -1,5 +1,13 @@
 # Rhoades Backend
 
+## Version 0.23.0
+
+- Implemented:
+  - Notification when a user is registered as procurator.
+  - Gender field to use the notify endpoint.
+- TODO:
+  - Implement notifications when a list is registered and when a list completes its registration.
+
 ## Version 0.22.0
 
 - Implemented:

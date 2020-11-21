@@ -34,13 +34,10 @@ User.route('/user/notify')
   .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args } } = req
-      const user = {
-        id: args?.id as string
-      } as DtoUser
 
       try {
-        await userSchema.validateAsync(user)
-        const uc = new UserC(user)
+        await userSchema.validateAsync(args as DtoUser)
+        const uc = new UserC(args as DtoUser)
         const result = await uc.process('notify')
 
         response(false, { result }, res, 200)
