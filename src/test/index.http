@@ -54,7 +54,7 @@ Content-Type: application/json
 
 {
   "args": {
-    "owner": "pTA0tyvx3NjgGhic27k5",
+    "owner": "1ZzkpBvPayaOLZzcvZQE",
     "type": "third-of-faculty"
   }
 }
@@ -75,7 +75,7 @@ Content-Type: application/json
 
 {
   "args": {
-    "id": "fWMsClB8o3sdQQc6hTqB",
-    "owner": "PB1WbtisYdvcI2gnJwJF"
+    "id": "3OsI0maW2AaozgZeAEiV",
+    "owner": "1ZzkpBvPayaOLZzcvZQE"
   }
 }

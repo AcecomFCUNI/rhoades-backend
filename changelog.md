@@ -1,25 +1,34 @@
 # Rhoades Backend
 
+## Version 0.28.0
+
+- Implemented:
+  - Notifications when a list completes its registration.
+- TODO:
+  - Implement field faculty for those list who need it.- Remove `university-council` from available positions to apply.
+- Fixed:
+  - `changelog.md`.
+
 ## Version 0.27.0
 
 - Implemented:
   - Endpoint to finish the registration of the list.
 - TODO:
-  - Implement notifications when a completes its registration.
+  - Implement notifications when a list completes its registration.
 
 ## Version 0.26.0
 
 - Implemented:
   - Added field `gender` to the verify endpoint, it will be null if there is no gender registered.
 - TODO:
-  - Implement notifications when a completes its registration.
+  - Implement notifications when a list completes its registration.
 
 ## Version 0.25.0
 
 - Implemented:
   - Added field `closed` to the list, it is false if the list is not completely registered (more users can be registered on it).
 - TODO:
-  - Implement notifications when a completes its registration.
+  - Implement notifications when a list completes its registration.
 
 ## Version 0.24.0
 

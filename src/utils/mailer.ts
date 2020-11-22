@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer'
-import { IUser } from '../interfaces'
+import { IList, IUser } from '../interfaces'
 import { MFE, MFME } from './messages'
+import { PATA } from './constants'
 
 const EMAIL_SENDER = process.env.EMAIL_SENDER as string
 const EMAIL_RECEIVER = process.env.EMAIL_RECEIVER as string
@@ -19,6 +20,15 @@ const generalMailOptions = {
   sender: EMAIL_SENDER
 }
 
+const sendMail = async (mailOptions: Record<string,unknown>): Promise<void> => {
+  try {
+    await transporter.sendMail(mailOptions)
+  } catch (error) {
+    console.error(error)
+    throw new Error(MFME.procuratorRegistration)
+  }
+}
+
 const deliverPassword = async (
   to      : string,
   password: string,
@@ -32,12 +42,7 @@ const deliverPassword = async (
     to
   }
 
-  try {
-    await transporter.sendMail(mailOptions)
-  } catch (err) {
-    console.log(err)
-    throw new Error(MFME.generic)
-  }
+  sendMail(mailOptions)
 }
 
 const notifyProcuratorRegistered = async (
@@ -56,15 +61,51 @@ const notifyProcuratorRegistered = async (
     to     : EMAIL_RECEIVER
   }
 
-  try {
-    await transporter.sendMail(mailOptions)
-  } catch (error) {
-    console.error(error)
-    throw new Error(MFME.procuratorRegistration)
+  sendMail(mailOptions)
+}
+
+const notifyFinishRegistrationList = async (
+  list : IList,
+  user : IUser,
+  html?: string
+): Promise<void> => {
+  let text: string | undefined = `El personero ${user.names} ${user.lastName} ${user.secondLastName}, identificado con código UNI: ${user.UNICode} ha registrado `
+  switch (list.type) {
+    case PATA.d:
+      text += 'un nuevo candidato a decano.'
+      break
+    case PATA.fc:
+      text += 'una nueva lista de Consejo de Facultad.'
+      break
+    case PATA.ua:
+      text += 'una nueva lista de Asamblea Universitaria - Docentes.'
+      break
+    case PATA.tof:
+      text += 'una nueva lista de Tercio de Facultad.'
+      break
+    case PATA.uta:
+      text += 'una nueva lista de Asamblea Universitaria - Estudiantes.'
+      break
+    case PATA.utc:
+      text += 'una nueva lista de Consejo Universitario.'
+      break
+    default:
+      text = undefined
   }
+
+  const mailOptions = {
+    ...generalMailOptions,
+    html   : html || '',
+    subject: MFE.finishRegistrationList,
+    text,
+    to     : EMAIL_RECEIVER
+  }
+
+  sendMail(mailOptions)
 }
 
 export {
   deliverPassword,
+  notifyFinishRegistrationList,
   notifyProcuratorRegistered
 }

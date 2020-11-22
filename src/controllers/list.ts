@@ -4,7 +4,7 @@ import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom/index'
 import { DtoList } from '../dto-interfaces/index'
 import { CFU, EFL, MFL } from './utils/index'
-import { PATA } from '../utils/constants'
+import { PATA, notifyFinishRegistrationList } from '../utils/index'
 import { IList, IUser } from '../interfaces/index'
 
 declare const global: CustomNodeJSGlobal
@@ -71,9 +71,24 @@ class List {
       if (list.owner !== this._args.owner)
         throw new httpErrors.Unauthorized(EFL.unauthorized)
 
+      const usersCollectionRef = global.firestoreDB.collection('users')
+      const user = await usersCollectionRef
+        .doc(this._args?.owner as string)
+        .get()
+
+      if (!user.data())
+        throw new httpErrors.NotFound(EFL.missingOwner)
+
+      const userData = {
+        ...user.data(),
+        id: this._args.owner
+      } as IUser
+
       await this._listRef.doc(this._args.id as string).update({
         closed: true
       })
+
+      notifyFinishRegistrationList(list, userData)
 
       return MFL.finishRegistration
     } catch (error) {
@@ -84,8 +99,9 @@ class List {
 
       if (
         error.message === EFL.alreadyFinished ||
-        error.message === EFL.unauthorized ||
-        error.message === EFL.missingList
+        error.message === EFL.missingList ||
+        error.message === EFL.missingOwner ||
+        error.message === EFL.unauthorized
       )
         throw error
 

@@ -1,5 +1,9 @@
 import docs from './docs.json'
-import { deliverPassword, notifyProcuratorRegistered } from './mailer'
+import {
+  deliverPassword,
+  notifyFinishRegistrationList,
+  notifyProcuratorRegistered
+} from './mailer'
 import { MFE, MFME } from './messages'
 import { PATA } from './constants'
 import { decryptMessage, encryptMessage, generatePassword } from './security'
@@ -20,6 +24,7 @@ export {
   decryptMessage,
   encryptMessage,
   generatePassword,
+  notifyFinishRegistrationList,
   notifyProcuratorRegistered,
   response,
   signAccessToken,

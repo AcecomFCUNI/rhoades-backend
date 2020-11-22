@@ -5,6 +5,7 @@ enum ErrorMessagesForLists {
   errorFinishingRegistration = 'Hubo un problema finalizando la inscripción de su lista',
   errorGettingLists = 'Hubo un error tratando de obtener las listas registradas.',
   missingList = 'La lista solicitada no existe.',
+  missingOwner = 'El dueño de la lista no está registrado.',
   noList = ' no tiene ninguna lista registrada.',
   unauthorized = 'Usted no puede finalizar la inscripción de una lista que no representa.'
 }
