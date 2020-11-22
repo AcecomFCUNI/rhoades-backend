@@ -9,7 +9,6 @@ const listCreationSchema = joi.object({
       'faculty-council',
       'rector',
       'university-assembly',
-      'university-council',
       'third-of-faculty',
       'university-third-assembly',
       'university-third-council'

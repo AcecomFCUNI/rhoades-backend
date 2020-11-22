@@ -3,6 +3,15 @@
 ## Version 0.28.0
 
 - Implemented:
+  - Remove `university-council` from available positions to apply.
+- TODO:
+  - Implement field faculty for those list who need it.
+- Fixed:
+  - `changelog.md`.
+
+## Version 0.28.0
+
+- Implemented:
   - Notifications when a list completes its registration.
 - TODO:
   - Implement field faculty for those list who need it.- Remove `university-council` from available positions to apply.

@@ -129,8 +129,7 @@ class List {
           list.type === PATA.d ||
           list.type === PATA.fc ||
           list.type === PATA.r ||
-          list.type === PATA.ua ||
-          list.type === PATA.uc
+          list.type === PATA.ua
         )
           return list
 

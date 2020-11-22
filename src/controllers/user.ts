@@ -56,8 +56,7 @@ class User {
       const isATeacherList = listData.type === PATA.d ||
         listData.type === PATA.fc ||
         listData.type === PATA.r ||
-        listData.type === PATA. ua ||
-        listData.type === PATA.uc
+        listData.type === PATA.ua
 
       if (userData.condition === 'teacher')
         if (isATeacherList)

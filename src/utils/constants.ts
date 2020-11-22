@@ -5,7 +5,6 @@ enum PositionsAvailableToApply {
   fc = 'faculty-council',
   r = 'rector',
   ua = 'university-assembly',
-  uc = 'university-council',
   // Students
   tof = 'third-of-faculty',
   uta = 'university-third-assembly',
