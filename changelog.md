@@ -1,6 +1,15 @@
 # Rhoades Backend
 
-## Version 0.28.0
+## Version 0.30.0
+
+- Implemented:
+  - Field faculty for those lists who need it.
+- TODO:
+  - Implement 2XX correct codes.
+- Fixed:
+  - `changelog.md`.
+
+## Version 0.29.0
 
 - Implemented:
   - Remove `university-council` from available positions to apply.

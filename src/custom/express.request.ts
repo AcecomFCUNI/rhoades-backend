@@ -11,12 +11,13 @@ import { DtoUser } from '../dto-interfaces/user.dto'
 interface CustomRequest extends Request {
   body: {
     args: DtoUser | DtoList
-  },
-  payload?: object,
+  }
+  payload?: object
   query: {
-    condition?     : string,
-    documentNumber?: string,
+    condition?     : string
+    documentNumber?: string
     documentType?  : string
+    faculty?       : string
   }
 }
 

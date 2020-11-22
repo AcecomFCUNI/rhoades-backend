@@ -15,11 +15,16 @@ const List = Router()
 List.route('/list/createList')
   .post(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const { body: { args } } = req
+      const { body: { args }, query: { faculty } } = req
+      const list = {
+        faculty,
+        owner: (args as DtoList).owner,
+        type : (args as DtoList).type
+      } as DtoList
 
       try {
-        await listCreationSchema.validateAsync(args as DtoList)
-        const lc = new ListC(args as DtoList)
+        await listCreationSchema.validateAsync(list)
+        const lc = new ListC(list)
         const result = await lc.process('createList')
 
         response(false, { result }, res, 200)

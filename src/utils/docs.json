@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.28.0"
+    "version": "0.30.0"
   },
   "servers": [
     {
@@ -266,6 +266,32 @@
         ],
         "summary": "Create a list to postulate.",
         "operationId": "createList",
+        "parameters": [
+          {
+            "name": "faculty",
+            "in": "query",
+            "description": "Faculty of the list, it must provided for the following type of list: dean, third-of-faculty and faculty-council.",
+            "required": false,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "FIIS",
+                "FIP",
+                "FC",
+                "FIEE",
+                "FIGMM",
+                "FIEECS",
+                "FIC",
+                "FAUA",
+                "FIA",
+                "FIQT",
+                "FIM"
+              ]
+            }
+          }
+        ],
         "requestBody": {
           "$ref": "#/components/requestBodies/DtoListWithoutId"
         },

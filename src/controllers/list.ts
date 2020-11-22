@@ -40,13 +40,27 @@ class List {
   }
 
   private async _createList (): Promise<IList> {
+    let list: firestore.DocumentReference<firestore.DocumentData>
     try {
-      const list = await this._listRef.add({
-        applicants: [],
-        closed    : false,
-        owner     : this._args.owner,
-        type      : this._args.type
-      })
+      if (
+        this._args.type === PATA.d ||
+        this._args.type === PATA.fc ||
+        this._args.type === PATA.tof
+      )
+        list = await this._listRef.add({
+          applicants: [],
+          closed    : false,
+          faculty   : this._args.faculty,
+          owner     : this._args.owner,
+          type      : this._args.type
+        })
+      else
+        list = await this._listRef.add({
+          applicants: [],
+          closed    : false,
+          owner     : this._args.owner,
+          type      : this._args.type
+        })
 
       const dataList = {
         ...(await list.get()).data(),
