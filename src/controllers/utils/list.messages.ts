@@ -1,11 +1,16 @@
 enum ErrorMessagesForLists {
+  alreadyFinished = 'La lista ya finalizó su inscripción.',
   errorCreating = 'Hubo un error creando la lista.',
   errorEnrolling = 'Hubo un problema inscribiendo al ',
+  errorFinishingRegistration = 'Hubo un problema finalizando la inscripción de su lista',
   errorGettingLists = 'Hubo un error tratando de obtener las listas registradas.',
-  noList = ' no tiene ninguna lista registrada.'
+  missingList = 'La lista solicitada no existe.',
+  noList = ' no tiene ninguna lista registrada.',
+  unauthorized = 'Usted no puede finalizar la inscripción de una lista que no representa.'
 }
 
 enum MessagesForLists {
+  finishRegistration = 'Su lista finalizó su inscripción correctamente.',
   success = 'Su lista fue creada exitosamente.'
 }
 

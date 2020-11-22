@@ -25,4 +25,14 @@ const listOwnerSchema = joi.object({
   owner: joi.string().length(20).required()
 })
 
-export { listCreationSchema, listIdSchema, listOwnerSchema }
+const listFinishRegistrationSchema = joi.object({
+  id   : joi.string().length(20).required(),
+  owner: joi.string().length(20).required()
+})
+
+export {
+  listCreationSchema,
+  listFinishRegistrationSchema,
+  listIdSchema,
+  listOwnerSchema
+}

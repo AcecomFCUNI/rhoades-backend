@@ -8,6 +8,6 @@ RUN yarn install --prod
 
 # RUN yarn build
 
-copy dist /app/dist
+COPY dist /app/dist
 
 CMD [ "yarn", "start" ]

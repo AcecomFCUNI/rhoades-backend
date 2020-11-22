@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.27.0
+
+- Implemented:
+  - Endpoint to finish the registration of the list.
+- TODO:
+  - Implement notifications when a completes its registration.
+
 ## Version 0.26.0
 
 - Implemented:

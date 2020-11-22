@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.26.0"
+    "version": "0.27.0"
   },
   "servers": [
     {
@@ -336,6 +336,80 @@
           },
           "404": {
             "description": "Teacher or student does not have any registered list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list/finishRegistration" :{
+      "patch": {
+        "tags": [
+          "list"
+        ],
+        "summary": "Finish list registration.",
+        "operationId": "finishRegistration",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DtoListWithIdAndType"
+        },
+        "responses": {
+          "200": {
+            "description": "The list has finished its registration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "A user is trying to modify a list that does not belong to him.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The list does not exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The list has already finished is registration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "There is an error in the payload structure",
             "content": {
               "application/json": {
                 "schema": {
@@ -690,6 +764,31 @@
                         "university-third-assembly",
                         "university-third-council"
                       ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DtoListWithIdAndType": {
+        "description": "Owner and id list",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "owner": {
+                      "type": "string",
+                      "description": "Firebase user id"
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "Firebase list id"
                     }
                   }
                 }

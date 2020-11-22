@@ -68,3 +68,14 @@ Content-Type: application/json
     "id": "Ko2C6skVaA6Teog0dliY"
   }
 }
+
+### Testing /list/finishRegistration/
+PATCH http://localhost:3000/api/list/finishRegistration
+Content-Type: application/json
+
+{
+  "args": {
+    "id": "fWMsClB8o3sdQQc6hTqB",
+    "owner": "PB1WbtisYdvcI2gnJwJF"
+  }
+}

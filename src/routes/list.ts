@@ -4,7 +4,11 @@ import { Request, Response } from '../custom/index'
 import { response } from '../utils/index'
 import { List as ListC } from '../controllers/index'
 import { DtoList } from '../dto-interfaces/index'
-import { listCreationSchema, listOwnerSchema } from '../schemas/index'
+import {
+  listCreationSchema,
+  listFinishRegistrationSchema,
+  listOwnerSchema
+} from '../schemas/index'
 
 const List = Router()
 
@@ -41,6 +45,29 @@ List.route('/list/getListsOfUser/:id')
 
         response(false, { result }, res, 200)
       } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
+List.route('/list/finishRegistration')
+  .patch(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { body: { args } } = req
+      const list = {
+        id   : (args as DtoList).id,
+        owner: (args as DtoList).owner
+      } as DtoList
+
+      try {
+        await listFinishRegistrationSchema.validateAsync(list)
+        const lc = new ListC(list)
+        const result = await lc.process('finishRegistration')
+
+        response(false, { result }, res, 200)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
         next(error)
       }
     }

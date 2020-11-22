@@ -3,7 +3,7 @@ import firestore from '@google-cloud/firestore'
 import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom/index'
 import { DtoList } from '../dto-interfaces/index'
-import { CFU, EFL } from './utils/index'
+import { CFU, EFL, MFL } from './utils/index'
 import { PATA } from '../utils/constants'
 import { IList, IUser } from '../interfaces/index'
 
@@ -23,12 +23,15 @@ class List {
   public process (
     type: string
   ):
+    | Promise<string>
     | Promise<IList>
     | Promise<Record<string, unknown>>
     | undefined {
     switch (type) {
       case 'createList':
         return this._createList()
+      case 'finishRegistration':
+        return this._finishRegistration()
       case 'getListsOfUser':
         return this._getListsOfUser()
       default:
@@ -55,6 +58,38 @@ class List {
       console.error(error)
 
       throw new httpErrors.InternalServerError(EFL.errorCreating)
+    }
+  }
+
+  private async _finishRegistration (): Promise<string> {
+    try {
+      const list = await this.getListData()
+
+      if (list.closed)
+        throw new httpErrors.Conflict(EFL.alreadyFinished)
+
+      if (list.owner !== this._args.owner)
+        throw new httpErrors.Unauthorized(EFL.unauthorized)
+
+      await this._listRef.doc(this._args.id as string).update({
+        closed: true
+      })
+
+      return MFL.finishRegistration
+    } catch (error) {
+      console.log(error)
+
+      if (error.message.includes('No document to update'))
+        throw new httpErrors.NotFound(EFL.missingList)
+
+      if (
+        error.message === EFL.alreadyFinished ||
+        error.message === EFL.unauthorized ||
+        error.message === EFL.missingList
+      )
+        throw error
+
+      throw new httpErrors.InternalServerError(EFL.errorFinishingRegistration)
     }
   }
 
@@ -158,19 +193,20 @@ class List {
       console.error(error)
 
       throw userData.condition === 'teacher'
-        ? new httpErrors.InternalServerError(
-            `${EFL.errorEnrolling}${CFU.pTeacher}`
-          )
-        : new httpErrors.InternalServerError(
-            `${EFL.errorEnrolling}${CFU.pStudent}`
-          )
+        ? new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pTeacher}`)
+        : new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pStudent}`)
     }
   }
 
   public async getListData (): Promise<IList> {
     const list = await this._listRef.doc(this._args.id as string).get()
 
-    return list
+    if (!list.data()) throw new httpErrors.NotFound(EFL.missingList)
+
+    return {
+      ...list.data(),
+      id: this._args.id
+    } as IList
   }
 }
 
