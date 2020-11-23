@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.31.0"
+    "version": "0.32.0"
   },
   "servers": [
     {
@@ -203,7 +203,7 @@
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/SimpleDtoList"
+          "$ref": "#/components/requestBodies/DtoListWithIdAndOwner"
         },
         "responses": {
           "200": {
@@ -391,7 +391,7 @@
         "summary": "Finish list registration.",
         "operationId": "finishRegistration",
         "requestBody": {
-          "$ref": "#/components/requestBodies/DtoListWithIdAndType"
+          "$ref": "#/components/requestBodies/DtoListWithIdAndOwner"
         },
         "responses": {
           "200": {
@@ -797,7 +797,7 @@
           }
         }
       },
-      "DtoListWithIdAndType": {
+      "DtoListWithIdAndOwner": {
         "description": "Owner and id list",
         "content": {
           "application/json": {

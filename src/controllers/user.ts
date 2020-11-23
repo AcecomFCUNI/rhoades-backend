@@ -51,6 +51,14 @@ class User {
 
       if (listData.closed) throw new httpErrors.Conflict(EFU.errorEnrolling5)
 
+      const ownerData = await this._getUserData(undefined, listData.owner)
+
+      if (!ownerData.registered)
+        throw new httpErrors.Unauthorized(EFU.errorEnrolling6)
+
+      if (listData.owner !== list.owner)
+        throw new httpErrors.Forbidden(EFU.errorEnrolling6)
+
       let userData = await this._getUserData(document)
 
       const isATeacherList = listData.type === PATA.d ||
@@ -86,7 +94,8 @@ class User {
         error.message === `${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling3}` ||
         error.message === `${CFU.indefiniteArticle}${CFU.teacher}${EFU.errorEnrolling4}${CFU.student}s.` ||
         error.message === `${CFU.indefiniteArticle}${CFU.student}${EFU.errorEnrolling4}${CFU.teacher}s.` ||
-        error.message === EFU.errorEnrolling5
+        error.message === EFU.errorEnrolling5 ||
+        error.message === EFU.errorEnrolling6
       )
         throw error
 
@@ -196,7 +205,10 @@ class User {
     await list.enroll(userData)
   }
 
-  private async _getUserData (document?: string): Promise<IUser> {
+  private async _getUserData (
+    document?: string,
+    id?      : string
+  ): Promise<IUser> {
     let user:
       | FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
       | FirebaseFirestore.DocumentSnapshot<FirebaseFirestore.DocumentData>
@@ -217,7 +229,10 @@ class User {
       })[0]
     }
 
-    user = await this._usersRef.doc(this._args?.id as string).get()
+    if (id)
+      user = await this._usersRef.doc(id as string).get()
+    else
+      user = await this._usersRef.doc(this._args?.id as string).get()
 
     if (!user.data())
       throw new httpErrors.NotFound(EFU.userNotFound)

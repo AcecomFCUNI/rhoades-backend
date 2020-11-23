@@ -60,12 +60,13 @@ Content-Type: application/json
 }
 
 ### Testing user/enrollList
-POST http://localhost:3000/api/user/enroll/19968665E?documentType=1
+POST http://localhost:3000/api/user/enroll/19868132E?documentType=1
 Content-Type: application/json
 
 {
   "args": {
-    "id": "Ko2C6skVaA6Teog0dliY"
+    "id": "y1e1Bj1KvGACiBdW9vBd",
+    "owner": "1ZzkpBvPayaOLZzcvZQE"
   }
 }
 

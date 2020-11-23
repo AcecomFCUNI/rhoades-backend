@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.32.0
+
+- Implemented:
+  - Validating that only an owner can enroll users into a list.
+- TODO:
+  - Refactor error catching.
+
 ## Version 0.31.0
 
 - Implemented:

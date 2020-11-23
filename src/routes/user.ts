@@ -4,7 +4,7 @@ import { User as UserC } from '../controllers/index'
 import { response } from '../utils/index'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
 import {
-  listIdSchema,
+  listFinishRegistrationSchema,
   userNotifySchema,
   userVerifySchema
 } from '../schemas/index'
@@ -66,7 +66,7 @@ User.route('/user/enroll/:code')
 
       try {
         await userVerifySchema.validateAsync(user)
-        await listIdSchema.validateAsync(args as DtoList)
+        await listFinishRegistrationSchema.validateAsync(args as DtoList)
 
         const uc = new UserC(user)
         const result = await uc.process('enroll', args as DtoList)
