@@ -111,15 +111,15 @@ class List {
         throw new httpErrors.Conflict(EFL.alreadyFinished)
 
       if (list.owner !== this._args.owner)
-        throw new httpErrors.Unauthorized(EFL.unauthorizedFinish)
+        throw new httpErrors.Forbidden(EFL.unauthorizedFinish)
 
-      const user = await this._getDetailUserData(this._args.owner as string)
+      const owner = await this._getDetailUserData(this._args.owner as string)
 
-      if (!user)
+      if (!owner)
         throw new httpErrors.NotFound(EFL.missingOwner)
 
-      const userData = {
-        ...user,
+      const ownerData = {
+        ...owner,
         id: this._args.owner
       } as IUser
 
@@ -127,7 +127,7 @@ class List {
         closed: true
       })
 
-      notifyFinishRegistrationList(list, userData)
+      notifyFinishRegistrationList(list, ownerData)
 
       return MFL.finishRegistration
     } catch (error) {

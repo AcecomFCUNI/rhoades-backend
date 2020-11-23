@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.35.0
+
+- Implemented:
+  - Changed error 401 for 403 in the finish registration route.
+- TODO:
+  - Refactor error catching.
+
 ## Version 0.34.0
 
 - Implemented:
