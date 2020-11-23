@@ -136,15 +136,15 @@ class List {
       if (error.message.includes('No document to update'))
         throw new httpErrors.NotFound(EFL.missingList)
 
-      if (
-        error.message === EFL.alreadyFinished ||
-        error.message === EFL.missingList ||
-        error.message === EFL.missingOwner ||
-        error.message === EFL.unauthorizedFinish
-      )
-        throw error
-
-      throw new httpErrors.InternalServerError(EFL.errorFinishingRegistration)
+      switch (error.message) {
+        case EFL.alreadyFinished:
+        case EFL.missingList:
+        case EFL.missingOwner:
+        case EFL.unauthorizedFinish:
+          throw error
+        default:
+        throw new httpErrors.InternalServerError(EFL.errorFinishingRegistration)
+      }
     }
   }
 

@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.36.0
+
+- Implemented:
+  - Refactor error catching.
+- TODO:
+  - Notification to CEUNI when a user does not have email.
+
 ## Version 0.35.0
 
 - Implemented:
