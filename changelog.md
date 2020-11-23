@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.31.0
+
+- Implemented:
+  - 201 code for the creation list endpoint.
+- TODO:
+  - Verify if the user who is trying to modify a list is the owner.
+
 ## Version 0.30.0
 
 - Implemented:

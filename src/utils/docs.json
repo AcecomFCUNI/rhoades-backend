@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.30.0"
+    "version": "0.31.0"
   },
   "servers": [
     {
@@ -296,7 +296,7 @@
           "$ref": "#/components/requestBodies/DtoListWithoutId"
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "The list has been successfully created.",
             "content": {
               "application/json": {

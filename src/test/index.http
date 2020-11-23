@@ -55,7 +55,7 @@ Content-Type: application/json
 {
   "args": {
     "owner": "1ZzkpBvPayaOLZzcvZQE",
-    "type": "third-of-faculty"
+    "type": "rector"
   }
 }
 
@@ -75,7 +75,7 @@ Content-Type: application/json
 
 {
   "args": {
-    "id": "3OsI0maW2AaozgZeAEiV",
-    "owner": "1ZzkpBvPayaOLZzcvZQE"
+    "id": "lNFXj4DHfJ6C4Zx4ZEm6",
+    "owner": "004Kr7OTxVlquphiIQNG"
   }
 }

@@ -27,7 +27,7 @@ List.route('/list/createList')
         const lc = new ListC(list)
         const result = await lc.process('createList')
 
-        response(false, { result }, res, 200)
+        response(false, { result }, res, 201)
       } catch (error) {
         if (error.isJoi) error.status = 422
         next(error)
