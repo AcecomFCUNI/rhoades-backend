@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.37.0
+
+- Implemented:
+  - Refactor error catching.
+- TODO:
+  - Implement endpoint to filter lists by faculty and type.
+
 ## Version 0.36.0
 
 - Implemented:

@@ -50,8 +50,8 @@ const notifyProcuratorRegistered = async (
   html?: string
 ): Promise<void> => {
   const text = user.gender === 'M'
-    ? `El nuevo personero es el señor: ${user.names} ${user.lastName} ${user.secondLastName}\nIdentificado con código UNI: ${user.UNICode}`
-    : `La nueva personera es la señorita: ${user.names} ${user.lastName} ${user.secondLastName}\nIdentificada con código UNI: ${user.UNICode}`
+    ? `El nuevo personero es el señor: ${user.names} ${user.lastName} ${user.secondLastName}\nIdentificado con código UNI: ${user.UNICode}.${MFE.farewell}`
+    : `La nueva personera es la señorita: ${user.names} ${user.lastName} ${user.secondLastName}\nIdentificada con código UNI: ${user.UNICode}.${MFE.farewell}`
 
   const mailOptions = {
     ...generalMailOptions,
@@ -104,8 +104,30 @@ const notifyFinishRegistrationList = async (
   sendMail(mailOptions)
 }
 
+const notifyProcuratorWithoutMail = async (
+  user : IUser,
+  html?: string
+): Promise<void> => {
+  let text = user.gender === 'M'
+    ? `El señor: ${user.names} ${user.lastName} ${user.secondLastName}, identificado con código UNI: ${user.UNICode}`
+    : `La señorita: ${user.names} ${user.lastName} ${user.secondLastName}, identificada con código UNI: ${user.UNICode}`
+
+  text += `, ha intentado registrarse en la plataforma, pero no tiene un correo registrado.\nPor favor, ponerse en contacto con ella para regularizar su situación.${MFE.farewell}`
+
+  const mailOptions = {
+    ...generalMailOptions,
+    html   : html || '',
+    subject: MFE.userHasNoEmail,
+    text,
+    to     : EMAIL_RECEIVER
+  }
+
+  sendMail(mailOptions)
+}
+
 export {
   deliverPassword,
   notifyFinishRegistrationList,
-  notifyProcuratorRegistered
+  notifyProcuratorRegistered,
+  notifyProcuratorWithoutMail
 }

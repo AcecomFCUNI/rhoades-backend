@@ -11,6 +11,7 @@ import {
   MFME,
   generatePassword,
   notifyProcuratorRegistered,
+  notifyProcuratorWithoutMail,
   PATA
 } from '../utils/index'
 
@@ -127,8 +128,10 @@ class User {
         await deliverPassword(user.mail as string, newPassword.password)
       } else if ('optionalMail' in user && user.optionalMail !== '')
         await deliverPassword(user.optionalMail as string, newPassword.password)
-      else
+      else {
+        await notifyProcuratorWithoutMail(user)
         throw new httpErrors.Conflict(EFU.userHasNotMail)
+      }
 
       // Updating that the user is registered
       await this._usersRef
