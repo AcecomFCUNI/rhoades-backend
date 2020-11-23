@@ -15,6 +15,7 @@ enum ErrorMessagesForUsers {
   errorEnrolling4 = ' no puede postular con una lista de ',
   errorEnrolling5 = 'La lista se encuentra cerrada y ya no se puede inscribir a nadie más.',
   errorEnrolling6 = 'Usted no puede registrar a alguien en una lista que no representa.',
+  errorEnrolling7 = 'Usted no puede registrarse en su propia lista.',
   errorNotifying = 'Hubo un error generando la contraseña del usuario.',
   errorVerifying = 'Hubo un error mientras se intentaba verificar el ',
   errorVerifyingUser = 'Hubo un error verificando al usuario.',

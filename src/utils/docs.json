@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.32.0"
+    "version": "0.33.0"
   },
   "servers": [
     {
@@ -216,6 +216,26 @@
               }
             }
           },
+          "401": {
+            "description": "The user who is trying to enroll a user is not registered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The procurator who is trying to enroll a user is not he owner of the list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Teacher or student not found.",
             "content": {
@@ -227,7 +247,7 @@
             }
           },
           "409": {
-            "description": "The user is already registered or postulating, or the list is closed.",
+            "description": "The user is already registered or postulating, or the list is closed, or is trying to register himself.",
             "content": {
               "application/json": {
                 "schema": {

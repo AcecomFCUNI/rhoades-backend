@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.33.0
+
+- Implemented:
+  - Validating that the owner can't register himself into his lists.
+- TODO:
+  - Refactor error catching.
+
 ## Version 0.32.0
 
 - Implemented:

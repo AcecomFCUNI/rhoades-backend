@@ -53,9 +53,17 @@ class User {
 
       const ownerData = await this._getUserData(undefined, listData.owner)
 
+      // Validating if the user being registered is the owner
+      if (document === 'UNICode' && ownerData.UNICode === this._args.documentNumber)
+        throw new httpErrors.Conflict(EFU.errorEnrolling7)
+      if (document === 'documentNumber' && ownerData.documentNumber === this._args.documentNumber)
+        throw new httpErrors.Conflict(EFU.errorEnrolling7)
+
+      // Validating if the procurator is registered
       if (!ownerData.registered)
         throw new httpErrors.Unauthorized(EFU.errorEnrolling6)
 
+      // Validating if the procurator is the owner of the list
       if (listData.owner !== list.owner)
         throw new httpErrors.Forbidden(EFU.errorEnrolling6)
 
@@ -95,7 +103,8 @@ class User {
         error.message === `${CFU.indefiniteArticle}${CFU.teacher}${EFU.errorEnrolling4}${CFU.student}s.` ||
         error.message === `${CFU.indefiniteArticle}${CFU.student}${EFU.errorEnrolling4}${CFU.teacher}s.` ||
         error.message === EFU.errorEnrolling5 ||
-        error.message === EFU.errorEnrolling6
+        error.message === EFU.errorEnrolling6 ||
+        error.message === EFU.errorEnrolling7
       )
         throw error
 

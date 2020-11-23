@@ -60,7 +60,7 @@ Content-Type: application/json
 }
 
 ### Testing user/enrollList
-POST http://localhost:3000/api/user/enroll/19868132E?documentType=1
+POST http://localhost:3000/api/user/enroll/20140118I?documentType=1
 Content-Type: application/json
 
 {
