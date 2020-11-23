@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.34.0
+
+- Implemented:
+  - Validating posible errors when a user tries to create a list.
+- TODO:
+  - Refactor error catching.
+
 ## Version 0.33.0
 
 - Implemented:

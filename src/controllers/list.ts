@@ -14,10 +14,14 @@ class List {
   private _listRef: FirebaseFirestore.CollectionReference<
     FirebaseFirestore.DocumentData
   >
+  private _userRef: FirebaseFirestore.CollectionReference<
+    FirebaseFirestore.DocumentData
+  >
 
   constructor (args: DtoList) {
     this._args = args
     this._listRef = global.firestoreDB.collection('lists')
+    this._userRef = global.firestoreDB.collection('users')
   }
 
   public process (
@@ -42,25 +46,42 @@ class List {
   private async _createList (): Promise<IList> {
     let list: firestore.DocumentReference<firestore.DocumentData>
     try {
-      if (
-        this._args.type === PATA.d ||
-        this._args.type === PATA.fc ||
-        this._args.type === PATA.tof
-      )
-        list = await this._listRef.add({
-          applicants: [],
-          closed    : false,
-          faculty   : this._args.faculty,
-          owner     : this._args.owner,
-          type      : this._args.type
-        })
-      else
-        list = await this._listRef.add({
-          applicants: [],
-          closed    : false,
-          owner     : this._args.owner,
-          type      : this._args.type
-        })
+      const owner = await this._getDetailUserData(this._args.owner as string)
+
+      if (!owner) throw new httpErrors.NotFound(EFL.missingOwner)
+
+      const ownerData = {
+        ...owner,
+        id: this._args.owner
+      } as IUser
+
+      if (!ownerData.registered)
+        throw new httpErrors.Unauthorized(EFL.unauthorizedRegistration)
+
+      const numberOfList = await this._getNumberOfList()
+
+      if (numberOfList >= 2) throw new httpErrors.Conflict(EFL.limitList)
+
+      switch (this._args.type) {
+        case PATA.d:
+        case PATA.fc:
+        case PATA.tof:
+          list = await this._listRef.add({
+            applicants: [],
+            closed    : false,
+            faculty   : this._args.faculty,
+            owner     : this._args.owner,
+            type      : this._args.type
+          })
+          break
+        default:
+          list = await this._listRef.add({
+            applicants: [],
+            closed    : false,
+            owner     : this._args.owner,
+            type      : this._args.type
+          })
+      }
 
       const dataList = {
         ...(await list.get()).data(),
@@ -71,7 +92,14 @@ class List {
     } catch (error) {
       console.error(error)
 
-      throw new httpErrors.InternalServerError(EFL.errorCreating)
+      switch (error.message) {
+        case EFL.missingOwner:
+        case EFL.unauthorizedRegistration:
+        case EFL.limitList:
+          throw error
+        default:
+          throw new httpErrors.InternalServerError(EFL.errorCreating)
+      }
     }
   }
 
@@ -83,18 +111,15 @@ class List {
         throw new httpErrors.Conflict(EFL.alreadyFinished)
 
       if (list.owner !== this._args.owner)
-        throw new httpErrors.Unauthorized(EFL.unauthorized)
+        throw new httpErrors.Unauthorized(EFL.unauthorizedFinish)
 
-      const usersCollectionRef = global.firestoreDB.collection('users')
-      const user = await usersCollectionRef
-        .doc(this._args?.owner as string)
-        .get()
+      const user = await this._getDetailUserData(this._args.owner as string)
 
-      if (!user.data())
+      if (!user)
         throw new httpErrors.NotFound(EFL.missingOwner)
 
       const userData = {
-        ...user.data(),
+        ...user,
         id: this._args.owner
       } as IUser
 
@@ -115,7 +140,7 @@ class List {
         error.message === EFL.alreadyFinished ||
         error.message === EFL.missingList ||
         error.message === EFL.missingOwner ||
-        error.message === EFL.unauthorized
+        error.message === EFL.unauthorizedFinish
       )
         throw error
 
@@ -151,7 +176,7 @@ class List {
       })
 
       if (teacherLists.length > 0)
-        teacherLists[0].applicants = await this._getDetailUserData(
+        teacherLists[0].applicants = await this._getDetailUsersData(
           teacherLists[0]
         )
 
@@ -167,7 +192,7 @@ class List {
       })
 
       if (studentLists.length > 0)
-        studentLists[0].applicants = await this._getDetailUserData(
+        studentLists[0].applicants = await this._getDetailUsersData(
           studentLists[0]
         )
 
@@ -184,21 +209,27 @@ class List {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  private async _getDetailUserData (iList: IList): Promise<IUser[]> {
-    const collectionRef = global.firestoreDB.collection('users')
+  private async _getDetailUserData (
+    id: string
+  ): Promise<firestore.DocumentData | undefined> {
+    const user = await this._userRef.doc(id).get()
+
+    return user.data()
+  }
+
+  private async _getDetailUsersData (iList: IList): Promise<IUser[]> {
     const length = iList?.applicants?.length as number
     const users: IUser[] = []
-    let user: firestore.DocumentSnapshot<firestore.DocumentData>
+    let user: firestore.DocumentData | undefined
 
     try {
       for (let i = 0; i < length; i++) {
         // eslint-disable-next-line no-await-in-loop
-        user = await collectionRef
-          .doc((iList?.applicants as string[])[i] as string)
-          .get()
+        user = await this._getDetailUserData(
+          (iList?.applicants as string[])[i] as string
+        )
         const userData = {
-          ...user.data(),
+          ...user,
           id: (iList?.applicants as string[])[i]
         } as IUser
 
@@ -211,6 +242,14 @@ class List {
 
       throw new httpErrors.InternalServerError(EFL.errorGettingLists)
     }
+  }
+
+  private async _getNumberOfList (): Promise<number> {
+    const lists = await this._listRef
+      .where('owner', '==', this._args.owner as string)
+      .get()
+
+    return lists.docs.length
   }
 
   public async enroll (userData: IUser): Promise<void> {

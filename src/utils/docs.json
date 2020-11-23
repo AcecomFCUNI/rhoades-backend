@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.33.0"
+    "version": "0.34.0"
   },
   "servers": [
     {
@@ -322,6 +322,36 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The owner is not registered as procurator.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The owner is not in the electoral roll.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The user has already 2 lists registered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }

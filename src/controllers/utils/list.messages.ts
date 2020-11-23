@@ -4,10 +4,12 @@ enum ErrorMessagesForLists {
   errorEnrolling = 'Hubo un problema inscribiendo al ',
   errorFinishingRegistration = 'Hubo un problema finalizando la inscripción de su lista',
   errorGettingLists = 'Hubo un error tratando de obtener las listas registradas.',
+  limitList = 'Usted no puede registrar más de 2 listas.',
   missingList = 'La lista solicitada no existe.',
   missingOwner = 'El dueño de la lista no está registrado.',
   noList = ' no tiene ninguna lista registrada.',
-  unauthorized = 'Usted no puede finalizar la inscripción de una lista que no representa.'
+  unauthorizedFinish = 'Usted no puede finalizar la inscripción de una lista que no representa.',
+  unauthorizedRegistration = 'Usted no puede registrar una lista porque no está registrado.'
 }
 
 enum MessagesForLists {
