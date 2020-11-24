@@ -1,9 +1,16 @@
 # Rhoades Backend
 
+## Version 0.38.0
+
+- Implemented:
+  - Endpoint to filter lists by faculty and type.
+- Fixed:
+  - `changelog.md` file.
+
 ## Version 0.37.0
 
 - Implemented:
-  - Refactor error catching.
+  - Notification when a user without email is trying to register into the system.
 - TODO:
   - Implement endpoint to filter lists by faculty and type.
 

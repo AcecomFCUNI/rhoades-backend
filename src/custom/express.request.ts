@@ -18,6 +18,7 @@ interface CustomRequest extends Request {
     documentNumber?: string
     documentType?  : string
     faculty?       : string
+    type?          : string
   }
 }
 

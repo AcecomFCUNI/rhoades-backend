@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.37.0"
+    "version": "0.38.0"
   },
   "servers": [
     {
@@ -423,7 +423,7 @@
         }
       }
     },
-    "/list/finishRegistration" :{
+    "/list/finishRegistration": {
       "patch": {
         "tags": [
           "list"
@@ -480,6 +480,83 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list/filter": {
+      "get": {
+        "tags": [
+          "list"
+        ],
+        "summary": "Filter the lists by faculty and type.",
+        "operationId": "filter",
+        "parameters": [
+          {
+            "name": "faculty",
+            "in": "query",
+            "description": "Faculty of the list, it must provided for the following type of list: dean, third-of-faculty and faculty-council.",
+            "required": false,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "FIIS",
+                "FIP",
+                "FC",
+                "FIEE",
+                "FIGMM",
+                "FIEECS",
+                "FIC",
+                "FAUA",
+                "FIA",
+                "FIQT",
+                "FIM"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "List type.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "dean",
+                "faculty-council",
+                "rector",
+                "university-assembly",
+                "third-of-faculty",
+                "university-third-assembly",
+                "university-third-council"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All the lists that satisfies the condition.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Lists"
                 }
               }
             }
@@ -568,6 +645,12 @@
           "type": {
             "type": "string"
           }
+        }
+      },
+      "Lists": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/List"
         }
       },
       "EmptyList": {

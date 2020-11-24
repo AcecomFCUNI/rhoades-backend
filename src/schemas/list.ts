@@ -58,8 +58,29 @@ const listFinishRegistrationSchema = joi.object({
   owner: joi.string().length(20).required()
 })
 
+const listFilterByFacultyAndType = joi.object({
+  faculty: joi
+    .when('type', {
+      is  : 'dean',
+      then: joi.string().required().valid(...faculties)
+    })
+    .when('type', {
+      is  : 'faculty-council',
+      then: joi.string().required().valid(...faculties)
+    })
+    .when('type', {
+      is  : 'third-of-faculty',
+      then: joi.string().required().valid(...faculties)
+    }),
+  type: joi
+    .string()
+    .valid(...availablePositionsToApply)
+    .required()
+})
+
 export {
   listCreationSchema,
+  listFilterByFacultyAndType,
   listFinishRegistrationSchema,
   listIdSchema,
   listOwnerSchema

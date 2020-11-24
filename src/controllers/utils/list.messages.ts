@@ -2,6 +2,7 @@ enum ErrorMessagesForLists {
   alreadyFinished = 'La lista ya finalizó su inscripción.',
   errorCreating = 'Hubo un error creando la lista.',
   errorEnrolling = 'Hubo un problema inscribiendo al ',
+  errorFiltering = 'Hubo un problema obteniendo las listas solicitadas.',
   errorFinishingRegistration = 'Hubo un problema finalizando la inscripción de su lista',
   errorGettingLists = 'Hubo un error tratando de obtener las listas registradas.',
   limitList = 'Usted no puede registrar más de 2 listas.',

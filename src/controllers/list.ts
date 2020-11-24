@@ -29,17 +29,53 @@ class List {
   ):
     | Promise<string>
     | Promise<IList>
+    | Promise<IList[]>
     | Promise<Record<string, unknown>>
     | undefined {
     switch (type) {
       case 'createList':
         return this._createList()
+      case 'filter':
+        return this._filter()
       case 'finishRegistration':
         return this._finishRegistration()
       case 'getListsOfUser':
         return this._getListsOfUser()
       default:
         return undefined
+    }
+  }
+
+  private async _filter (): Promise<IList[]> {
+    let lists: firestore.QuerySnapshot<firestore.DocumentData>
+    try {
+      if (!this._args.faculty)
+        lists = await this._listRef
+          .where('type', '==', this._args.type as string)
+          .get()
+      else
+        lists = await this._listRef
+          .where('type', '==', this._args.type as string)
+          .where('faculty', '==', this._args.faculty as string)
+          .get()
+
+      const listsData: IList[] = []
+      for (let i = 0; i < lists.docs.length; i++) {
+        const list = {
+          ...lists.docs[i].data(),
+          id: lists.docs[i].id
+        } as IList
+
+        // eslint-disable-next-line no-await-in-loop
+        list.applicants = await this._getDetailUsersData(list)
+        listsData.push(list)
+      }
+
+      return listsData
+    } catch (error) {
+      console.error(error)
+
+      throw new httpErrors.InternalServerError(EFL.errorCreating)
     }
   }
 

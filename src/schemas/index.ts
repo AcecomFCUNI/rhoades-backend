@@ -1,5 +1,6 @@
 import {
   listCreationSchema,
+  listFilterByFacultyAndType,
   listFinishRegistrationSchema,
   listIdSchema,
   listOwnerSchema
@@ -8,6 +9,7 @@ import { userNotifySchema, userVerifySchema } from './user'
 
 export {
   listCreationSchema,
+  listFilterByFacultyAndType,
   listFinishRegistrationSchema,
   listIdSchema,
   listOwnerSchema,

@@ -6,6 +6,7 @@ import { List as ListC } from '../controllers/index'
 import { DtoList } from '../dto-interfaces/index'
 import {
   listCreationSchema,
+  listFilterByFacultyAndType,
   listFinishRegistrationSchema,
   listOwnerSchema
 } from '../schemas/index'
@@ -69,6 +70,28 @@ List.route('/list/finishRegistration')
         await listFinishRegistrationSchema.validateAsync(list)
         const lc = new ListC(list)
         const result = await lc.process('finishRegistration')
+
+        response(false, { result }, res, 200)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
+List.route('/list/filter')
+  .get(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { query: { faculty, type } } = req
+      const list = {
+        faculty,
+        type
+      } as DtoList
+
+      try {
+        await listFilterByFacultyAndType.validateAsync(list)
+        const lc = new ListC(list)
+        const result = await lc.process('filter')
 
         response(false, { result }, res, 200)
       } catch (error) {
