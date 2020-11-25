@@ -1,5 +1,18 @@
 # Rhoades Backend
 
+## Version 0.39.0
+
+- Implemented:
+  - Error 409 when a user is trying enroll another list of the same type.
+  - Error 403 when a user is trying enroll a list from a different faculty than his.
+- Updated:
+  - Documentation for the `/list/createList` endpoint.
+  - [`readme.md`](https://github.com/AcecomFCUNI/rhoades-backend#readme) file.
+- Fixed:
+  - Error messages.
+  - `changelog.md` file.
+  - Documentation
+
 ## Version 0.38.0
 
 - Implemented:
@@ -179,7 +192,7 @@
 ## Version 0.15.7
 
 - Fixed:
-  - Documentation from the following endpoints: `user/enroll/:code`, `list/createList` and `list/getListsOfUser/:id`.
+  - Documentation of the following endpoints: `user/enroll/:code`, `list/createList` and `list/getListsOfUser/:id`.
   - `changelog.md` file.
 - TODO:
   - Implement single use token.

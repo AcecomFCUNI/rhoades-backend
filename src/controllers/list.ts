@@ -84,24 +84,29 @@ class List {
     try {
       const owner = await this._getDetailUserData(this._args.owner as string)
 
+      // Validating that the owner exists
       if (!owner) throw new httpErrors.NotFound(EFL.missingOwner)
 
+      // Validating that the owner is a procurator
       const ownerData = {
         ...owner,
         id: this._args.owner
       } as IUser
-
       if (!ownerData.registered)
         throw new httpErrors.Unauthorized(EFL.unauthorizedRegistration)
 
-      const numberOfList = await this._getNumberOfList()
+      // Getting the lists of the user to validate if he can or not register a new one
+      const lists = await this._getListsOfUser(ownerData.id)
 
-      if (numberOfList >= 2) throw new httpErrors.Conflict(EFL.limitList)
+      console.log(lists)
 
       switch (this._args.type) {
         case PATA.d:
         case PATA.fc:
         case PATA.tof:
+          // Validating conditions to create a list for a faculty
+          this._validateCreationList(ownerData, lists, true)
+
           list = await this._listRef.add({
             applicants: [],
             closed    : false,
@@ -111,6 +116,9 @@ class List {
           })
           break
         default:
+          // Validating conditions to create a list for the university
+          this._validateCreationList(ownerData, lists)
+
           list = await this._listRef.add({
             applicants: [],
             closed    : false,
@@ -129,9 +137,12 @@ class List {
       console.error(error)
 
       switch (error.message) {
+        case EFL.differentFaculty:
+        case EFL.limitList:
         case EFL.missingOwner:
         case EFL.unauthorizedRegistration:
-        case EFL.limitList:
+        case EFL.teacherListAlready:
+        case EFL.studentListAlready:
           throw error
         default:
           throw new httpErrors.InternalServerError(EFL.errorCreating)
@@ -184,11 +195,19 @@ class List {
     }
   }
 
-  private async _getListsOfUser (): Promise<Record<string, unknown>> {
+  private async _getListsOfUser (
+    ownerId?: string
+  ): Promise<Record<string, unknown>> {
+    let lists: firestore.QuerySnapshot<firestore.DocumentData>
     try {
-      const lists = await this._listRef
-        .where('owner', '==', this._args.owner as string)
-        .get()
+      if (ownerId)
+        lists = await this._listRef
+          .where('owner', '==', ownerId)
+          .get()
+      else
+        lists = await this._listRef
+          .where('owner', '==', this._args.owner as string)
+          .get()
 
       if (lists.docs.length === 0) return {}
 
@@ -280,12 +299,32 @@ class List {
     }
   }
 
-  private async _getNumberOfList (): Promise<number> {
-    const lists = await this._listRef
-      .where('owner', '==', this._args.owner as string)
-      .get()
+  private _validateCreationList (
+    ownerData: IUser,
+    lists    : Record<string, unknown>,
+    faculty? : boolean
+  ): void {
+    if (faculty) {
+      // Validating that the owner belongs to the faculty that he is trying to register
+      if (ownerData.faculty !== this._args.faculty)
+        throw new httpErrors.Forbidden(EFL.differentFaculty)
 
-    return lists.docs.length
+      // Validating that the owner doesn't have another list of teachers
+      if ('teachers' in lists && (this._args.type === PATA.d || this._args.type === PATA.fc))
+        throw new httpErrors.Conflict(EFL.teacherListAlready)
+
+      // Validating that the owner doesn't have another list of students
+      if ('students' in lists && this._args.type === PATA.tof)
+        throw new httpErrors.Conflict(EFL.studentListAlready)
+    }
+
+    // Validating that the owner doesn't have another list of teachers
+    if ('teachers' in lists && (this._args.type === PATA.r || this._args.type === PATA.ua))
+      throw new httpErrors.Conflict(EFL.teacherListAlready)
+
+    // Validating that the owner doesn't have another list of students
+    if ('students' in lists && (this._args.type === PATA.uta || this._args.type === PATA.utc))
+      throw new httpErrors.Conflict(EFL.studentListAlready)
   }
 
   public async enroll (userData: IUser): Promise<void> {

@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.38.0"
+    "version": "0.39.0"
   },
   "servers": [
     {
@@ -327,7 +327,17 @@
             }
           },
           "401": {
-            "description": "The owner is not registered as procurator.",
+            "description": "The user is not registered as procurator.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The user is trying to enroll a list that is from a faculty different from his.",
             "content": {
               "application/json": {
                 "schema": {
@@ -337,7 +347,7 @@
             }
           },
           "404": {
-            "description": "The owner is not in the electoral roll.",
+            "description": "The user is not in the electoral roll.",
             "content": {
               "application/json": {
                 "schema": {
@@ -347,7 +357,7 @@
             }
           },
           "409": {
-            "description": "The user has already 2 lists registered.",
+            "description": "The user has already 2 lists registered, or has already registered a teachers or students list.",
             "content": {
               "application/json": {
                 "schema": {

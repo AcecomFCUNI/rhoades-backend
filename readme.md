@@ -31,6 +31,7 @@ IV =
 
 # Mail
 EMAIL_PASSWORD =
+EMAIL_RECEIVER =
 EMAIL_SENDER =
 
 # Front
