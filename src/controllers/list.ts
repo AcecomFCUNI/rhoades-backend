@@ -46,39 +46,6 @@ class List {
     }
   }
 
-  private async _filter (): Promise<IList[]> {
-    let lists: firestore.QuerySnapshot<firestore.DocumentData>
-    try {
-      if (!this._args.faculty)
-        lists = await this._listRef
-          .where('type', '==', this._args.type as string)
-          .get()
-      else
-        lists = await this._listRef
-          .where('type', '==', this._args.type as string)
-          .where('faculty', '==', this._args.faculty as string)
-          .get()
-
-      const listsData: IList[] = []
-      for (let i = 0; i < lists.docs.length; i++) {
-        const list = {
-          ...lists.docs[i].data(),
-          id: lists.docs[i].id
-        } as IList
-
-        // eslint-disable-next-line no-await-in-loop
-        list.applicants = await this._getDetailUsersData(list)
-        listsData.push(list)
-      }
-
-      return listsData
-    } catch (error) {
-      console.error(error)
-
-      throw new httpErrors.InternalServerError(EFL.errorCreating)
-    }
-  }
-
   private async _createList (): Promise<IList> {
     let list: firestore.DocumentReference<firestore.DocumentData>
     try {
@@ -148,6 +115,39 @@ class List {
     }
   }
 
+  private async _filter (): Promise<IList[]> {
+    let lists: firestore.QuerySnapshot<firestore.DocumentData>
+    try {
+      if (!this._args.faculty)
+        lists = await this._listRef
+          .where('type', '==', this._args.type as string)
+          .get()
+      else
+        lists = await this._listRef
+          .where('type', '==', this._args.type as string)
+          .where('faculty', '==', this._args.faculty as string)
+          .get()
+
+      const listsData: IList[] = []
+      for (let i = 0; i < lists.docs.length; i++) {
+        const list = {
+          ...lists.docs[i].data(),
+          id: lists.docs[i].id
+        } as IList
+
+        // eslint-disable-next-line no-await-in-loop
+        list.applicants = await this._getDetailUsersData(list)
+        listsData.push(list)
+      }
+
+      return listsData
+    } catch (error) {
+      console.error(error)
+
+      throw new httpErrors.InternalServerError(EFL.errorCreating)
+    }
+  }
+
   private async _finishRegistration (): Promise<string> {
     try {
       const list = await this.getListData()
@@ -155,13 +155,13 @@ class List {
       if (list.closed)
         throw new httpErrors.Conflict(EFL.alreadyFinished)
 
-      if (list.owner !== this._args.owner)
-        throw new httpErrors.Forbidden(EFL.unauthorizedFinish)
-
       const owner = await this._getDetailUserData(this._args.owner as string)
 
       if (!owner)
         throw new httpErrors.NotFound(EFL.missingOwner)
+
+      if (list.owner !== this._args.owner)
+        throw new httpErrors.Forbidden(EFL.unauthorizedFinish)
 
       const ownerData = {
         ...owner,

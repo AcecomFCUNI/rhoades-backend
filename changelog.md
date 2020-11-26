@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.40.2
+
+- Fixed:
+  - Error 404 when a user that doesn't exists is trying to finish the registration of a list.
+
 ## Version 0.40.1
 
 - Fixed:

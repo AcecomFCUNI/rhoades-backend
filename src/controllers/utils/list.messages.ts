@@ -8,7 +8,7 @@ enum ErrorMessagesForLists {
   errorGettingLists = 'Hubo un error tratando de obtener las listas registradas.',
   limitList = 'Usted no puede inscribir más de 2 listas.',
   missingList = 'La lista solicitada no existe.',
-  missingOwner = 'El dueño de la lista no está registrado.',
+  missingOwner = 'El personero de la lista no se encuentra registrado.',
   noList = ' no tiene ninguna lista registrada.',
   studentListAlready = 'Usted ya no puede inscribir otra lista de estudiantes.',
   teacherListAlready = 'Usted ya no puede inscribir otra lista de docentes.',
