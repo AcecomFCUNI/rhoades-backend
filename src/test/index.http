@@ -49,12 +49,12 @@ Content-Type: application/json
 }
 
 ### Testing list/createList
-POST http://localhost:3000/api/list/createList?faculty=FIIS
+POST http://localhost:3000/api/list/createList?faculty=FC
 Content-Type: application/json
 
 {
   "args": {
-    "owner": "1ZzkpBvPayaOLZzcvZQE",
+    "owner": "PB1WbtisYdvcI2gnJwJF",
     "type": "dean"
   }
 }

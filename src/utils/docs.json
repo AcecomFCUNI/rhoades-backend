@@ -10,16 +10,20 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.40.0"
+    "version": "0.40.1"
   },
   "servers": [
     {
-      "url": "https://acecom-rhoades.herokuapp.com/api/",
-      "description": "Rhoades prod API"
-    },
-    {
       "url": "https://acecom-rhoades-dev.herokuapp.com/api/",
       "description": "Rhoades dev API"
+    },
+    {
+      "url": "http://54.227.226.104:3000/api/",
+      "description": "Rhoades AWS dev API"
+    },
+    {
+      "url": "https://acecom-rhoades.herokuapp.com/api/",
+      "description": "Rhoades prod API"
     }
   ],
   "tags": [

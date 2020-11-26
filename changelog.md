@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.40.1
+
+- Fixed:
+  - Error 409 when a user was trying to enroll another list of a different type.
+
 ## Version 0.40.0
 
 - Implemented:

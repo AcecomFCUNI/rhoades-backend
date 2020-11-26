@@ -98,8 +98,6 @@ class List {
       // Getting the lists of the user to validate if he can or not register a new one
       const lists = await this._getListsOfUser(ownerData.id)
 
-      console.log(lists)
-
       switch (this._args.type) {
         case PATA.d:
         case PATA.fc:
@@ -178,7 +176,7 @@ class List {
 
       return MFL.finishRegistration
     } catch (error) {
-      console.log(error)
+      console.error(error)
 
       if (error.message.includes('No document to update'))
         throw new httpErrors.NotFound(EFL.missingList)
@@ -251,12 +249,23 @@ class List {
           studentLists[0]
         )
 
-      const finalResult = {
-        students: studentLists[0],
-        teachers: teacherLists[0]
-      }
+      if (studentLists[0] && teacherLists[0])
+        return {
+          students: studentLists[0],
+          teachers: teacherLists[0]
+        }
 
-      return finalResult
+      if (teacherLists[0])
+        return {
+          teachers: teacherLists[0]
+        }
+
+      if (studentLists[0])
+        return {
+          students: studentLists[0]
+        }
+
+      return {}
     } catch (error) {
       console.error(error)
 
