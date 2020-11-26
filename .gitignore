@@ -125,3 +125,6 @@ typings/
 # .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/node,yarn
+
+# pm2
+ecosystem.config.js

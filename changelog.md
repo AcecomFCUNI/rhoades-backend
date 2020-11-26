@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.40.0
+
+- Implemented:
+  - Configuration for `aws`.
+
 ## Version 0.39.0
 
 - Implemented:
