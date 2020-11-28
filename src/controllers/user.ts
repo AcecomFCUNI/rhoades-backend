@@ -176,6 +176,7 @@ class User {
       user = await this._getUserData(document)
 
       return {
+        condition     : user.condition,
         gender        : user.gender || null,
         id            : user.id,
         lastName      : user.lastName,

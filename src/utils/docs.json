@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.40.2"
+    "version": "0.41.0"
   },
   "servers": [
     {
@@ -699,6 +699,13 @@
               "result": {
                 "type": "object",
                 "properties": {
+                  "condition": {
+                    "type": "string",
+                    "enum": [
+                      "student",
+                      "teacher"
+                    ]
+                  },
                   "gender": {
                     "type": "string",
                     "enum": [

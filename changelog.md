@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.41.0
+
+- Implemented:
+  - Condition for the verify endpoint.
+
 ## Version 0.40.2
 
 - Fixed:
