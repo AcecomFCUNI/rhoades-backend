@@ -5,7 +5,11 @@ import {
   listIdSchema,
   listOwnerSchema
 } from './list'
-import { userNotifySchema, userVerifySchema } from './user'
+import {
+  userNotifySchema,
+  userSetCommitteeMembersSchema,
+  userVerifySchema
+} from './user'
 
 export {
   listCreationSchema,
@@ -14,5 +18,6 @@ export {
   listIdSchema,
   listOwnerSchema,
   userNotifySchema,
+  userSetCommitteeMembersSchema,
   userVerifySchema
 }

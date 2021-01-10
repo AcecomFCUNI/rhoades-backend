@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.42.0
+
+- Implemented:
+  - Endpoint to register the committee members with its corresponding documentation.
+
 ## Version 0.41.0
 
 - Implemented:

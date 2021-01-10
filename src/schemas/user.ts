@@ -10,7 +10,13 @@ const userVerifySchema = joi.object({
   documentType  : joi.string().valid('0', '1').required()
 })
 
+const userSetCommitteeMembersSchema = joi
+  .array()
+  .items(joi.string().length(9))
+  .length(9)
+
 export {
   userNotifySchema,
+  userSetCommitteeMembersSchema,
   userVerifySchema
 }

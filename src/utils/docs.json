@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.41.0"
+    "version": "0.42.0"
   },
   "servers": [
     {
@@ -252,6 +252,60 @@
           },
           "409": {
             "description": "The user is already registered or postulating, or the list is closed, or is trying to register himself.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/user/setCommitteeMembers": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Register the electoral committee.",
+        "operationId": "setCommitteeMembers",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DtoIdUsers"
+        },
+        "responses": {
+          "200": {
+            "description": "The committee members were successfully registered.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultSuccess"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The user is a procurator or is postulating",
             "content": {
               "application/json": {
                 "schema": {
@@ -857,6 +911,24 @@
           }
         },
         "required": true
+      },
+      "DtoIdUsers": {
+        "description": "Array with the UNI codes of the members of the electoral Committee",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "args": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       "DtoUserWithGender": {
         "description": "Payload to notify the user",

@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-extra-parens */
 import admin from 'firebase-admin'
 import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom/index'
 import { List } from './list'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
 import { IUser } from '../interfaces/index'
-import { CFU, EFU, MFU } from './utils/index'
+import { CFU, EFU, EMFA, MFU } from './utils/index'
 import {
   deliverPassword,
   MFME,
@@ -18,12 +18,12 @@ import {
 declare const global: CustomNodeJSGlobal
 const KEY_PASSWORD = process.env.KEY_PASSWORD as string
 class User {
-  private _args: DtoUser
+  private _args: DtoUser | DtoUser[]
   private _usersRef: FirebaseFirestore.CollectionReference<
     FirebaseFirestore.DocumentData
   >
 
-  constructor (args: DtoUser) {
+  constructor (args: DtoUser | DtoUser[]) {
     this._args = args
     this._usersRef = global.firestoreDB.collection('users')
   }
@@ -33,6 +33,8 @@ class User {
     list?: DtoList
   ): Promise<IUser> | Promise<string> | undefined {
     switch (type) {
+      case 'committee':
+        return this._setCommitteeMembers()
       case 'enroll':
         return this._enroll(list as DtoList)
       case 'notify':
@@ -44,8 +46,60 @@ class User {
     }
   }
 
+  private async _setCommitteeMembers (): Promise<string> {
+    const posibleMembers = this._args as DtoUser[]
+    const fullData: IUser[] = []
+
+    try {
+      for (let i = 0; i < posibleMembers.length; i++) {
+        this._args = posibleMembers[i]
+        // eslint-disable-next-line no-await-in-loop
+        const data = await this._getUserData('UNICode')
+        const condition = data.condition === 'teacher' ? 'docente': 'estudiante'
+
+        if (data.postulating)
+          throw new httpErrors.Conflict(`El ${condition} identificado con el código: ${data.UNICode} está postulando.`)
+
+        if (data.registered)
+          throw new httpErrors.Conflict(`El ${condition} identificado con el código: ${data.UNICode} es personero`)
+
+        fullData.push(data)
+      }
+
+      const numberOfTeachers = fullData.reduce((result, { condition }) => {
+        return condition === 'teacher' ? ++result : result
+      }, 0)
+
+      const numberOfStudents = fullData.reduce((result, { condition }) => {
+        return condition === 'student' ? ++result : result
+      }, 0)
+
+      if (numberOfTeachers !== 6)
+        throw new httpErrors.BadRequest(EMFA.missingTeachers)
+      if (numberOfStudents !== 3)
+        throw new httpErrors.BadRequest(EMFA.missingStudents)
+
+      for (let i = 0; i < fullData.length; i++)
+        // eslint-disable-next-line no-await-in-loop
+        await this._usersRef
+          .doc(fullData[i].id as string)
+          .update({
+            committeeMember: true
+          })
+
+      return 'The committee members were successfully registered'
+    } catch (error) {
+      console.log(error)
+      if (error instanceof httpErrors.HttpError) throw error
+
+      throw new httpErrors.InternalServerError(EMFA.generic)
+    }
+  }
+
   private async _enroll (list: DtoList): Promise<IUser> {
-    const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
+    const document = (this._args as DtoUser)?.documentType === '0'
+      ? 'documentNumber'
+      : 'UNICode'
 
     try {
       const listData = await new List(list).getListData()
@@ -55,9 +109,9 @@ class User {
       const ownerData = await this._getUserData(undefined, listData.owner)
 
       // Validating if the user being registered is the owner
-      if (document === 'UNICode' && ownerData.UNICode === this._args.documentNumber)
+      if (document === 'UNICode' && ownerData.UNICode === (this._args as DtoUser).documentNumber)
         throw new httpErrors.Conflict(EFU.errorEnrolling7)
-      if (document === 'documentNumber' && ownerData.documentNumber === this._args.documentNumber)
+      if (document === 'documentNumber' && ownerData.documentNumber === (this._args as DtoUser).documentNumber)
         throw new httpErrors.Conflict(EFU.errorEnrolling7)
 
       // Validating if the procurator is registered
@@ -108,7 +162,7 @@ class User {
         case EFU.errorEnrolling7:
           throw error
         default:
-          throw this._args?.condition === 'teacher'
+          throw (this._args as DtoUser)?.condition === 'teacher'
             ? new httpErrors.InternalServerError(`${EFU.errorEnrolling}${CFU.pTeacher}`)
             : new httpErrors.InternalServerError(`${EFU.errorEnrolling}${CFU.pStudent}`)
       }
@@ -137,7 +191,7 @@ class User {
       await this._usersRef
         .doc(user.id as string)
         .update({
-          gender    : this._args?.gender,
+          gender    : (this._args as DtoUser)?.gender,
           registered: true
         })
 
@@ -150,7 +204,7 @@ class User {
 
       await notifyProcuratorRegistered({
         ...user,
-        gender: this._args.gender
+        gender: (this._args as DtoUser).gender
       } as IUser)
 
       return MFU.updateAndNotifySuccess
@@ -169,7 +223,9 @@ class User {
   }
 
   private async _verify (): Promise<IUser> {
-    const document = this._args?.documentType === '0' ? 'documentNumber' : 'UNICode'
+    const document = (this._args as DtoUser)?.documentType === '0'
+      ? 'documentNumber'
+      : 'UNICode'
     let user: IUser
 
     try {
@@ -228,7 +284,7 @@ class User {
 
     if (document) {
       user = await this._usersRef
-        .where(document as string, '==', this._args?.documentNumber as string)
+        .where(document as string, '==', (this._args as DtoUser)?.documentNumber as string)
         .get()
 
       if (user.docs.length === 0)
@@ -245,14 +301,16 @@ class User {
     if (id)
       user = await this._usersRef.doc(id as string).get()
     else
-      user = await this._usersRef.doc(this._args?.id as string).get()
+      user = await this._usersRef
+        .doc((this._args as DtoUser)?.id as string)
+        .get()
 
     if (!user.data())
       throw new httpErrors.NotFound(EFU.userNotFound)
 
     return {
       ...user.data(),
-      id: this._args.id as string
+      id: (this._args as DtoUser).id as string
     } as IUser
   }
 }

@@ -70,6 +70,24 @@ Content-Type: application/json
   }
 }
 
+### Testing user/setCommitteeMembers
+POST http://localhost:3000/api/user/setCommitteeMembers
+Content-Type: application/json
+
+{
+  "args": [
+    "20140118I",
+    "20172083F",
+    "20184093A",
+    "20182215B",
+    "20102587E",
+    "20191305K",
+    "20160374K",
+    "20151315E",
+    "20182163B"
+  ]
+}
+
 ### Testing /list/finishRegistration/
 PATCH http://localhost:3000/api/list/finishRegistration
 Content-Type: application/json
