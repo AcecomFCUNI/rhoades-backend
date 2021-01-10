@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.42.1
+
+- Fixed:
+  - Changed from post to patch method.
+
 ## Version 0.42.0
 
 - Implemented:
