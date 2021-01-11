@@ -50,6 +50,14 @@ class User {
     const fullData: IUser[] = []
 
     try {
+      // Verify if there aren't committee members
+      const currentCommitteeMembers = await this._usersRef
+        .where('committeeMember', '==', true)
+        .get()
+
+      if (currentCommitteeMembers.docs.length > 0)
+        throw new httpErrors.Conflict(EMFA.committeeAlreadyRegistered)
+
       for (let i = 0; i < posibleMembers.length; i++) {
         this._args = posibleMembers[i]
         // eslint-disable-next-line no-await-in-loop
@@ -60,7 +68,7 @@ class User {
           throw new httpErrors.Conflict(`El ${condition} identificado con el código: ${data.UNICode} está postulando.`)
 
         if (data.registered)
-          throw new httpErrors.Conflict(`El ${condition} identificado con el código: ${data.UNICode} es personero`)
+          throw new httpErrors.Conflict(`El ${condition} identificado con el código: ${data.UNICode} es personero.`)
 
         fullData.push(data)
       }
@@ -87,6 +95,7 @@ class User {
           })
 
       return 'The committee members were successfully registered'
+
     } catch (error) {
       return errorHandling(error, EMFA.generic)
     }

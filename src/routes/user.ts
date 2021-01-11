@@ -98,7 +98,7 @@ User.route('/user/setCommitteeMembers')
         const uc = new UserC(committeeMembers)
         const result = await uc.process('committee')
 
-        response(true, { result }, res, 200)
+        response(false, { result }, res, 200)
       } catch (error) {
         if (error.isJoi) error.status = 422
         next(error)

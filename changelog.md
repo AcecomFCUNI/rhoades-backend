@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.46.3
+
+- Fixed:
+  - Added validation for the setCommittee members endpoint, now it is impossible to register a new committee when there is one already registered.
+
 ## Version 0.46.2
 
 - Fixed:
