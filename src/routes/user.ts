@@ -72,7 +72,7 @@ User.route('/user/enroll/:code')
         const uc = new UserC(user)
         const result = await uc.process('enroll', args as DtoList)
 
-        response(true, { result }, res, 200)
+        response(false, { result }, res, 200)
       } catch (error) {
         if (error.isJoi) error.status = 422
         next(error)

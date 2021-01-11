@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.49.1
+
+- Fixed:
+  - Changed error from true to false in the enroll endpoint.
+
 ## Version 0.49.0
 
 - Implemented:
