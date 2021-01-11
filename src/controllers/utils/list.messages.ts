@@ -1,5 +1,6 @@
 enum ErrorMessagesForLists {
   alreadyFinished = 'La lista ya finalizó su inscripción.',
+  alreadyFinishedCanNotDelete = 'La lista ya finalizó su inscripción, no puede ser eliminada.',
   differentFaculty = 'Usted no puede inscribir una lista en una facultad que no es la suya.',
   errorCreating = 'Hubo un error creando la lista.',
   errorEnrolling = 'Hubo un problema inscribiendo al ',
@@ -13,6 +14,7 @@ enum ErrorMessagesForLists {
   noList = ' no tiene ninguna lista registrada.',
   studentListAlready = 'Usted ya no puede inscribir otra lista de estudiantes.',
   teacherListAlready = 'Usted ya no puede inscribir otra lista de docentes.',
+  unauthorizedDeletion = 'Usted no puede eliminar una lista que no representa.',
   unauthorizedFinish = 'Usted no puede finalizar la inscripción de una lista que no representa.',
   unauthorizedRegistration = 'Usted no puede inscribir una lista porque no está registrado.',
   unauthorizedRemoveCandidate = 'Usted no puede remover un candidato en una lista a la que no representa.'

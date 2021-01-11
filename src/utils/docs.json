@@ -463,42 +463,44 @@
         "requestBody": {
           "$ref": "#/components/requestBodies/DtoListWithoutId"
         },
-        "200": {
-          "description": "The list has been successfully deleted.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DefaultSuccess"
+        "responses": {
+          "200": {
+            "description": "The list has been successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultSuccess"
+                }
               }
             }
-          }
-        },
-        "401": {
-          "description": "The provided owner is not registered as procurator or it is not the owner.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DefaultError"
+          },
+          "401": {
+            "description": "The provided owner is not registered as procurator or it is not the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
               }
             }
-          }
-        },
-        "422": {
-          "description": "There is an error in the payload structure.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DefaultError"
+          },
+          "422": {
+            "description": "There is an error in the payload structure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
               }
             }
-          }
-        },
-        "500": {
-          "description": "Internal server error.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DefaultError"
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
               }
             }
           }

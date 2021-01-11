@@ -115,11 +115,14 @@ class List {
 
       // Validate if the owner is registered
       if (!owner.registered)
-        throw new httpErrors.Forbidden()
+        throw new httpErrors.Forbidden(EFL.missingOwner)
 
       // Validate if the provided owner is the owner of the list
       if (list.owner !== this._args.owner)
-        throw new httpErrors.Forbidden()
+        throw new httpErrors.Forbidden(EFL.unauthorizedDeletion)
+
+      if (list.closed)
+        throw new httpErrors.Conflict(EFL.alreadyFinishedCanNotDelete)
 
       await this._listRef.doc(this._args.id as string).delete()
 

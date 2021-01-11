@@ -1,5 +1,11 @@
 # Rhoades Backend
 
+## Version 0.47.1
+
+- Fixed:
+  - Errors from the endpoint to delete a list.
+  - Responses from the documentation of the endpoint to delete a list.
+
 ## Version 0.47.0
 
 - Implemented:
