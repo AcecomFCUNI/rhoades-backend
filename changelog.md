@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.49.0
+
+- Implemented:
+  - The Unauthorized errors from the endpoints were changed to Forbidden.
+
 ## Version 0.48.0
 
 - Implemented:

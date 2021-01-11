@@ -121,7 +121,7 @@ class User {
 
       // Validating if the procurator is registered
       if (!ownerData.registered)
-        throw new httpErrors.Unauthorized(EFU.errorEnrolling6)
+        throw new httpErrors.Forbidden(EFU.errorEnrolling6)
 
       // Validating if the procurator is the owner of the list
       if (listData.owner !== list.owner)

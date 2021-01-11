@@ -64,8 +64,9 @@ class List {
         ...owner,
         id: this._args.owner
       } as IUser
+
       if (!ownerData.registered)
-        throw new httpErrors.Unauthorized(EFL.unauthorizedRegistration)
+        throw new httpErrors.Forbidden(EFL.forbiddenRegistration)
 
       // Getting the lists of the user to validate if he can or not register a new one
       const lists = await this._getListsOfUser(ownerData.id)
@@ -119,7 +120,7 @@ class List {
 
       // Validate if the provided owner is the owner of the list
       if (list.owner !== this._args.owner)
-        throw new httpErrors.Forbidden(EFL.unauthorizedDeletion)
+        throw new httpErrors.Forbidden(EFL.forbiddenDeletion)
 
       if (list.closed)
         throw new httpErrors.Conflict(EFL.alreadyFinishedCanNotDelete)
@@ -178,7 +179,7 @@ class List {
         throw new httpErrors.NotFound(EFL.missingOwner)
 
       if (list.owner !== this._args.owner)
-        throw new httpErrors.Forbidden(EFL.unauthorizedFinish)
+        throw new httpErrors.Forbidden(EFL.forbiddenFinish)
 
       const ownerData = {
         ...owner,
@@ -315,11 +316,11 @@ class List {
       const owner = await this._getDetailUserData(this._args.owner as string)
 
       if (!owner.registered)
-        throw new httpErrors.Unauthorized(EFL.unauthorizedRemoveCandidate)
+        throw new httpErrors.Forbidden(EFL.forbiddenRemoveCandidate)
 
       // Validate if the provided owner is the owner of the list
       if (this._args.owner !== list.owner)
-        throw new httpErrors.Forbidden(EFL.unauthorizedRemoveCandidate)
+        throw new httpErrors.Forbidden(EFL.forbiddenRemoveCandidate)
 
       // Validate if the list contains the candidate
       if (!list.applicants?.includes(idCandidate))

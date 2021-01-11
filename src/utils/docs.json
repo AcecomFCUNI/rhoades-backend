@@ -226,18 +226,8 @@
               }
             }
           },
-          "401": {
-            "description": "The user who is trying to enroll a user is not registered.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefaultError"
-                }
-              }
-            }
-          },
           "403": {
-            "description": "The procurator who is trying to enroll a user is not he owner of the list.",
+            "description": "The provided owner is not he owner of the list or is not registered as procurator.",
             "content": {
               "application/json": {
                 "schema": {
@@ -390,18 +380,8 @@
               }
             }
           },
-          "401": {
-            "description": "The user is not registered as procurator.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefaultError"
-                }
-              }
-            }
-          },
           "403": {
-            "description": "The user is trying to enroll a list that is from a faculty different from his.",
+            "description": "The provided owner is trying to enroll a list that is from a faculty different from his or is not registered as procurator.",
             "content": {
               "application/json": {
                 "schema": {
@@ -474,7 +454,7 @@
               }
             }
           },
-          "401": {
+          "403": {
             "description": "The provided owner is not registered as procurator or it is not the owner.",
             "content": {
               "application/json": {
@@ -757,7 +737,7 @@
             }
           },
           "403": {
-            "description": "The user is trying to remove a candidate from a list that is different from his.",
+            "description": "The provided owner is trying to remove a candidate from a list that is different from his or is not registered as procurator.",
             "content": {
               "application/json": {
                 "schema": {
