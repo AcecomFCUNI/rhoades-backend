@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.46.4
+
+- Fixed:
+  - Error in the removeCandidate endpoint, candidateId wasn't being processed.
+
 ## Version 0.46.3
 
 - Fixed:

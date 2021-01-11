@@ -99,5 +99,16 @@ Content-Type: application/json
   }
 }
 
+### Testing /list/removeCandidate/:candaditeId
+DELETE http://localhost:3000/api/list/removeCandidate/00i1nTLankmpi9OMh4NE
+Content-Type: application/json
+
+{
+  "args": {
+    "owner": "1ZzkpBvPayaOLZzcvZQE",
+    "id": "6g1FTTlSKO0YsFkRWsFY"
+  }
+}
+
 ### Tesing /list/filter/
 GET http://localhost:3000/api/list/filter?faculty=FIIS&type=third-of-faculty
