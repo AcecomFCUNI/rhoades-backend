@@ -5,7 +5,7 @@ import { EMFA } from './service.messages'
 import { CFU, EFU, MFU } from './user.messages'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
-const errorHandling = (error: any, message: string): never => {
+const errorHandling = (error: any, message?: string): never => {
   console.error(error)
 
   if (error.message.includes('No document to update'))

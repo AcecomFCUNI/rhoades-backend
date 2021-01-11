@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.47.3
+
+- Fixed:
+  - Now a list that is closed can not be deleted.
+  - Request body for the delete list endpoint.
+  - The process of the list deletion is now being awaited before the response.
+
 ## Version 0.47.2
 
 - Fixed:

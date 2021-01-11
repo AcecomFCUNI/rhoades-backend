@@ -135,7 +135,7 @@ List.route('/list/delete')
       try {
         await listFinishRegistrationSchema.validateAsync(list)
         const lc = new ListC(list)
-        const result = lc.process('deleteList')
+        const result = await lc.process('deleteList')
 
         response(false, { result }, res, 200)
       } catch (error) {

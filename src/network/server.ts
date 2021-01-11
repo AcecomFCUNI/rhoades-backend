@@ -39,7 +39,7 @@ class Server {
 
         res.header(
           'Access-Control-Allow-Methods',
-          'GET, PATCH, POST'
+          'DELETE, GET, PATCH, POST'
         )
         next()
       }

@@ -88,6 +88,17 @@ Content-Type: application/json
   ]
 }
 
+### Testing /list/delete
+DELETE http://localhost:3000/api/list/delete
+Content-Type: application/json
+
+{
+  "args": {
+    "owner": "Zpk5htPbalXNHVA589Sm",
+    "id": "T7JDO7x7ExrrgKjANjW4"
+  }
+}
+
 ### Testing /list/finishRegistration/
 PATCH http://localhost:3000/api/list/finishRegistration
 Content-Type: application/json
