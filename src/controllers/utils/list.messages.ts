@@ -1,6 +1,7 @@
 enum ErrorMessagesForLists {
   alreadyFinished = 'La lista ya finalizó su inscripción.',
   alreadyFinishedCanNotDelete = 'La lista ya finalizó su inscripción, no puede ser eliminada.',
+  alreadyFinishedCanNotDeleteUser = 'La lista ya finalizó su inscripción, no puede eliminar un candidato.',
   differentFaculty = 'Usted no puede inscribir una lista en una facultad que no es la suya.',
   errorCreating = 'Hubo un error creando la lista.',
   errorEnrolling = 'Hubo un problema inscribiendo al ',

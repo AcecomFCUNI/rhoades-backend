@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.47.0"
+    "version": "0.47.2"
   },
   "servers": [
     {
@@ -453,7 +453,7 @@
         }
       }
     },
-    "list/delete": {
+    "/list/delete": {
       "delete": {
         "tags": [
           "list"
@@ -476,6 +476,16 @@
           },
           "401": {
             "description": "The provided owner is not registered as procurator or it is not the owner.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The list is closed and can not be deleted.",
             "content": {
               "application/json": {
                 "schema": {
@@ -757,7 +767,7 @@
             }
           },
           "409": {
-            "description": "The requested candidate is not in the provided list.",
+            "description": "The requested candidate is not in the provided list or the list is closed.",
             "content": {
               "application/json": {
                 "schema": {

@@ -1,5 +1,11 @@
 # Rhoades Backend
 
+## Version 0.47.2
+
+- Fixed:
+  - Now a candidate can't be deleted once the list is closed.
+  - Documentation related to the delete list endpoint.
+
 ## Version 0.47.1
 
 - Fixed:

@@ -325,6 +325,9 @@ class List {
       if (!list.applicants?.includes(idCandidate))
         throw new httpErrors.Conflict(EFL.missingUserInList)
 
+      if (list.closed)
+        throw new httpErrors.Conflict(EFL.alreadyFinishedCanNotDeleteUser)
+
       // Deleting user from the list
       await this._listRef.doc(this._args.id as string).update({
         applicants: firestore.FieldValue.arrayRemove(idCandidate)
