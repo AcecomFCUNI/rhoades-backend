@@ -25,7 +25,8 @@ class List {
   }
 
   public process (
-    type: string
+    type        : string,
+    idCandidate?: string
   ):
     | Promise<string>
     | Promise<IList>
@@ -41,6 +42,8 @@ class List {
         return this._finishRegistration()
       case 'getListsOfUser':
         return this._getListsOfUser()
+      case 'removeCandidate':
+        return this._removeCandidate(idCandidate as string)
       default:
         return undefined
     }
@@ -276,6 +279,43 @@ class List {
       return users
     } catch (error) {
       return errorHandling(error, EFL.errorGettingLists)
+    }
+  }
+
+  private async _removeCandidate (idCandidate: string): Promise<string> {
+    try {
+      const list = await this.getListData()
+
+      // Validate if the owner is registered
+      const owner = await this._getDetailUserData(this._args.owner as string)
+      const ownerData = {
+        ...owner
+      } as IUser
+
+      if (!ownerData.registered)
+        throw new httpErrors.Unauthorized(EFL.unauthorizedRemoveCandidate)
+
+      // Validate if the owner of the list
+      if (this._args.owner !== list.owner)
+        throw new httpErrors.Forbidden(EFL.unauthorizedRemoveCandidate)
+
+      // Validate if the list contains the candidate
+      if (!list.applicants?.includes(idCandidate))
+        throw new httpErrors.Conflict(EFL.missingUserInList)
+
+      // Deleting user from the list
+      await this._listRef.doc(this._args.id as string).update({
+        applicants: firestore.FieldValue.arrayRemove(idCandidate)
+      })
+
+      // Updating candidate status
+      await this._userRef.doc(idCandidate).update({
+        postulating: false
+      })
+
+      return MFL.deletedUserSuccessfully
+    } catch (error) {
+      return errorHandling(error, error.message)
     }
   }
 

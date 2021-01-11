@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.46.0
+
+- Implemented:
+  - Endpoint to remove user from a list.
+
 ## Version 0.45.3
 
 - Fixed:

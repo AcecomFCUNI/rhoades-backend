@@ -101,4 +101,26 @@ List.route('/list/filter')
     }
   )
 
+List.route('/list/removeCandidate/:candidateId')
+  .delete(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { body: { args } } = req
+      const list = {
+        id   : (args as DtoList).id,
+        owner: (args as DtoList).owner
+      } as DtoList
+
+      try {
+        await listFinishRegistrationSchema.validateAsync(list)
+        const lc = new ListC(list)
+        const result = await lc.process('removeCandidate')
+
+        response(false, { result }, res, 200)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
 export { List }

@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.45.3"
+    "version": "0.46.0"
   },
   "servers": [
     {
@@ -631,6 +631,90 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Lists"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list/removeCandidate/{candidateId}": {
+      "delete": {
+        "tags": [
+          "list"
+        ],
+        "summary": "Remove the requested candidate from the requested list.",
+        "operationId": "removeCandidate",
+        "parameters": [
+          {
+            "name": "candidateId",
+            "in": "path",
+            "description": "Firebase candidate to remove id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The candidate has successfully removed from the list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is not registered as procurator.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            } 
+          },
+          "403": {
+            "description": "The user is trying to remove a candidate from a list that is different from his.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The requested candidate is not in the provided list.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "There is an error in the payload structure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }
