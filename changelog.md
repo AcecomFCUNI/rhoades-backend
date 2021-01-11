@@ -1,5 +1,11 @@
 # Rhoades Backend
 
+## Version 0.46.1
+
+- Fixed:
+  - Changed setCommitteeMembers endpoint from patch to post.
+
+
 ## Version 0.46.0
 
 - Implemented:

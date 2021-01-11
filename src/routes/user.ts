@@ -81,7 +81,7 @@ User.route('/user/enroll/:code')
   )
 
 User.route('/user/setCommitteeMembers')
-  .patch(
+  .post(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args } } = req
 
