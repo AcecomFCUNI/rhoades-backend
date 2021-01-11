@@ -3,7 +3,7 @@ import firestore from '@google-cloud/firestore'
 import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom/index'
 import { DtoList } from '../dto-interfaces/index'
-import { CFU, EFL, MFL } from './utils/index'
+import { CFU, EFL, MFL, errorHandling } from './utils/index'
 import { PATA, notifyFinishRegistrationList } from '../utils/index'
 import { IList, IUser } from '../interfaces/index'
 
@@ -99,19 +99,7 @@ class List {
 
       return dataList
     } catch (error) {
-      console.error(error)
-
-      switch (error.message) {
-        case EFL.differentFaculty:
-        case EFL.limitList:
-        case EFL.missingOwner:
-        case EFL.unauthorizedRegistration:
-        case EFL.teacherListAlready:
-        case EFL.studentListAlready:
-          throw error
-        default:
-          throw new httpErrors.InternalServerError(EFL.errorCreating)
-      }
+      return errorHandling(error, EFL.errorCreating)
     }
   }
 
@@ -176,20 +164,7 @@ class List {
 
       return MFL.finishRegistration
     } catch (error) {
-      console.error(error)
-
-      if (error.message.includes('No document to update'))
-        throw new httpErrors.NotFound(EFL.missingList)
-
-      switch (error.message) {
-        case EFL.alreadyFinished:
-        case EFL.missingList:
-        case EFL.missingOwner:
-        case EFL.unauthorizedFinish:
-          throw error
-        default:
-        throw new httpErrors.InternalServerError(EFL.errorFinishingRegistration)
-      }
+      return errorHandling(error, EFL.errorFinishingRegistration)
     }
   }
 
@@ -267,9 +242,7 @@ class List {
 
       return {}
     } catch (error) {
-      console.error(error)
-
-      throw error
+      return errorHandling(error, error.message)
     }
   }
 
@@ -302,9 +275,7 @@ class List {
 
       return users
     } catch (error) {
-      console.error(error)
-
-      throw new httpErrors.InternalServerError(EFL.errorGettingLists)
+      return errorHandling(error, EFL.errorGettingLists)
     }
   }
 
@@ -342,11 +313,12 @@ class List {
         applicants: firestore.FieldValue.arrayUnion(userData.id as string)
       })
     } catch (error) {
-      console.error(error)
-
-      throw userData.condition === 'teacher'
-        ? new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pTeacher}`)
-        : new httpErrors.InternalServerError(`${EFL.errorEnrolling}${CFU.pStudent}`)
+      errorHandling(
+        error,
+        userData.condition === 'teacher'
+          ? `${EFL.errorEnrolling}${CFU.pTeacher}`
+          : `${EFL.errorEnrolling}${CFU.pStudent}`
+      )
     }
   }
 

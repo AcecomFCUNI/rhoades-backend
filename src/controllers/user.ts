@@ -5,10 +5,9 @@ import { CustomNodeJSGlobal } from '../custom/index'
 import { List } from './list'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
 import { IUser } from '../interfaces/index'
-import { CFU, EFU, EMFA, MFU } from './utils/index'
+import { errorHandling, CFU, EFU, EMFA, MFU } from './utils/index'
 import {
   deliverPassword,
-  MFME,
   generatePassword,
   notifyProcuratorRegistered,
   notifyProcuratorWithoutMail,
@@ -89,10 +88,7 @@ class User {
 
       return 'The committee members were successfully registered'
     } catch (error) {
-      console.log(error)
-      if (error instanceof httpErrors.HttpError) throw error
-
-      throw new httpErrors.InternalServerError(EMFA.generic)
+      return errorHandling(error, EMFA.generic)
     }
   }
 
@@ -144,28 +140,12 @@ class User {
 
       return userData
     } catch (error) {
-      console.error(error)
-
-      switch (error.message) {
-        case EFU.teacherNotFound:
-        case EFU.studentNotFound:
-        case `${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling1}`:
-        case `${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling1}`:
-        case `${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling2}`:
-        case `${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling2}`:
-        case `${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling3}`:
-        case `${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling3}`:
-        case `${CFU.indefiniteArticle}${CFU.teacher}${EFU.errorEnrolling4}${CFU.student}s.`:
-        case `${CFU.indefiniteArticle}${CFU.student}${EFU.errorEnrolling4}${CFU.teacher}s.`:
-        case EFU.errorEnrolling5:
-        case EFU.errorEnrolling6:
-        case EFU.errorEnrolling7:
-          throw error
-        default:
-          throw (this._args as DtoUser)?.condition === 'teacher'
-            ? new httpErrors.InternalServerError(`${EFU.errorEnrolling}${CFU.pTeacher}`)
-            : new httpErrors.InternalServerError(`${EFU.errorEnrolling}${CFU.pStudent}`)
-      }
+      return errorHandling(
+        error,
+        (this._args as DtoUser)?.condition === 'teacher'
+          ? `${EFU.errorEnrolling}${CFU.pTeacher}`
+          : `${EFU.errorEnrolling}${CFU.pStudent}`
+      )
     }
   }
 
@@ -209,16 +189,7 @@ class User {
 
       return MFU.updateAndNotifySuccess
     } catch (error) {
-      console.log(error)
-
-      switch (error.message) {
-        case MFME.generic:
-        case EFU.userHasNotMail:
-        case EFU.userNotFound:
-          throw error
-        default:
-          throw new httpErrors.InternalServerError(EFU.errorNotifying)
-      }
+      return errorHandling(error, EFU.errorNotifying)
     }
   }
 
@@ -242,12 +213,7 @@ class User {
         secondLastName: user.secondLastName
       } as IUser
     } catch (error) {
-      console.error(error)
-
-      if (error.message === EFU.userNotFound)
-        throw error
-
-      throw new httpErrors.InternalServerError(EFU.errorVerifyingUser)
+      return errorHandling(error, EFU.errorVerifyingUser)
     }
   }
 

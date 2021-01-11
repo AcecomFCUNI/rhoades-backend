@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.43.0
+
+- Implemented:
+  - New way to handle controllers errors.
+
 ## Version 0.42.1
 
 - Fixed:
