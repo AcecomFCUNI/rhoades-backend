@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.48.0
+
+- Implemented:
+  - Now the errors use the error message has default, in the errorHandling.
+
 ## Version 0.47.3
 
 - Fixed:

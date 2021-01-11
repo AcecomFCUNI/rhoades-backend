@@ -14,7 +14,7 @@ const errorHandling = (error: any, message?: string): never => {
   if (error instanceof httpErrors.HttpError)
     throw error
 
-  throw new httpErrors.InternalServerError(message)
+  throw new httpErrors.InternalServerError(message ?? error.message)
 }
 
 export { CFU, EFL, EFU, EMFA, MFL, MFU, errorHandling }

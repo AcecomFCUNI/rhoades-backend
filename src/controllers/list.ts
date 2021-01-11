@@ -128,7 +128,7 @@ class List {
 
       return MFL.deletedListSuccessfully
     } catch (error) {
-      return errorHandling(error, error.message)
+      return errorHandling(error)
     }
   }
 
@@ -271,7 +271,7 @@ class List {
 
       return {}
     } catch (error) {
-      return errorHandling(error, error.message)
+      return errorHandling(error)
     }
   }
 
@@ -340,7 +340,7 @@ class List {
 
       return MFL.deletedUserSuccessfully
     } catch (error) {
-      return errorHandling(error, error.message)
+      return errorHandling(error)
     }
   }
 
