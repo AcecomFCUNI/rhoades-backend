@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.46.4"
+    "version": "0.47.0"
   },
   "servers": [
     {
@@ -453,6 +453,58 @@
         }
       }
     },
+    "list/delete": {
+      "delete": {
+        "tags": [
+          "list"
+        ],
+        "summary": "Delete a list from a procurator",
+        "operationId": "deleteList",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DtoListWithoutId"
+        },
+        "200": {
+          "description": "The list has been successfully deleted.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultSuccess"
+              }
+            }
+          }
+        },
+        "401": {
+          "description": "The provided owner is not registered as procurator or it is not the owner.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultError"
+              }
+            }
+          }
+        },
+        "422": {
+          "description": "There is an error in the payload structure.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultError"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefaultError"
+              }
+            }
+          }
+        }
+      }
+    },
     "/list/getListsOfUser/{id}": {
       "get": {
         "tags": [
@@ -690,7 +742,7 @@
                   "$ref": "#/components/schemas/DefaultError"
                 }
               }
-            } 
+            }
           },
           "403": {
             "description": "The user is trying to remove a candidate from a list that is different from his.",

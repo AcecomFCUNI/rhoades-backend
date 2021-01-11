@@ -19,6 +19,7 @@ enum ErrorMessagesForLists {
 }
 
 enum MessagesForLists {
+  deletedListSuccessfully = 'Se eliminó su lista correctamente',
   deletedUserSuccessfully = 'Se eliminó correctamente al candidato de su lista.',
   finishRegistration = 'Su lista finalizó su inscripción correctamente.',
   success = 'Su lista fue creada exitosamente.'

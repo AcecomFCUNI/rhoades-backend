@@ -1,5 +1,11 @@
 # Rhoades Backend
 
+## Version 0.47.0
+
+- Implemented:
+  - Rework of the `_getDetailUserData` method from the list controller.
+  - Endpoint to delete a list.
+
 ## Version 0.46.4
 
 - Fixed:

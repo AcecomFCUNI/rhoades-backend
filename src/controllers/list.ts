@@ -36,6 +36,8 @@ class List {
     switch (type) {
       case 'createList':
         return this._createList()
+      case 'deleteList':
+        return this._deleteList()
       case 'filter':
         return this._filter()
       case 'finishRegistration':
@@ -103,6 +105,27 @@ class List {
       return dataList
     } catch (error) {
       return errorHandling(error, EFL.errorCreating)
+    }
+  }
+
+  private async _deleteList (): Promise<string> {
+    try {
+      const list = await this.getListData()
+      const owner = await this._getDetailUserData(this._args.owner as string)
+
+      // Validate if the owner is registered
+      if (!owner.registered)
+        throw new httpErrors.Forbidden()
+
+      // Validate if the provided owner is the owner of the list
+      if (list.owner !== this._args.owner)
+        throw new httpErrors.Forbidden()
+
+      await this._listRef.doc(this._args.id as string).delete()
+
+      return MFL.deletedListSuccessfully
+    } catch (error) {
+      return errorHandling(error, error.message)
     }
   }
 
@@ -251,16 +274,19 @@ class List {
 
   private async _getDetailUserData (
     id: string
-  ): Promise<firestore.DocumentData | undefined> {
+  ): Promise<IUser> {
     const user = await this._userRef.doc(id).get()
 
-    return user.data()
+    return {
+      ...user.data(),
+      id
+    } as IUser
   }
 
   private async _getDetailUsersData (iList: IList): Promise<IUser[]> {
     const length = iList?.applicants?.length as number
     const users: IUser[] = []
-    let user: firestore.DocumentData | undefined
+    let user: IUser
 
     try {
       for (let i = 0; i < length; i++) {
@@ -268,12 +294,8 @@ class List {
         user = await this._getDetailUserData(
           (iList?.applicants as string[])[i] as string
         )
-        const userData = {
-          ...user,
-          id: (iList?.applicants as string[])[i]
-        } as IUser
 
-        users.push(userData)
+        users.push(user)
       }
 
       return users
@@ -288,14 +310,11 @@ class List {
 
       // Validate if the owner is registered
       const owner = await this._getDetailUserData(this._args.owner as string)
-      const ownerData = {
-        ...owner
-      } as IUser
 
-      if (!ownerData.registered)
+      if (!owner.registered)
         throw new httpErrors.Unauthorized(EFL.unauthorizedRemoveCandidate)
 
-      // Validate if the owner of the list
+      // Validate if the provided owner is the owner of the list
       if (this._args.owner !== list.owner)
         throw new httpErrors.Forbidden(EFL.unauthorizedRemoveCandidate)
 
