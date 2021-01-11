@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.46.2
+
+- Fixed:
+  - Added request body to the documentation of the removeCandidate endpoint.
+
 ## Version 0.46.1
 
 - Fixed:

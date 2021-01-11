@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.46.1"
+    "version": "0.46.2"
   },
   "servers": [
     {
@@ -668,6 +668,9 @@
             }
           }
         ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DtoListWithIdAndOwner"
+        },
         "responses": {
           "200": {
             "description": "The candidate has successfully removed from the list",
