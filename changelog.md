@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.45.1
+
+- Fixed:
+  - A procurator can't register a candidate from another faculty in a list of dean, third of faculty or faculty council.
+
 ## Version 0.45.0
 
 - Implemented:

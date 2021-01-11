@@ -4,7 +4,7 @@ import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom/index'
 import { List } from './list'
 import { DtoList, DtoUser } from '../dto-interfaces/index'
-import { IUser } from '../interfaces/index'
+import { IList, IUser } from '../interfaces/index'
 import { errorHandling, CFU, EFU, EMFA, MFU } from './utils/index'
 import {
   deliverPassword,
@@ -127,14 +127,24 @@ class User {
 
       if (userData.condition === 'teacher')
         if (isATeacherList)
-          await this._validateAndEnroll(userData, new List(list))
+          await this._validateAndEnroll(
+            userData,
+            new List(list),
+            ownerData,
+            listData
+          )
         else
           throw new httpErrors.BadRequest(`${CFU.indefiniteArticle}${CFU.teacher}${EFU.errorEnrolling4}${CFU.student}s.`)
       else
         if (isATeacherList)
           throw new httpErrors.BadRequest(`${CFU.indefiniteArticle}${CFU.student}${EFU.errorEnrolling4}${CFU.teacher}s.`)
         else
-          await this._validateAndEnroll(userData, new List(list))
+          await this._validateAndEnroll(
+            userData,
+            new List(list),
+            ownerData,
+            listData
+          )
 
       userData = await this._getUserData(document)
 
@@ -218,7 +228,12 @@ class User {
     }
   }
 
-  private async _validateAndEnroll (userData: IUser, list: List) {
+  private async _validateAndEnroll (
+    userData: IUser,
+    list    : List,
+    owner   : IUser,
+    listData: IList
+  ): Promise<void> {
     if ('postulating' in userData || userData.postulating)
       throw userData.condition === 'teacher'
         ? new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling1}`)
@@ -233,6 +248,14 @@ class User {
       throw userData.condition === 'teacher'
         ? new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling3}`)
         : new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling3}`)
+
+    if (
+      listData.type === PATA.d ||
+      listData.type === PATA.fc ||
+      listData.type === PATA.tof
+    )
+      if (owner.faculty !== userData.faculty)
+        throw new httpErrors.BadRequest(EFU.errorEnrolling8)
 
     await this._usersRef
       .doc(userData.id as string)
