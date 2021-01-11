@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.43.0"
+    "version": "0.44.0"
   },
   "servers": [
     {
@@ -758,6 +758,22 @@
                     "enum": [
                       "student",
                       "teacher"
+                    ]
+                  },
+                  "faculty": {
+                    "type": "string",
+                    "enum": [
+                      "FIIS",
+                      "FIP",
+                      "FC",
+                      "FIEE",
+                      "FIGMM",
+                      "FIEECS",
+                      "FIC",
+                      "FAUA",
+                      "FIA",
+                      "FIQT",
+                      "FIM"
                     ]
                   },
                   "gender": {

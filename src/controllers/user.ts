@@ -204,6 +204,7 @@ class User {
 
       return {
         condition     : user.condition,
+        faculty       : user.faculty,
         gender        : user.gender || null,
         id            : user.id,
         lastName      : user.lastName,

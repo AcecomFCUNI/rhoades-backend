@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.44.0
+
+- Implemented:
+  - Added faculty field to the response of the verify endpoint.
+
 ## Version 0.43.0
 
 - Implemented:
