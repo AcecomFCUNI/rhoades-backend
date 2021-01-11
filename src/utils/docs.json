@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.45.2"
+    "version": "0.45.3"
   },
   "servers": [
     {
@@ -135,6 +135,16 @@
           },
           "404": {
             "description": "Teacher or student not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The user doesn't have email or is already registered.",
             "content": {
               "application/json": {
                 "schema": {

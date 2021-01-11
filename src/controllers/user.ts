@@ -166,6 +166,10 @@ class User {
       const newPassword = generatePassword(KEY_PASSWORD)
       const user = await this._getUserData()
 
+      // Verify if the user is already registered
+      if (user.registered)
+        throw new httpErrors.Conflict(EFU.errorNotifying2)
+
       // Verify if the user has email
       if ('mail' in user && user.mail !== '') {
         hasEmail = true

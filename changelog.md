@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.45.3
+
+- Fixed:
+  - Validation the check if the user is registered in the notify endpoint.
+
 ## Version 0.45.2
 
 - Fixed:

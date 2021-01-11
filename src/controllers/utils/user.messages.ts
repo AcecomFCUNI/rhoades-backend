@@ -18,6 +18,7 @@ enum ErrorMessagesForUsers {
   errorEnrolling7 = 'Usted no puede registrarse en su propia lista.',
   errorEnrolling8 = 'Usted no puede registrar a alguien de otra facultad',
   errorNotifying = 'Hubo un error generando la contraseña del usuario.',
+  errorNotifying2 = 'Usted ya se encuentra registrado como personero.',
   errorVerifying = 'Hubo un error mientras se intentaba verificar el ',
   errorVerifyingUser = 'Hubo un error verificando al usuario.',
   generic = 'Hubo un error intentando inscribir al usuario',

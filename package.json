@@ -1,6 +1,6 @@
 {
   "name": "rhoades-backend",
-  "version": "0.45.2",
+  "version": "0.45.3",
   "main": "src/index.ts",
   "description": "Backend for the application to automatize the registration of lists",
   "scripts": {
