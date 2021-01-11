@@ -1,18 +1,18 @@
 /* eslint-disable no-extra-parens */
 import admin from 'firebase-admin'
 import httpErrors from 'http-errors'
-import { CustomNodeJSGlobal } from '../custom/index'
+import { CustomNodeJSGlobal } from '../custom'
 import { List } from './list'
-import { DtoList, DtoUser } from '../dto-interfaces/index'
-import { IList, IUser } from '../interfaces/index'
-import { errorHandling, CFU, EFU, EMFA, MFU } from './utils/index'
+import { DtoList, DtoUser } from '../dto-interfaces'
+import { IList, IUser } from '../interfaces'
+import { errorHandling, CFU, EFU, EMFA, MFU } from './utils'
 import {
   deliverPassword,
   generatePassword,
   notifyProcuratorRegistered,
   notifyProcuratorWithoutMail,
   PATA
-} from '../utils/index'
+} from '../utils'
 
 declare const global: CustomNodeJSGlobal
 const KEY_PASSWORD = process.env.KEY_PASSWORD as string

@@ -1,7 +1,7 @@
 import express from 'express'
 import morgan from 'morgan'
 import { applyRoutes } from './routes'
-import { firebaseConnection, redisConnection } from '../database/index'
+import { firebaseConnection, redisConnection } from '../database'
 
 class Server {
   public app                 : express.Application

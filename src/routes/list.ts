@@ -1,15 +1,15 @@
 /* eslint-disable no-extra-parens */
 import { NextFunction, Router } from 'express'
-import { Request, Response } from '../custom/index'
-import { response } from '../utils/index'
-import { List as ListC } from '../controllers/index'
-import { DtoList } from '../dto-interfaces/index'
+import { Request, Response } from '../custom'
+import { response } from '../utils'
+import { List as ListC } from '../controllers'
+import { DtoList } from '../dto-interfaces'
 import {
   listCreationSchema,
   listFilterByFacultyAndType,
   listFinishRegistrationSchema,
   listOwnerSchema
-} from '../schemas/index'
+} from '../schemas'
 
 const List = Router()
 

@@ -1,14 +1,14 @@
 import { NextFunction, Router } from 'express'
-import { Request, Response } from '../custom/index'
-import { User as UserC } from '../controllers/index'
-import { response } from '../utils/index'
-import { DtoList, DtoUser } from '../dto-interfaces/index'
+import { Request, Response } from '../custom'
+import { User as UserC } from '../controllers'
+import { response } from '../utils'
+import { DtoList, DtoUser } from '../dto-interfaces'
 import {
   listFinishRegistrationSchema,
   userNotifySchema,
   userSetCommitteeMembersSchema,
   userVerifySchema
-} from '../schemas/index'
+} from '../schemas'
 
 const User = Router()
 

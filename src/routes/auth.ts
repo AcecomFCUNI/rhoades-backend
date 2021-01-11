@@ -1,15 +1,14 @@
 /* eslint-disable no-extra-parens, max-len */
-import httpErrors from 'http-errors'
 import joi from 'joi'
 import { NextFunction, Response, Router } from 'express'
-import { Request } from '../custom/index'
+import { Request } from '../custom'
 import {
   response,
   signAccessToken,
   signRefreshToken,
-  verifyAccessToken,
-  verifyRefreshToken
-} from '../utils/index'
+  verifyAccessToken
+  // verifyRefreshToken
+} from '../utils'
 import { DtoUser } from '../dto-interfaces'
 
 const validationSchema = joi.object({

@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.50.0
+
+- Implemented:
+  - Simplification of the imports, importing from `index.ts` file is no longer required, now modules are being imported from the folder itself.
+
 ## Version 0.49.1
 
 - Fixed:
