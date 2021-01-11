@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.45.0
+
+- Implemented:
+  - Removed aws server url.
+
 ## Version 0.44.0
 
 - Implemented:
