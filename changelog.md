@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.45.2
+
+- Fixed:
+  - Documentation of the setCommitteeMembers endpoint.
+
 ## Version 0.45.1
 
 - Fixed:
