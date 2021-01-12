@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.51.1
+
+- Fixed:
+  - The endpoint to enroll didn't validate if the following fields where true or not: postulating, registered and committeeMember.
+
 ## Version 0.51.0
 
 - Implemented:

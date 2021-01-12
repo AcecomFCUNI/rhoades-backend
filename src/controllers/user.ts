@@ -247,17 +247,17 @@ class User {
     owner   : IUser,
     listData: IList
   ): Promise<void> {
-    if ('postulating' in userData || userData.postulating)
+    if ('postulating' in userData && userData.postulating)
       throw userData.condition === 'teacher'
         ? new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling1}`)
         : new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling1}`)
 
-    if ('registered' in userData || userData.registered)
+    if ('registered' in userData && userData.registered)
       throw userData.condition === 'teacher'
         ? new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling2}`)
         : new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling2}`)
 
-    if ('committeeMember' in userData || userData.committeeMember)
+    if ('committeeMember' in userData && userData.committeeMember)
       throw userData.condition === 'teacher'
         ? new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.teacher}${EFU.errorEnrolling3}`)
         : new httpErrors.Conflict(`${CFU.definiteArticle}${CFU.student}${EFU.errorEnrolling3}`)
