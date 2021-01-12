@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.51.2
+
+- Fixed:
+  - Removed `\n` character from the response of the notify endpoint.
+
 ## Version 0.51.1
 
 - Fixed:
