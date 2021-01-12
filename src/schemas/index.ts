@@ -3,9 +3,11 @@ import {
   listFilterByFacultyAndType,
   listFinishRegistrationSchema,
   listIdSchema,
-  listOwnerSchema
+  listOwnerSchema,
+  listReviewSchema
 } from './list'
 import {
+  userIdSchema,
   userNotifySchema,
   userSetCommitteeMembersSchema,
   userVerifySchema
@@ -17,6 +19,8 @@ export {
   listFinishRegistrationSchema,
   listIdSchema,
   listOwnerSchema,
+  listReviewSchema,
+  userIdSchema,
   userNotifySchema,
   userSetCommitteeMembersSchema,
   userVerifySchema

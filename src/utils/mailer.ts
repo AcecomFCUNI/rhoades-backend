@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import { IList, IUser } from '../interfaces'
 import { MFE, MFME } from './messages'
-import { PATA } from './constants'
+import { PATA, PATA_IS } from './constants'
 
 const EMAIL_SENDER = process.env.EMAIL_SENDER as string
 const EMAIL_RECEIVER = process.env.EMAIL_RECEIVER as string
@@ -42,7 +42,7 @@ const deliverPassword = async (
     to
   }
 
-  sendMail(mailOptions)
+  await sendMail(mailOptions)
 }
 
 const notifyProcuratorRegistered = async (
@@ -61,7 +61,7 @@ const notifyProcuratorRegistered = async (
     to     : EMAIL_RECEIVER
   }
 
-  sendMail(mailOptions)
+  await sendMail(mailOptions)
 }
 
 const notifyFinishRegistrationList = async (
@@ -101,7 +101,7 @@ const notifyFinishRegistrationList = async (
     to     : EMAIL_RECEIVER
   }
 
-  sendMail(mailOptions)
+  await sendMail(mailOptions)
 }
 
 const notifyProcuratorWithoutMail = async (
@@ -122,12 +122,35 @@ const notifyProcuratorWithoutMail = async (
     to     : EMAIL_RECEIVER
   }
 
-  sendMail(mailOptions)
+  await sendMail(mailOptions)
+}
+
+const notifyProcuratorListReviewed = async (
+  owner      : IUser,
+  status     : string,
+  observation: string,
+  type       : string
+): Promise<void> => {
+  let statusInSpanish: string
+
+  if (status === 'accepted') statusInSpanish = 'aceptada'
+  else if (status === 'observed') statusInSpanish = 'observada'
+  else statusInSpanish = 'rechazada'
+
+  const mailOptions = {
+    ...generalMailOptions,
+    subject: `Lista de ${PATA_IS[type]}: ${statusInSpanish.toUpperCase()}`,
+    text   : observation,
+    to     : owner.mail || owner.optionalMail
+  }
+
+  await sendMail(mailOptions)
 }
 
 export {
   deliverPassword,
   notifyFinishRegistrationList,
+  notifyProcuratorListReviewed,
   notifyProcuratorRegistered,
   notifyProcuratorWithoutMail
 }

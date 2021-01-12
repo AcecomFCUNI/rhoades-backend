@@ -4,7 +4,11 @@ import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom'
 import { DtoList } from '../dto-interfaces'
 import { CFU, EFL, MFL, errorHandling } from './utils'
-import { PATA, notifyFinishRegistrationList } from '../utils'
+import {
+  PATA,
+  notifyProcuratorListReviewed,
+  notifyFinishRegistrationList
+} from '../utils'
 import { IList, IUser } from '../interfaces'
 
 declare const global: CustomNodeJSGlobal
@@ -26,12 +30,14 @@ class List {
 
   public process (
     type        : string,
-    idCandidate?: string
+    idCandidate?: string,
+    adminId?    : string
   ):
     | Promise<string>
     | Promise<IList>
     | Promise<IList[]>
     | Promise<Record<string, unknown>>
+    | Promise<void>
     | undefined {
     switch (type) {
       case 'createList':
@@ -46,6 +52,8 @@ class List {
         return this._getListsOfUser()
       case 'removeCandidate':
         return this._removeCandidate(idCandidate as string)
+      case 'review':
+        return this._review(adminId as string)
       default:
         return undefined
     }
@@ -342,6 +350,45 @@ class List {
       return MFL.deletedUserSuccessfully
     } catch (error) {
       return errorHandling(error)
+    }
+  }
+
+  private async _review (adminId: string): Promise<string> {
+    try {
+      const adminUser = await this._getDetailUserData(adminId)
+
+      // Validating admin
+      if (adminUser.condition !== 'admin')
+        throw new httpErrors.Forbidden(EFL.noAdmin)
+
+      // Validating list closed
+      const list = await this.getListData()
+      if (!list.closed)
+        throw new httpErrors.Conflict(EFL.listNotClosed)
+
+      // Validating owner registered
+      const owner = await this._getDetailUserData(this._args.owner as string)
+
+      if (!owner.registered)
+        throw new httpErrors.Forbidden(EFL.forbiddenRegistration)
+
+      // Notifying procurator and updating the database
+      await Promise.all([
+        await notifyProcuratorListReviewed(
+          owner,
+          this._args.status as string,
+          this._args.observation as string,
+          list.type as string
+        ),
+        await this._listRef.doc(this._args.id as string).update({
+          observation: this._args.observation,
+          status     : this._args.status
+        })
+      ])
+
+      return MFL.reviewed
+    } catch (error) {
+      return errorHandling(error, EFL.errorReviewing)
     }
   }
 

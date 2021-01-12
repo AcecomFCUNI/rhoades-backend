@@ -8,14 +8,17 @@ enum ErrorMessagesForLists {
   errorFiltering = 'Hubo un problema obteniendo las listas solicitadas.',
   errorFinishingRegistration = 'Hubo un problema finalizando la inscripción de su lista',
   errorGettingLists = 'Hubo un error tratando de obtener las listas registradas.',
+  errorReviewing = 'Hubo un error notificando al personero de la lista.',
   forbiddenDeletion = 'Usted no puede eliminar una lista que no representa.',
   forbiddenFinish = 'Usted no puede finalizar la inscripción de una lista que no representa.',
   forbiddenRegistration = 'Usted no puede inscribir una lista porque no está registrado.',
   forbiddenRemoveCandidate = 'Usted no puede remover un candidato en una lista a la que no representa.',
   limitList = 'Usted no puede inscribir más de 2 listas.',
+  listNotClosed = 'No se puede revisar una lista que no ha finalizado su inscripción.',
   missingList = 'La lista solicitada no existe.',
   missingOwner = 'El personero de la lista no se encuentra registrado.',
   missingUserInList = 'El candidato solicitado no se encuentra registrado en la lista.',
+  noAdmin = 'Esta accción solo la puede realizar un administrador.',
   noList = ' no tiene ninguna lista registrada.',
   studentListAlready = 'Usted ya no puede inscribir otra lista de estudiantes.',
   teacherListAlready = 'Usted ya no puede inscribir otra lista de docentes.'
@@ -25,6 +28,7 @@ enum MessagesForLists {
   deletedListSuccessfully = 'Se eliminó su lista correctamente',
   deletedUserSuccessfully = 'Se eliminó correctamente al candidato de su lista.',
   finishRegistration = 'Su lista finalizó su inscripción correctamente.',
+  reviewed = 'El personero de la lista fue notificado exitosamente.',
   success = 'Su lista fue creada exitosamente.'
 }
 

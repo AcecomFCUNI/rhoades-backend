@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.50.0"
+    "version": "0.51.0"
   },
   "servers": [
     {
@@ -717,21 +717,11 @@
         },
         "responses": {
           "200": {
-            "description": "The candidate has successfully removed from the list",
+            "description": "The candidate has been successfully removed from the list",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DefaultSuccess"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "The user is not registered as procurator.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }
@@ -748,6 +738,99 @@
           },
           "409": {
             "description": "The requested candidate is not in the provided list or the list is closed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "There is an error in the payload structure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list/review/{adminId}/{status}": {
+      "patch": {
+        "tags": [
+          "list"
+        ],
+        "summary": "Review the list by accepting, rejecting or observing it.",
+        "operationId": "review",
+        "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "description": "Firebase admin id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "path",
+            "description": "Status of the review.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "accepted",
+                "observed",
+                "rejected"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/DtoListReview"
+        },
+        "responses": {
+          "200": {
+            "description": "The list has been successfully reviewed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultSuccess"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The provided owner is not registered or the provided admin is not really an admin.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The list is not closed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1183,6 +1266,35 @@
                     "id": {
                       "type": "string",
                       "description": "Firebase list id"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "DtoListReview": {
+        "description": "Owner and id list",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "args": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Firebase list id"
+                    },
+                    "observation": {
+                      "type": "string",
+                      "description": "Message from the electoral committee to the procurator"
+                    },
+                    "owner": {
+                      "type": "string",
+                      "description": "Firebase user id"
                     }
                   }
                 }

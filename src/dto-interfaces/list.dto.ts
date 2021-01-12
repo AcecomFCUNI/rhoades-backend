@@ -1,6 +1,8 @@
 export interface DtoList {
-  faculty?: string
-  id?     : string
-  owner?  : string
-  type?   : string
+  faculty?    : string
+  id?         : string
+  observation?: string
+  owner?      : string
+  status?     : string
+  type?       : string
 }

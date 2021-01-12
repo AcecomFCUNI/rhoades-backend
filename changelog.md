@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.51.0
+
+- Implemented:
+  - Review endpoint, now the committee member, through its admin account can accept, reject or observe a list once the inscription process is over.
+
 ## Version 0.50.0
 
 - Implemented:

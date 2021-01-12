@@ -1,5 +1,9 @@
 import joi from 'joi'
 
+const userIdSchema = joi.object({
+  id: joi.string().length(20).required()
+})
+
 const userNotifySchema = joi.object({
   gender: joi.string().valid('F', 'M').required(),
   id    : joi.string().length(20).required()
@@ -16,6 +20,7 @@ const userSetCommitteeMembersSchema = joi
   .length(9)
 
 export {
+  userIdSchema,
   userNotifySchema,
   userSetCommitteeMembersSchema,
   userVerifySchema

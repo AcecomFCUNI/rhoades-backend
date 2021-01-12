@@ -78,10 +78,18 @@ const listFilterByFacultyAndType = joi.object({
     .required()
 })
 
+const listReviewSchema = joi.object({
+  id         : joi.string().length(20).required(),
+  observation: joi.string(),
+  owner      : joi.string().length(20).required(),
+  status     : joi.string().valid('accepted', 'observed', 'rejected')
+})
+
 export {
   listCreationSchema,
   listFilterByFacultyAndType,
   listFinishRegistrationSchema,
   listIdSchema,
-  listOwnerSchema
+  listOwnerSchema,
+  listReviewSchema
 }

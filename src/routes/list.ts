@@ -5,10 +5,12 @@ import { response } from '../utils'
 import { List as ListC } from '../controllers'
 import { DtoList } from '../dto-interfaces'
 import {
+  userIdSchema,
   listCreationSchema,
   listFilterByFacultyAndType,
   listFinishRegistrationSchema,
-  listOwnerSchema
+  listOwnerSchema,
+  listReviewSchema
 } from '../schemas'
 
 const List = Router()
@@ -136,6 +138,31 @@ List.route('/list/delete')
         await listFinishRegistrationSchema.validateAsync(list)
         const lc = new ListC(list)
         const result = await lc.process('deleteList')
+
+        response(false, { result }, res, 200)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
+List.route('/list/review/:adminId/:status')
+  .patch(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { body: { args }, params: { adminId, status } } = req
+      const list = {
+        id         : (args as DtoList).id,
+        observation: (args as DtoList).observation,
+        owner      : (args as DtoList).owner,
+        status
+      } as DtoList
+
+      try {
+        await listReviewSchema.validateAsync(list)
+        await userIdSchema.validateAsync(adminId)
+        const lc = new ListC(list)
+        const result = await lc.process('review', undefined, adminId)
 
         response(false, { result }, res, 200)
       } catch (error) {
