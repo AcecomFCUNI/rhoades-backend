@@ -65,7 +65,7 @@ class List {
       const owner = await this._getDetailUserData(this._args.owner as string)
 
       // Validating that the owner exists
-      if (!owner) throw new httpErrors.NotFound(EFL.missingOwner)
+      if (!owner.registered) throw new httpErrors.NotFound(EFL.missingOwner)
 
       // Validating that the owner is a procurator
       const ownerData = {
@@ -183,7 +183,7 @@ class List {
 
       const owner = await this._getDetailUserData(this._args.owner as string)
 
-      if (!owner)
+      if (!owner.registered)
         throw new httpErrors.NotFound(EFL.missingOwner)
 
       if (list.owner !== this._args.owner)
@@ -324,7 +324,7 @@ class List {
       const owner = await this._getDetailUserData(this._args.owner as string)
 
       if (!owner.registered)
-        throw new httpErrors.Forbidden(EFL.forbiddenRemoveCandidate)
+        throw new httpErrors.Forbidden(EFL.missingOwner)
 
       // Validate if the provided owner is the owner of the list
       if (this._args.owner !== list.owner)

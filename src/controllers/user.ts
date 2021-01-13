@@ -111,17 +111,17 @@ class User {
 
       if (listData.closed) throw new httpErrors.Conflict(EFU.errorEnrolling5)
 
-      const ownerData = await this._getUserData(undefined, listData.owner)
+      const ownerData = await this._getUserData(undefined, list.owner)
 
-      // Validating if the user being registered is the owner
+      // Validating if the procurator is registered
+      if (!ownerData.registered)
+        throw new httpErrors.Forbidden(EFU.errorEnrolling9)
+
+      // Validating if the user that is going to be enrolled is the owner
       if (document === 'UNICode' && ownerData.UNICode === (this._args as DtoUser).documentNumber)
         throw new httpErrors.Conflict(EFU.errorEnrolling7)
       if (document === 'documentNumber' && ownerData.documentNumber === (this._args as DtoUser).documentNumber)
         throw new httpErrors.Conflict(EFU.errorEnrolling7)
-
-      // Validating if the procurator is registered
-      if (!ownerData.registered)
-        throw new httpErrors.Forbidden(EFU.errorEnrolling6)
 
       // Validating if the procurator is the owner of the list
       if (listData.owner !== list.owner)

@@ -65,7 +65,7 @@ Content-Type: application/json
 
 {
   "args": {
-    "id": "y1e1Bj1KvGACiBdW9vBd",
+    "id": "BohYVQsBpcPjH8MpqCKk",
     "owner": "1ZzkpBvPayaOLZzcvZQE"
   }
 }
@@ -111,13 +111,13 @@ Content-Type: application/json
 }
 
 ### Testing /list/removeCandidate/:candaditeId
-DELETE http://localhost:3000/api/list/removeCandidate/00i1nTLankmpi9OMh4NE
+DELETE http://localhost:3000/api/list/removeCandidate/1ZzkpBvPayaOLZzcvZQE
 Content-Type: application/json
 
 {
   "args": {
-    "owner": "1ZzkpBvPayaOLZzcvZQE",
-    "id": "6g1FTTlSKO0YsFkRWsFY"
+    "owner": "1ZzkpBvPayaOLZzcvZQe",
+    "id": "YwLmC8GszwWRLXo0AX70"
   }
 }
 

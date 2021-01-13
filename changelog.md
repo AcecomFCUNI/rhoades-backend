@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.51.3
+
+- Fixed:
+  - Error messages from the endpoints finishRegistration, removeCandidate and enroll when the provided owner was not found.
+
 ## Version 0.51.2
 
 - Fixed:

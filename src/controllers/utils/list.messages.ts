@@ -16,7 +16,7 @@ enum ErrorMessagesForLists {
   limitList = 'Usted no puede inscribir más de 2 listas.',
   listNotClosed = 'No se puede revisar una lista que no ha finalizado su inscripción.',
   missingList = 'La lista solicitada no existe.',
-  missingOwner = 'El personero de la lista no se encuentra registrado.',
+  missingOwner = 'El personero provisto no se encuentra registrado.',
   missingUserInList = 'El candidato solicitado no se encuentra registrado en la lista.',
   noAdmin = 'Esta accción solo la puede realizar un administrador.',
   noList = ' no tiene ninguna lista registrada.',
