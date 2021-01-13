@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.51.3"
+    "version": "0.52.0"
   },
   "servers": [
     {
@@ -434,7 +434,7 @@
       }
     },
     "/list/delete": {
-      "delete": {
+      "patch": {
         "tags": [
           "list"
         ],
@@ -693,7 +693,7 @@
       }
     },
     "/list/removeCandidate/{candidateId}": {
-      "delete": {
+      "patch": {
         "tags": [
           "list"
         ],

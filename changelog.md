@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.52.0
+
+- Implemented:
+  - Replaced delete methods for patch, because delete methods thrown cors error.
+
 ## Version 0.51.3
 
 - Fixed:

@@ -104,7 +104,7 @@ List.route('/list/filter')
   )
 
 List.route('/list/removeCandidate/:candidateId')
-  .delete(
+  .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args }, params: { candidateId } } = req
       const list = {
@@ -126,7 +126,7 @@ List.route('/list/removeCandidate/:candidateId')
   )
 
 List.route('/list/delete')
-  .delete(
+  .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args } } = req
       const list = {
