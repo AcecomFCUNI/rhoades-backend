@@ -19,6 +19,7 @@ enum ErrorMessagesForLists {
   missingOwner = 'El personero provisto no se encuentra registrado.',
   missingUserInList = 'El candidato solicitado no se encuentra registrado en la lista.',
   noAdmin = 'Esta accción solo la puede realizar un administrador.',
+  noAdminRegistered = 'Esta accción solo la puede realizar un administrador y este no se encuentra registrado.',
   noList = ' no tiene ninguna lista registrada.',
   studentListAlready = 'Usted ya no puede inscribir otra lista de estudiantes.',
   teacherListAlready = 'Usted ya no puede inscribir otra lista de docentes.'

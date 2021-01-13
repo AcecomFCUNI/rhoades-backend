@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.52.2
+
+- Fixed:
+  - Added validation to the review endpoint, now the controller validates whether the admin is registered or not.
+
 ## Version 0.52.1
 
 - Fixed:

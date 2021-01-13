@@ -361,6 +361,9 @@ class List {
       if (adminUser.condition !== 'admin')
         throw new httpErrors.Forbidden(EFL.noAdmin)
 
+      if (!adminUser.registered)
+        throw new httpErrors.Forbidden(EFL.noAdminRegistered)
+
       // Validating list closed
       const list = await this.getListData()
       if (!list.closed)
