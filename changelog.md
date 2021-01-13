@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.52.1
+
+- Fixed:
+  - Validation of the id coming from the review list endpoint.
+
 ## Version 0.52.0
 
 - Implemented:

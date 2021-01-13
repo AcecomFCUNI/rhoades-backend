@@ -160,7 +160,7 @@ List.route('/list/review/:adminId/:status')
 
       try {
         await listReviewSchema.validateAsync(list)
-        await userIdSchema.validateAsync(adminId)
+        await userIdSchema.validateAsync({ id: adminId })
         const lc = new ListC(list)
         const result = await lc.process('review', undefined, adminId)
 

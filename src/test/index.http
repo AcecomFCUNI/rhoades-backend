@@ -123,3 +123,15 @@ Content-Type: application/json
 
 ### Tesing /list/filter/
 GET http://localhost:3000/api/list/filter?faculty=FIIS&type=third-of-faculty
+
+### Review /list/review
+PATCH http://localhost:3000/api/list/review/TTxBOWGeIhLbAaEwxWjb/accepted
+Content-Type: application/json
+
+{
+  "args": {
+    "id": "6g1FTTlSKO0YsFkRWsFY",
+    "observation": "Te aceptamos",
+    "owner": "1ZzkpBvPayaOLZzcvZQE"
+  }
+}
