@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.55.1
+
+- Fixed:
+  - Now, when a list is deleted, all the applicants return their postulating field to false.
+
 ## Version 0.55.0
 
 - Implemented:

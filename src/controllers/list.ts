@@ -133,7 +133,16 @@ class List {
       if (list.closed)
         throw new httpErrors.Conflict(EFL.alreadyFinishedCanNotDelete)
 
-      await this._listRef.doc(this._args.id as string).delete()
+      if (list.applicants && list.applicants?.length > 0)
+        await Promise.all([
+          ...(list.applicants as string[]).map(async id => {
+            // eslint-disable-next-line no-return-await
+            return await this._userRef.doc(id).update({ postulating: false })
+          }),
+          this._listRef.doc(this._args.id as string).delete()
+        ])
+      else
+        await this._listRef.doc(this._args.id as string).delete()
 
       return MFL.deletedListSuccessfully
     } catch (error) {
