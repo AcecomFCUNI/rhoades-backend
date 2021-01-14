@@ -1,5 +1,6 @@
 import httpErrors from 'http-errors'
 
+import { EFF } from './file.messages'
 import { EFL, MFL } from './list.messages'
 import { EMFA } from './service.messages'
 import { CFU, EFU, MFU } from './user.messages'
@@ -17,4 +18,4 @@ const errorHandling = (error: any, message?: string): never => {
   throw new httpErrors.InternalServerError(message ?? error.message)
 }
 
-export { CFU, EFL, EFU, EMFA, MFL, MFU, errorHandling }
+export { CFU, EFF, EFL, EFU, EMFA, MFL, MFU, errorHandling }

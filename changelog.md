@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.56.0
+
+- Implemented:
+  - [`express-fileupload`](https://www.npmjs.com/package/express-fileupload) to receive files from the client.
+  - [`mongoose`](https://www.npmjs.com/package/mongoose) to create our file model and connect to our MongoDB database to perform crud operations.
+  - Endpoint to upload documents.
+
 ## Version 0.55.1
 
 - Fixed:

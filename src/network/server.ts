@@ -1,11 +1,13 @@
 import express from 'express'
+import upload from 'express-fileupload'
 import morgan from 'morgan'
 import { applyRoutes } from './routes'
-import { firebaseConnection, redisConnection } from '../database'
+import { firebaseConnection, mongoConnection, redisConnection } from '../database'
 
 class Server {
   public app                 : express.Application
   private _firebaseConnection: (() => void) | undefined
+  private _mongooseConnection: (() => void) | undefined
   private _redisConnection   : (() => void) | undefined
 
   constructor () {
@@ -17,6 +19,7 @@ class Server {
     this.app.set('port', process.env.PORT as string || '3000')
     this.app.use(morgan('dev'))
     this.app.use(express.json())
+    this.app.use(upload())
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(
       (
@@ -52,6 +55,11 @@ class Server {
     this._firebaseConnection()
   }
 
+  private _mongo (): void {
+    this._mongooseConnection = mongoConnection
+    this._mongooseConnection()
+  }
+
   private _redis (): void {
     this._redisConnection = redisConnection
     this._redisConnection()
@@ -63,7 +71,10 @@ class Server {
     )
 
     try {
-      this._firebase()
+      Promise.all([
+        this._firebase(),
+        this._mongo()
+      ])
       // this._redis()
     } catch (error) {
       console.error(error)

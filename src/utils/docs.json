@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.55.1"
+    "version": "0.56.0"
   },
   "servers": [
     {
@@ -20,6 +20,10 @@
     {
       "url": "https://acecom-rhoades.herokuapp.com/api/",
       "description": "Rhoades prod API"
+    },
+    {
+      "url": "http://localhost:3000/api/",
+      "description": "Rhoades local API"
     }
   ],
   "tags": [
@@ -916,6 +920,88 @@
           },
           "409": {
             "description": "The list is not closed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "There is an error in the payload structure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/upload/{idList}": {
+      "post": {
+        "tags": [
+          "list"
+        ],
+        "summary": "Upload the files related to the list.",
+        "operationId": "fileUpload",
+        "parameters": [
+          {
+            "name": "idList",
+            "in": "path",
+            "description": "Firebase list id.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fileId": {
+                    "type": "string"
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The list has been successfully reviewed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The provided format is not allowed.",
             "content": {
               "application/json": {
                 "schema": {
