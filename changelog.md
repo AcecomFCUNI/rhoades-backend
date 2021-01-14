@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.54.0
+
+- Implemented:
+  - Postulating field is now returned in the verify endpoint.
+
 ## Version 0.53.0
 
 - Implemented:

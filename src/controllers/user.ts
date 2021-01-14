@@ -233,6 +233,7 @@ class User {
         lastName      : user.lastName,
         mail          : user.mail || user.optionalMail || '',
         names         : user.names,
+        postulating   : user.postulating ?? false,
         registered    : !user.registered ? false : user.registered,
         secondLastName: user.secondLastName
       } as IUser
