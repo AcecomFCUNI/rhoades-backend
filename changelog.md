@@ -1,5 +1,15 @@
 # Rhoades Backend
 
+## Version 0.53.0
+
+- Implemented:
+  - New validation for the review endpoint:
+    - New field to count how many times a review was performed in the `IList`.
+    - A review can be performed three times.
+    - The last review can only have accepted or rejected status.
+    - Once a review is done, the number of reviews is incremented.
+    - Accepted status doesn't accept observations anymore.
+
 ## Version 0.52.2
 
 - Fixed:

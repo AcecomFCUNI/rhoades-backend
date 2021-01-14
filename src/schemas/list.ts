@@ -80,9 +80,16 @@ const listFilterByFacultyAndType = joi.object({
 
 const listReviewSchema = joi.object({
   id         : joi.string().length(20).required(),
-  observation: joi.string(),
-  owner      : joi.string().length(20).required(),
-  status     : joi.string().valid('accepted', 'observed', 'rejected')
+  observation: joi
+    .when('status', {
+      switch: [
+        { is: 'accepted', then: joi.allow(null).empty() },
+        { is: 'observed', then: joi.string().required() },
+        { is: 'rejected', then: joi.string().required() }
+      ]
+    }),
+  owner : joi.string().length(20).required(),
+  status: joi.string().valid('accepted', 'observed', 'rejected')
 })
 
 export {

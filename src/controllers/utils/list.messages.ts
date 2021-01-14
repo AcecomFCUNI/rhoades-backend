@@ -14,6 +14,7 @@ enum ErrorMessagesForLists {
   forbiddenRegistration = 'Usted no puede inscribir una lista porque no está registrado.',
   forbiddenRemoveCandidate = 'Usted no puede remover un candidato en una lista a la que no representa.',
   limitList = 'Usted no puede inscribir más de 2 listas.',
+  listFinalReview = 'En este punto, una lista solo puede ser aceptada o rechazada.',
   listNotClosed = 'No se puede revisar una lista que no ha finalizado su inscripción.',
   missingList = 'La lista solicitada no existe.',
   missingOwner = 'El personero provisto no se encuentra registrado.',

@@ -3,7 +3,7 @@ import firestore from '@google-cloud/firestore'
 import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom'
 import { DtoList } from '../dto-interfaces'
-import { CFU, EFL, MFL, errorHandling } from './utils'
+import { CFU, EFL, EFU, MFL, errorHandling } from './utils'
 import {
   PATA,
   notifyProcuratorListReviewed,
@@ -289,6 +289,8 @@ class List {
   ): Promise<IUser> {
     const user = await this._userRef.doc(id).get()
 
+    if (!user.data()) throw new httpErrors.NotFound(EFU.userNotFound)
+
     return {
       ...user.data(),
       id
@@ -364,10 +366,17 @@ class List {
       if (!adminUser.registered)
         throw new httpErrors.Forbidden(EFL.noAdminRegistered)
 
-      // Validating list closed
+      // Validating list closed and reviewed
       const list = await this.getListData()
       if (!list.closed)
         throw new httpErrors.Conflict(EFL.listNotClosed)
+
+      if (
+        list.reviewedTimes &&
+        list.reviewedTimes === 2 &&
+        list.status === 'observed'
+      )
+        throw new httpErrors.Conflict(EFL.listFinalReview)
 
       // Validating owner registered
       const owner = await this._getDetailUserData(this._args.owner as string)
@@ -384,8 +393,9 @@ class List {
           list.type as string
         ),
         await this._listRef.doc(this._args.id as string).update({
-          observation: this._args.observation,
-          status     : this._args.status
+          observation  : this._args.observation,
+          reviewedTimes: list.reviewedTimes ? list.reviewedTimes++ : 1,
+          status       : this._args.status
         })
       ])
 
