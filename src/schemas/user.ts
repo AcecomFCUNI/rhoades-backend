@@ -1,5 +1,9 @@
 import joi from 'joi'
 
+const userCodeSchema = joi.object({
+  documentNumber: joi.string().min(8).max(16).required()
+})
+
 const userIdSchema = joi.object({
   id: joi.string().length(20).required()
 })
@@ -20,6 +24,7 @@ const userSetCommitteeMembersSchema = joi
   .length(9)
 
 export {
+  userCodeSchema,
   userIdSchema,
   userNotifySchema,
   userSetCommitteeMembersSchema,

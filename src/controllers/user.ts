@@ -34,6 +34,8 @@ class User {
     switch (type) {
       case 'committee':
         return this._setCommitteeMembers()
+      case 'committeeMember':
+        return this._setCommitteeMember()
       case 'enroll':
         return this._enroll(list as DtoList)
       case 'notify':
@@ -95,9 +97,62 @@ class User {
           })
 
       return 'The committee members were successfully registered'
-
     } catch (error) {
       return errorHandling(error, EMFA.generic)
+    }
+  }
+
+  private async _setCommitteeMember (): Promise<string> {
+    try {
+      const posibleMember = await this._getUserData('UNICode')
+      const currentCommitteeMembers = await this._usersRef
+        .where('committeeMember', '==', true)
+        .get()
+
+      // Validating committee is full
+      if (currentCommitteeMembers.docs.length === 9)
+        throw new httpErrors.Conflict(EMFA.committeeAlreadyRegistered)
+
+      // Validating committee has enough teachers and students
+      const currentCommitteeMembersData = currentCommitteeMembers.docs
+        .map(doc => {
+          return {
+            ...doc.data(),
+            id: doc.id
+          } as IUser
+        })
+
+      const numberOfTeachers = currentCommitteeMembersData
+        .reduce((result, { condition }) => {
+          return condition === 'teacher' ? ++result : result
+        }, 0)
+
+      if (numberOfTeachers === 6 && posibleMember.condition === 'teacher')
+        throw new httpErrors.BadRequest(EMFA.fullTeachers)
+
+      const numberOfStudents = currentCommitteeMembersData
+        .reduce((result, { condition }) => {
+          return condition === 'student' ? ++result : result
+        }, 0)
+
+      if (numberOfStudents === 3 && posibleMember.condition === 'student')
+        throw new httpErrors.BadRequest(EMFA.fullStudents)
+
+      if (posibleMember.postulating)
+        throw new httpErrors.Conflict(`El ${posibleMember.condition} identificado con el código: ${posibleMember.UNICode} está postulando.`)
+
+      if (posibleMember.registered)
+        throw new httpErrors.Conflict(`El ${posibleMember.condition} identificado con el código: ${posibleMember.UNICode} es personero.`)
+
+      await this._usersRef
+        .doc(posibleMember.id as string)
+        .update({
+          committeeMember: true
+        })
+
+      return 'The committee member were successfully registered'
+    } catch (error) {
+      return errorHandling(error, EMFA.generic2)
     }
   }
 

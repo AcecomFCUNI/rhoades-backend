@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.55.0
+
+- Implemented:
+  - Endpoint to register the committee members one by one.
+- Updated:
+  - Documentation from the setCommitteeMembers endpoint.
+
 ## Version 0.54.0
 
 - Implemented:

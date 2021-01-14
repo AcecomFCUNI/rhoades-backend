@@ -5,6 +5,7 @@ import { response } from '../utils'
 import { DtoList, DtoUser } from '../dto-interfaces'
 import {
   listFinishRegistrationSchema,
+  userCodeSchema,
   userNotifySchema,
   userSetCommitteeMembersSchema,
   userVerifySchema
@@ -71,6 +72,28 @@ User.route('/user/enroll/:code')
 
         const uc = new UserC(user)
         const result = await uc.process('enroll', args as DtoList)
+
+        response(false, { result }, res, 200)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
+User.route('/user/setCommitteeMember/:code')
+  .post(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { params: { code } } = req
+      const user = {
+        documentNumber: code
+      } as DtoUser
+
+      try {
+        await userCodeSchema.validateAsync(user)
+
+        const uc = new UserC(user)
+        const result = await uc.process('committeeMember')
 
         response(false, { result }, res, 200)
       } catch (error) {
