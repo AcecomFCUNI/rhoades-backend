@@ -1,13 +1,5 @@
-import { Document, model, Schema } from 'mongoose'
-
-interface IFile extends Document {
-  data    : Buffer
-  encoding: string
-  list    : string
-  mimetype: string
-  name    : string
-  size    : number
-}
+import { model, Schema } from 'mongoose'
+import { IFile } from '../../../interfaces/index'
 
 const File = new Schema(
   {

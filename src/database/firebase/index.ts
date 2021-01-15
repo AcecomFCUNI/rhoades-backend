@@ -1,6 +1,6 @@
 import admin from 'firebase-admin'
-import { CustomNodeJSGlobal } from '../custom/global'
-import { deleteFile, writeJson } from '../utils/file'
+import { CustomNodeJSGlobal } from '../../custom/global'
+import { deleteFile, writeJson } from '../../utils/file'
 
 declare const global: CustomNodeJSGlobal
 

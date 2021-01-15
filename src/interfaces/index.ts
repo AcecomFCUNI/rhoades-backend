@@ -1,4 +1,5 @@
+import { IFile } from './file'
 import { IList } from './list'
 import { IUser } from './user'
 
-export { IList, IUser }
+export { IFile, IList, IUser }

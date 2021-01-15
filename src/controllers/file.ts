@@ -1,5 +1,5 @@
 import httpErrors from 'http-errors'
-import { IFile, FileModel } from '../models'
+import { IFile, FileModel } from '../database/mongo/models'
 import { DtoFile } from '../dto-interfaces'
 import { EFF, errorHandling } from './utils'
 

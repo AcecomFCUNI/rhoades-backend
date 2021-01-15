@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { Request } from 'express'
-import { DtoList } from '../dto-interfaces/list.dto'
-import { DtoUser } from '../dto-interfaces/user.dto'
+import { DtoFile, DtoList, DtoUser } from '../dto-interfaces'
 
 /*
  * With this piece of code we ca personalize the attributes of the request,
@@ -10,7 +9,7 @@ import { DtoUser } from '../dto-interfaces/user.dto'
 
 interface CustomRequest extends Request {
   body: {
-    args: DtoUser | DtoUser[] | DtoList
+    args: DtoFile | DtoList | DtoUser | DtoUser[]
   }
   payload?: object
   query: {

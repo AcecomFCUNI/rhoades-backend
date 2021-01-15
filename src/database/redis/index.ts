@@ -1,5 +1,5 @@
 import redis from 'redis'
-import { CustomNodeJSGlobal } from '../custom/global'
+import { CustomNodeJSGlobal } from '../../custom/global'
 
 declare const global: CustomNodeJSGlobal
 

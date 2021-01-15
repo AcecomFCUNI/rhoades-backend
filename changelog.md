@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.57.0
+
+- Implemented:
+  - Code refactoring.
+
 ## Version 0.56.0
 
 - Implemented:
