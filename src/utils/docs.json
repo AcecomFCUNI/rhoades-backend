@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.57.0"
+    "version": "0.58.0"
   },
   "servers": [
     {
@@ -42,7 +42,7 @@
         "tags": [
           "user"
         ],
-        "summary": "Create user",
+        "summary": "Create user.",
         "operationId": "verifyUser",
         "parameters": [
           {
@@ -990,8 +990,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "The list has been successfully reviewed",
+          "201": {
+            "description": "The file has been successfully uploaded.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1001,11 +1001,65 @@
             }
           },
           "400": {
-            "description": "The provided format is not allowed.",
+            "description": "The provided file format is not allowed.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "There is an error in the payload structure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/getData/{idList}": {
+      "get": {
+        "rags": [
+          "list"
+        ],
+        "summary": "Get the all the data files from the list, except the file itself.",
+        "operationId": "getDataFiles",
+        "parameters": [
+          {
+            "name": "idList",
+            "in": "path",
+            "description": "Firebase list id.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The data from the files of the list were found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultSuccess"
                 }
               }
             }

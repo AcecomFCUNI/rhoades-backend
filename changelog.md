@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.58.0
+
+- Implemented:
+  - Endpoint to get all the data from the files of the provided list, but not the file itself.
+
 ## Version 0.57.0
 
 - Implemented:

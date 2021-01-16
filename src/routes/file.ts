@@ -15,18 +15,18 @@ File.route('/file/upload/:list')
       if (req.files) {
         const { files, params: { list } } = req
         const file = Object.keys(files)[0]
-        const fileObject = files[file] as upload.UploadedFile
+        const fileObj: upload.UploadedFile = files[file] as upload.UploadedFile
         try {
           await listIdSchema.validateAsync({ id: list })
 
-          const fileToUpload = {
-            data    : fileObject.data,
-            encoding: fileObject.encoding,
+          const fileToUpload: DtoFile = {
+            data    : fileObj.data,
+            encoding: fileObj.encoding,
             list,
-            mimetype: fileObject.mimetype,
-            name    : fileObject.name,
-            size    : fileObject.size
-          } as DtoFile
+            mimetype: fileObj.mimetype,
+            name    : fileObj.name,
+            size    : fileObj.size
+          }
           const f = new FileC(fileToUpload)
           const result = await f.process('upload')
 
@@ -37,6 +37,25 @@ File.route('/file/upload/:list')
         }
       } else
         next(new httpErrors.BadRequest('Missing file'))
+    }
+  )
+
+File.route('/file/getData/:list')
+  .get(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { params: { list } } = req
+      try {
+        const file: DtoFile = { list }
+        await listIdSchema.validateAsync(file)
+
+        const f = new FileC(file)
+        const result = await f.process('getDataFilesByList')
+
+        response(false, { result }, res, 200)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
     }
   )
 

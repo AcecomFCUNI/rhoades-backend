@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-parens */
 import httpErrors from 'http-errors'
 import { IFile, FileModel } from '../database/mongo/models'
 import { DtoFile } from '../dto-interfaces'
@@ -10,8 +11,10 @@ class File {
     this._args = args
   }
 
-  public process (type: string): Promise<IFile> | undefined {
+  public process (type: string): Promise<IFile> | Promise<IFile[]> | undefined {
     switch (type) {
+      case 'getDataFilesByList':
+        return this._getFilesDataByList()
       case 'upload':
         return this._upload()
       default:
@@ -19,33 +22,30 @@ class File {
     }
   }
 
-  private async _upload (): Promise<IFile> {
-    const {
-      data,
-      encoding,
-      list,
-      mimetype,
-      name,
-      size
-    } = this._args
-
+  private async _getFilesDataByList (): Promise<IFile[]> {
     try {
-      if (!mimetype.includes('pdf'))
+      const result = await FileModel.find(
+        { list: this._args.list },
+        '-_id -data'
+      )
+
+      return result
+    } catch (error) {
+      return errorHandling(error, EFF.genericGetDataFiles)
+    }
+  }
+
+  private async _upload (): Promise<IFile> {
+    try {
+      if (!(this._args.mimetype as string).includes('pdf'))
         throw new httpErrors.BadRequest(EFF.formatNotAllowed)
 
-      const newFile = new FileModel({
-        data,
-        encoding,
-        list,
-        mimetype,
-        name,
-        size
-      })
+      const newFile = new FileModel({ ...this._args })
       const result = await newFile.save()
 
       return result
     } catch (error) {
-      return errorHandling(error)
+      return errorHandling(error, EFF.genericUpload)
     }
   }
 }
