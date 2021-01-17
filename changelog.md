@@ -1,5 +1,13 @@
 # Rhoades Backend
 
+## Version 0.59.0
+
+- Implemented:
+  - Added committeeMember field to the return of the verify endpoint.
+  - Reduced the return of the enroll endpoint, now it returns just the following: faculty, id, names, lastName and secondLastName fields.
+- Updated:
+  - Documentation of the endpoints that belongs to the user route.
+
 ## Version 0.58.0
 
 - Implemented:

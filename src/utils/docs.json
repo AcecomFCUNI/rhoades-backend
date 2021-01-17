@@ -10,30 +10,30 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.58.0"
+    "version": "0.59.0"
   },
   "servers": [
     {
       "url": "https://acecom-rhoades-dev.herokuapp.com/api/",
-      "description": "Rhoades dev API"
+      "description": "Rhoades dev API."
     },
     {
       "url": "https://acecom-rhoades.herokuapp.com/api/",
-      "description": "Rhoades prod API"
+      "description": "Rhoades prod API."
     },
     {
       "url": "http://localhost:3000/api/",
-      "description": "Rhoades local API"
+      "description": "Rhoades local API."
     }
   ],
   "tags": [
     {
       "name": "user",
-      "description": "Operations about a teacher or student that belongs to the CEUNI's electoral roll"
+      "description": "Operations about a teacher or student that belongs to the CEUNI's electoral roll."
     },
     {
       "name": "list",
-      "description": "Operations about a list performed by a registered user"
+      "description": "Operations about a list performed by a registered user."
     }
   ],
   "paths": {
@@ -74,7 +74,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Whether the user belongs to the patten.",
+            "description": "Whether the user belongs to the pattern.",
             "content": {
               "application/json": {
                 "schema": {
@@ -158,7 +158,7 @@
             }
           },
           "422": {
-            "description": "Invalid request format",
+            "description": "Invalid request format.",
             "content": {
               "application/json": {
                 "schema": {
@@ -261,7 +261,7 @@
             }
           },
           "422": {
-            "description": "Invalid request format",
+            "description": "Invalid request format.",
             "content": {
               "application/json": {
                 "schema": {
@@ -400,7 +400,7 @@
             }
           },
           "422": {
-            "description": "Invalid request format",
+            "description": "Invalid request format.",
             "content": {
               "application/json": {
                 "schema": {
@@ -527,7 +527,7 @@
         "tags": [
           "list"
         ],
-        "summary": "Delete a list from a procurator",
+        "summary": "Delete a list from a procurator.",
         "operationId": "deleteList",
         "requestBody": {
           "$ref": "#/components/requestBodies/DtoListWithIdAndOwner"
@@ -597,7 +597,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Firebase user id",
+            "description": "Firebase user id.",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -662,7 +662,7 @@
             }
           },
           "404": {
-            "description": "The list does not exists",
+            "description": "The list does not exists.",
             "content": {
               "application/json": {
                 "schema": {
@@ -682,7 +682,7 @@
             }
           },
           "422": {
-            "description": "There is an error in the payload structure",
+            "description": "There is an error in the payload structure.",
             "content": {
               "application/json": {
                 "schema": {
@@ -792,7 +792,7 @@
           {
             "name": "candidateId",
             "in": "path",
-            "description": "Firebase candidate to remove id",
+            "description": "Firebase candidate to remove id.",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -806,7 +806,7 @@
         },
         "responses": {
           "200": {
-            "description": "The candidate has been successfully removed from the list",
+            "description": "The candidate has been successfully removed from the list.",
             "content": {
               "application/json": {
                 "schema": {
@@ -869,7 +869,7 @@
           {
             "name": "adminId",
             "in": "path",
-            "description": "Firebase admin id",
+            "description": "Firebase admin id.",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -899,7 +899,7 @@
         },
         "responses": {
           "200": {
-            "description": "The list has been successfully reviewed",
+            "description": "The list has been successfully reviewed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1035,7 +1035,7 @@
     },
     "/file/getData/{idList}": {
       "get": {
-        "rags": [
+        "tags": [
           "list"
         ],
         "summary": "Get the all the data files from the list, except the file itself.",
@@ -1096,13 +1096,24 @@
           "UNICode": {
             "type": "string"
           },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "student",
+              "teacher"
+            ]
+          },
+          "committeeMember": {
+            "type": "boolean"
+          },
           "documentNumber": {
             "type": "string",
-            "description": "Number of DNI, CE or others"
+            "description": "Number of DNI, CE or others."
           },
           "documentType": {
             "type": "string",
-            "description": "DNI, CE or others"
+            "description": "DNI, CE or others."
           },
           "faculty": {
             "type": "string"
@@ -1116,7 +1127,7 @@
           },
           "mail": {
             "type": "string",
-            "description": "UNI mail registered in the pattern"
+            "description": "UNI mail registered in the pattern."
           },
           "names": {
             "type": "string"
@@ -1198,6 +1209,9 @@
               "result": {
                 "type": "object",
                 "properties": {
+                  "committeeMember": {
+                    "type": "boolean"
+                  },
                   "condition": {
                     "type": "string",
                     "enum": [
@@ -1237,7 +1251,7 @@
                   },
                   "mail": {
                     "type": "string",
-                    "description": "UNI mail or optional mail registered in the pattern"
+                    "description": "UNI mail or optional mail registered in the pattern."
                   },
                   "names": {
                     "type": "string"
@@ -1271,7 +1285,25 @@
             "type": "object",
             "properties": {
               "result": {
-                "$ref": "#/components/schemas/User"
+                "type": "object",
+                "properties": {
+                  "faculty": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "description": "Firebase user id.",
+                    "type": "string"
+                  },
+                  "lastName": {
+                    "type": "string"
+                  },
+                  "names": {
+                    "type": "string"
+                  },
+                  "secondLastName": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }
@@ -1356,7 +1388,7 @@
     },
     "requestBodies": {
       "SimpleDtoUser": {
-        "description": "User id from Firebase",
+        "description": "User id from Firebase.",
         "content": {
           "application/json": {
             "schema": {
@@ -1367,7 +1399,7 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "Firebase id"
+                      "description": "Firebase id."
                     }
                   }
                 }
@@ -1378,7 +1410,7 @@
         "required": true
       },
       "DtoIdUsers": {
-        "description": "Array with the UNI codes of the members of the electoral Committee",
+        "description": "Array with the UNI codes of the members of the electoral Committee.",
         "content": {
           "application/json": {
             "schema": {
@@ -1396,7 +1428,7 @@
         }
       },
       "DtoUserWithGender": {
-        "description": "Payload to notify the user",
+        "description": "Payload to notify the user.",
         "content": {
           "application/json": {
             "schema": {
@@ -1407,11 +1439,11 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "Firebase id"
+                      "description": "Firebase id."
                     },
                     "gender": {
                       "type": "string",
-                      "description": "User gender",
+                      "description": "User gender.",
                       "enum": [
                         "F",
                         "M"
@@ -1425,7 +1457,7 @@
         }
       },
       "SimpleDtoList": {
-        "description": "List id from Firebase",
+        "description": "List id from Firebase.",
         "content": {
           "application/json": {
             "schema": {
@@ -1436,7 +1468,7 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "Firebase id"
+                      "description": "Firebase id."
                     }
                   }
                 }
@@ -1446,7 +1478,7 @@
         }
       },
       "DtoListWithoutId": {
-        "description": "Owner and type of the list",
+        "description": "Owner and type of the list.",
         "content": {
           "application/json": {
             "schema": {
@@ -1457,7 +1489,7 @@
                   "properties": {
                     "owner": {
                       "type": "string",
-                      "description": "Firestore id"
+                      "description": "Firestore id."
                     },
                     "type": {
                       "type": "string",
@@ -1479,7 +1511,7 @@
         }
       },
       "DtoListWithIdAndOwner": {
-        "description": "Owner and id list",
+        "description": "Owner and id list.",
         "content": {
           "application/json": {
             "schema": {
@@ -1490,11 +1522,11 @@
                   "properties": {
                     "owner": {
                       "type": "string",
-                      "description": "Firebase user id"
+                      "description": "Firebase user id."
                     },
                     "id": {
                       "type": "string",
-                      "description": "Firebase list id"
+                      "description": "Firebase list id."
                     }
                   }
                 }
@@ -1504,7 +1536,7 @@
         }
       },
       "DtoListReview": {
-        "description": "Owner and id list",
+        "description": "Owner and id list.",
         "content": {
           "application/json": {
             "schema": {
@@ -1515,15 +1547,15 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "description": "Firebase list id"
+                      "description": "Firebase list id."
                     },
                     "observation": {
                       "type": "string",
-                      "description": "Message from the electoral committee to the procurator"
+                      "description": "Message from the electoral committee to the procurator."
                     },
                     "owner": {
                       "type": "string",
-                      "description": "Firebase user id"
+                      "description": "Firebase user id."
                     }
                   }
                 }

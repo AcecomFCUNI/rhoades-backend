@@ -5,7 +5,7 @@ import { CustomNodeJSGlobal } from '../custom'
 import { List } from './list'
 import { DtoList, DtoUser } from '../dto-interfaces'
 import { IList, IUser } from '../interfaces'
-import { errorHandling, CFU, EFU, EMFA, MFU } from './utils'
+import { errorHandling, CFU, EFU, EMFA, MFA, MFU } from './utils'
 import {
   deliverPassword,
   generatePassword,
@@ -96,7 +96,7 @@ class User {
             committeeMember: true
           })
 
-      return 'The committee members were successfully registered'
+      return MFA.success1
     } catch (error) {
       return errorHandling(error, EMFA.generic)
     }
@@ -150,7 +150,7 @@ class User {
           committeeMember: true
         })
 
-      return 'The committee member were successfully registered'
+      return MFA.success2
     } catch (error) {
       return errorHandling(error, EMFA.generic2)
     }
@@ -212,7 +212,13 @@ class User {
 
       userData = await this._getUserData(document)
 
-      return userData
+      return {
+        faculty       : userData.faculty,
+        id            : userData.id,
+        lastName      : userData.lastName,
+        names         : userData.names,
+        secondLastName: userData.secondLastName
+      } as IUser
     } catch (error) {
       return errorHandling(
         error,
@@ -281,16 +287,17 @@ class User {
       user = await this._getUserData(document)
 
       return {
-        condition     : user.condition,
-        faculty       : user.faculty,
-        gender        : user.gender || null,
-        id            : user.id,
-        lastName      : user.lastName,
-        mail          : user.mail || user.optionalMail || '',
-        names         : user.names,
-        postulating   : user.postulating ?? false,
-        registered    : !user.registered ? false : user.registered,
-        secondLastName: user.secondLastName
+        committeeMember: user.committeeMember ?? false,
+        condition      : user.condition,
+        faculty        : user.faculty,
+        gender         : user.gender || null,
+        id             : user.id,
+        lastName       : user.lastName,
+        mail           : user.mail || user.optionalMail || '',
+        names          : user.names,
+        postulating    : user.postulating ?? false,
+        registered     : !user.registered ? false : user.registered,
+        secondLastName : user.secondLastName
       } as IUser
     } catch (error) {
       return errorHandling(error, EFU.errorVerifyingUser)
