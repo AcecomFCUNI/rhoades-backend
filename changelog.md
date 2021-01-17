@@ -1,5 +1,12 @@
 # Rhoades Backend
 
+## Version 0.60.0
+
+- Implemented:
+  - The following endpoints: enroll and getListOfUser now returns only the minimum information about the user.
+- Updated:
+  - Documentation of the endpoints that belongs to the list and file routes.
+
 ## Version 0.59.0
 
 - Implemented:

@@ -219,6 +219,25 @@ class List {
     ownerId?: string
   ): Promise<Record<string, unknown>> {
     let lists: firestore.QuerySnapshot<firestore.DocumentData>
+
+    const cleanListMembersData = (list: IList): IUser[] => {
+      const applicants = list.applicants as IUser[]
+
+      return applicants.length > 0
+        ? applicants.map(listMember => ({
+          UNICode       : listMember.UNICode,
+          // eslint-disable-next-line sort-keys
+          documentNumber: listMember.documentNumber,
+          documentType  : listMember.documentType,
+          faculty       : listMember.faculty,
+          id            : listMember.id,
+          lastName      : listMember.lastName,
+          names         : listMember.names,
+          secondLastName: listMember.secondLastName
+        }))
+        : []
+    }
+
     try {
       if (ownerId)
         lists = await this._listRef
@@ -273,18 +292,30 @@ class List {
 
       if (studentLists[0] && teacherLists[0])
         return {
-          students: studentLists[0],
-          teachers: teacherLists[0]
+          students: {
+            ...studentLists[0],
+            applicants: cleanListMembersData(studentLists[0])
+          },
+          teachers: {
+            ...teacherLists[0],
+            applicants: cleanListMembersData(teacherLists[0])
+          }
         }
 
       if (teacherLists[0])
         return {
-          teachers: teacherLists[0]
+          teachers: {
+            ...teacherLists[0],
+            applicants: cleanListMembersData(teacherLists[0])
+          }
         }
 
       if (studentLists[0])
         return {
-          students: studentLists[0]
+          teachers: {
+            ...teacherLists[0],
+            applicants: cleanListMembersData(studentLists[0])
+          }
         }
 
       return {}

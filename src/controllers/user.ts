@@ -213,6 +213,10 @@ class User {
       userData = await this._getUserData(document)
 
       return {
+        UNICode       : userData.UNICode,
+        // eslint-disable-next-line sort-keys
+        documentNumber: userData.documentNumber,
+        documentType  : userData.documentType,
         faculty       : userData.faculty,
         id            : userData.id,
         lastName      : userData.lastName,

@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.59.0"
+    "version": "0.60.0"
   },
   "servers": [
     {
@@ -995,7 +995,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DefaultSuccess"
+                  "$ref": "#/components/schemas/File"
                 }
               }
             }
@@ -1059,7 +1059,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DefaultSuccess"
+                  "$ref": "#/components/schemas/FilesDataByList"
                 }
               }
             }
@@ -1151,7 +1151,59 @@
           }
         }
       },
+      "UserNotFull": {
+        "type": "object",
+        "properties": {
+          "UNICode": {
+            "type": "string"
+          },
+          "documentNumber": {
+            "type": "string",
+            "description": "Number of DNI, CE or others."
+          },
+          "documentType": {
+            "type": "string",
+            "description": "DNI, CE or others."
+          },
+          "faculty": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "description": "Firestore id."
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "names": {
+            "type": "string"
+          },
+          "secondLastName": {
+            "type": "string"
+          }
+        }
+      },
       "List": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "applicants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserNotFull"
+            }
+          },
+          "owner": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "ListWithUsersDetails": {
         "type": "object",
         "properties": {
           "id": {
@@ -1174,7 +1226,7 @@
       "Lists": {
         "type": "array",
         "items": {
-          "$ref": "#/components/schemas/List"
+          "$ref": "#/components/schemas/ListWithUsersDetails"
         }
       },
       "EmptyList": {
@@ -1194,6 +1246,65 @@
           "type": {
             "type": "string"
           }
+        }
+      },
+      "File": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Mongo id of the file."
+          },
+          "data": {
+            "type": "string",
+            "format": "binary",
+            "description": "Buffer of the document content."
+          },
+          "encoding": {
+            "type": "string",
+            "description": "Encoding of the file uploaded."
+          },
+          "list": {
+            "type": "string",
+            "description": "Firebase list id."
+          },
+          "mimetype": {
+            "type": "string",
+            "description": "File type."
+          },
+          "size": {
+            "type": "number",
+            "format": "int64",
+            "description": "Size of the file."
+          }
+        }
+      },
+      "FileWithoutData": {
+        "type": "object",
+        "properties": {
+          "encoding": {
+            "type": "string",
+            "description": "Encoding of the file uploaded."
+          },
+          "list": {
+            "type": "string",
+            "description": "Firebase list id."
+          },
+          "mimetype": {
+            "type": "string",
+            "description": "File type."
+          },
+          "size": {
+            "type": "number",
+            "format": "int64",
+            "description": "Size of the file."
+          }
+        }
+      },
+      "FilesDataByList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/FileWithoutData"
         }
       },
       "VerifyUserResponse": {
@@ -1285,25 +1396,7 @@
             "type": "object",
             "properties": {
               "result": {
-                "type": "object",
-                "properties": {
-                  "faculty": {
-                    "type": "string"
-                  },
-                  "id": {
-                    "description": "Firebase user id.",
-                    "type": "string"
-                  },
-                  "lastName": {
-                    "type": "string"
-                  },
-                  "names": {
-                    "type": "string"
-                  },
-                  "secondLastName": {
-                    "type": "string"
-                  }
-                }
+                "$ref": "#/components/schemas/UserNotFull"
               }
             }
           }
