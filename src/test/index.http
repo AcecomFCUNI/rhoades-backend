@@ -88,6 +88,9 @@ Content-Type: application/json
   ]
 }
 
+### Testing /list/getListsOfUser
+GET http://localhost:3000/api/list/getListsOfUser/ASxV3VViiCU8H4LUW2sI
+
 ### Testing /list/delete
 DELETE http://localhost:3000/api/list/delete
 Content-Type: application/json

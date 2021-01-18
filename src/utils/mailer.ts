@@ -126,10 +126,10 @@ const notifyProcuratorWithoutMail = async (
 }
 
 const notifyProcuratorListReviewed = async (
-  owner      : IUser,
-  status     : string,
-  observation: string,
-  type       : string
+  owner       : IUser,
+  status      : string,
+  type        : string,
+  observation?: string
 ): Promise<void> => {
   let statusInSpanish: string
 
@@ -140,7 +140,7 @@ const notifyProcuratorListReviewed = async (
   const mailOptions = {
     ...generalMailOptions,
     subject: `Lista de ${PATA_IS[type]}: ${statusInSpanish.toUpperCase()}`,
-    text   : observation,
+    text   : observation ?? '',
     to     : owner.mail || owner.optionalMail
   }
 

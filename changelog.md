@@ -1,5 +1,14 @@
 # Rhoades Backend
 
+## Version 0.61.0
+
+- Implemented:
+  - `Promise.all()` in the list and user controllers.
+- Fixed:
+  - Error in the return of the getListsOfUser endpoint.
+  - Error in the documentation.
+  - Error in the review endpoint.
+
 ## Version 0.60.0
 
 - Implemented:

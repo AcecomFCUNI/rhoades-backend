@@ -135,9 +135,8 @@ class List {
 
       if (list.applicants && list.applicants?.length > 0)
         await Promise.all([
-          ...(list.applicants as string[]).map(async id => {
-            // eslint-disable-next-line no-return-await
-            return await this._userRef.doc(id).update({ postulating: false })
+          ...(list.applicants as string[]).map(id => {
+            return this._userRef.doc(id).update({ postulating: false })
           }),
           this._listRef.doc(this._args.id as string).delete()
         ])
@@ -177,9 +176,7 @@ class List {
 
       return listsData
     } catch (error) {
-      console.error(error)
-
-      throw new httpErrors.InternalServerError(EFL.errorCreating)
+      return errorHandling(error, EFL.errorCreating)
     }
   }
 
@@ -312,8 +309,8 @@ class List {
 
       if (studentLists[0])
         return {
-          teachers: {
-            ...teacherLists[0],
+          students: {
+            ...studentLists[0],
             applicants: cleanListMembersData(studentLists[0])
           }
         }
@@ -338,19 +335,13 @@ class List {
   }
 
   private async _getDetailUsersData (iList: IList): Promise<IUser[]> {
-    const length = iList?.applicants?.length as number
-    const users: IUser[] = []
-    let user: IUser
+    const applicants = iList.applicants as string[]
+    let users: IUser[] = []
 
     try {
-      for (let i = 0; i < length; i++) {
-        // eslint-disable-next-line no-await-in-loop
-        user = await this._getDetailUserData(
-          (iList?.applicants as string[])[i] as string
-        )
-
-        users.push(user)
-      }
+      users = await Promise.all(
+        applicants.map(applicant => this._getDetailUserData(applicant))
+      )
 
       return users
     } catch (error) {
@@ -398,6 +389,7 @@ class List {
   private async _review (adminId: string): Promise<string> {
     try {
       const adminUser = await this._getDetailUserData(adminId)
+      console.log(adminUser.condition)
 
       // Validating admin
       if (adminUser.condition !== 'admin')
@@ -425,19 +417,32 @@ class List {
         throw new httpErrors.Forbidden(EFL.forbiddenRegistration)
 
       // Notifying procurator and updating the database
-      await Promise.all([
-        await notifyProcuratorListReviewed(
-          owner,
-          this._args.status as string,
-          this._args.observation as string,
-          list.type as string
-        ),
-        await this._listRef.doc(this._args.id as string).update({
-          observation  : this._args.observation,
-          reviewedTimes: list.reviewedTimes ? list.reviewedTimes++ : 1,
-          status       : this._args.status
-        })
-      ])
+      if (this._args.observation)
+        await Promise.all([
+          notifyProcuratorListReviewed(
+            owner,
+            this._args.status as string,
+            list.type as string,
+            this._args.observation,
+          ),
+          this._listRef.doc(this._args.id as string).update({
+            observation  : this._args.observation,
+            reviewedTimes: list.reviewedTimes ? list.reviewedTimes++ : 1,
+            status       : this._args.status
+          })
+        ])
+      else
+        await Promise.all([
+          notifyProcuratorListReviewed(
+            owner,
+            this._args.status as string,
+            list.type as string
+          ),
+          this._listRef.doc(this._args.id as string).update({
+            reviewedTimes: list.reviewedTimes ? list.reviewedTimes++ : 1,
+            status       : this._args.status
+          })
+        ])
 
       return MFL.reviewed
     } catch (error) {

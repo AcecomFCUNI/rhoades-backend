@@ -88,13 +88,13 @@ class User {
       if (numberOfStudents !== 3)
         throw new httpErrors.BadRequest(EMFA.missingStudents)
 
-      for (let i = 0; i < fullData.length; i++)
-        // eslint-disable-next-line no-await-in-loop
-        await this._usersRef
-          .doc(fullData[i].id as string)
+      await Promise.all(fullData.map(user => {
+        return this._usersRef
+          .doc(user.id as string)
           .update({
             committeeMember: true
           })
+      }))
 
       return MFA.success1
     } catch (error) {
@@ -255,25 +255,23 @@ class User {
         throw new httpErrors.Conflict(EFU.userHasNotMail)
       }
 
-      // Updating that the user is registered
-      await this._usersRef
-        .doc(user.id as string)
-        .update({
+      await Promise.all([
+        // Updating that the user is registered
+        this._usersRef.doc(user.id as string).update({
           gender    : (this._args as DtoUser)?.gender,
           registered: true
-        })
-
-      // Registering the user into Firebase Authentication
-      await admin.auth().createUser({
-        email   : hasEmail ? user.mail: user.optionalMail,
-        password: newPassword.password,
-        uid     : user.id as string
-      })
-
-      await notifyProcuratorRegistered({
-        ...user,
-        gender: (this._args as DtoUser).gender
-      } as IUser)
+        }),
+        // Registering the user into Firebase Authentication
+        admin.auth().createUser({
+          email   : hasEmail ? user.mail: user.optionalMail,
+          password: newPassword.password,
+          uid     : user.id as string
+        }),
+        notifyProcuratorRegistered({
+          ...user,
+          gender: (this._args as DtoUser).gender
+        } as IUser)
+      ])
 
       return MFU.updateAndNotifySuccess
     } catch (error) {
