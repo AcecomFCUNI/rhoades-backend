@@ -4,4 +4,8 @@ enum ErrorForFile {
   genericUpload = 'Hubo un error subiendo el archivo.'
 }
 
-export { ErrorForFile as EFF }
+enum MessagesForFile {
+  genericSuccess1 = 'Se ha subido el documento correctamente.'
+}
+
+export { ErrorForFile as EFF, MessagesForFile as MFF }

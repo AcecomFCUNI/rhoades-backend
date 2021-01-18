@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.61.0"
+    "version": "0.61.1"
   },
   "servers": [
     {
@@ -995,7 +995,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/File"
+                  "$ref": "#/components/schemas/DefaultSuccess"
                 }
               }
             }
@@ -1272,6 +1272,10 @@
             "type": "string",
             "description": "File type."
           },
+          "name": {
+            "type": "string",
+            "description": "File name"
+          },
           "size": {
             "type": "number",
             "format": "int64",
@@ -1294,6 +1298,10 @@
             "type": "string",
             "description": "File type."
           },
+          "name": {
+            "type": "string",
+            "description": "File name"
+          },
           "size": {
             "type": "number",
             "format": "int64",
@@ -1302,9 +1310,23 @@
         }
       },
       "FilesDataByList": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/FileWithoutData"
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "boolean",
+            "default": false
+          },
+          "message": {
+            "type": "object",
+            "properties": {
+              "result": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/FileWithoutData"
+                }        
+              }
+            }
+          }
         }
       },
       "VerifyUserResponse": {

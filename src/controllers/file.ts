@@ -2,7 +2,7 @@
 import httpErrors from 'http-errors'
 import { IFile, FileModel } from '../database/mongo/models'
 import { DtoFile } from '../dto-interfaces'
-import { EFF, errorHandling } from './utils'
+import { EFF, MFF, errorHandling } from './utils'
 
 class File {
   private _args: DtoFile
@@ -11,7 +11,9 @@ class File {
     this._args = args
   }
 
-  public process (type: string): Promise<IFile> | Promise<IFile[]> | undefined {
+  public process (
+    type: string
+  ): Promise<string> | Promise<IFile[]> | undefined {
     switch (type) {
       case 'getDataFilesByList':
         return this._getFilesDataByList()
@@ -35,15 +37,15 @@ class File {
     }
   }
 
-  private async _upload (): Promise<IFile> {
+  private async _upload (): Promise<string> {
     try {
       if (!(this._args.mimetype as string).includes('pdf'))
         throw new httpErrors.BadRequest(EFF.formatNotAllowed)
 
       const newFile = new FileModel({ ...this._args })
-      const result = await newFile.save()
+      await newFile.save()
 
-      return result
+      return MFF.genericSuccess1
     } catch (error) {
       return errorHandling(error, EFF.genericUpload)
     }

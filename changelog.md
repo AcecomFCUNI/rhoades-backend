@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.61.1
+
+- Fixed:
+  - Return of the getData from file endpoint.
+
 ## Version 0.61.0
 
 - Implemented:
