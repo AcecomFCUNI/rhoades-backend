@@ -5,7 +5,8 @@ import { Request, Response } from '../custom'
 import { response } from '../utils'
 import { File as FileC } from '../controllers'
 import { DtoFile } from '../dto-interfaces'
-import { listIdSchema } from '../schemas'
+import { fileIdSchema, listIdSchema } from '../schemas'
+import { IFile } from '../interfaces'
 
 const File = Router()
 
@@ -49,9 +50,41 @@ File.route('/file/getData/:list')
         await listIdSchema.validateAsync(file)
 
         const f = new FileC(file)
-        const result = await f.process('getDataFilesByList')
+        const result = await f.process('getFilesDataByList')
 
         response(false, { result }, res, 200)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
+File.route('/file/download/:id')
+  .get(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { params: { id } } = req
+      try {
+        const file: DtoFile = { id }
+        await fileIdSchema.validateAsync(file)
+
+        const f = new FileC(file)
+        const result = await f.process('download') as IFile
+
+        // To download it directly
+        res.setHeader(
+          'Content-Disposition',
+          `attachment; filename="${result.name}"`
+        )
+
+        // To open it in a new tab
+        // res.setHeader(
+        //   'Content-Disposition',
+        //   `inline; filename="${result.name}"`
+        // )
+
+        res.setHeader('Content-Type', 'application/pdf')
+        res.status(200).send(result.data)
       } catch (error) {
         if (error.isJoi) error.status = 422
         next(error)

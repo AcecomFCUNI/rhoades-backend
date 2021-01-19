@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.61.1"
+    "version": "0.62.0"
   },
   "servers": [
     {
@@ -1060,6 +1060,71 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FilesDataByList"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "There is an error in the payload structure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/download/{idDocument}": {
+      "get": {
+        "tags": [
+          "list"
+        ],
+        "summary": "Download the uploaded file.",
+        "operationId": "fileDownload",
+        "parameters": [
+          {
+            "name": "idDocument",
+            "in": "path",
+            "description": "Mongo id of the file.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The file was successfully downloaded.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The provided id doesn't match any file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }

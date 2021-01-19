@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.62.0
+
+- Implemented:
+  - Endpoint to download and uploaded file.
+
 ## Version 0.61.1
 
 - Fixed:

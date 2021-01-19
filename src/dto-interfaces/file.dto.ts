@@ -1,7 +1,8 @@
 export interface DtoFile {
   data?    : Buffer
   encoding?: string
-  list     : string
+  id?      : string
+  list?    : string
   mimetype?: string
   name?    : string
   size?    : number

@@ -13,9 +13,16 @@ class File {
 
   public process (
     type: string
-  ): Promise<string> | Promise<IFile[]> | undefined {
+  ):
+    | Promise<IFile>
+    | Promise<IFile[]>
+    | Promise<string>
+    | undefined
+  {
     switch (type) {
-      case 'getDataFilesByList':
+      case 'download':
+        return this._download()
+      case '_getFilesDataByList':
         return this._getFilesDataByList()
       case 'upload':
         return this._upload()
@@ -24,10 +31,25 @@ class File {
     }
   }
 
+  private async _download (): Promise<IFile> {
+    try {
+      const result = await FileModel.findById(
+        this._args.id as string,
+        '-_id data name'
+      )
+
+      if (!result) throw new httpErrors.NotFound(EFF.fileNotFound)
+
+      return result
+    } catch (error) {
+      return errorHandling(error)
+    }
+  }
+
   private async _getFilesDataByList (): Promise<IFile[]> {
     try {
       const result = await FileModel.find(
-        { list: this._args.list },
+        { list: this._args.list as string },
         '-_id -data'
       )
 

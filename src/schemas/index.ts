@@ -1,3 +1,4 @@
+import { fileIdSchema } from './file'
 import {
   listCreationSchema,
   listFilterByFacultyAndType,
@@ -15,6 +16,7 @@ import {
 } from './user'
 
 export {
+  fileIdSchema,
   listCreationSchema,
   listFilterByFacultyAndType,
   listFinishRegistrationSchema,
