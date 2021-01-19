@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.62.0"
+    "version": "0.63.0"
   },
   "servers": [
     {
@@ -951,7 +951,7 @@
         }
       }
     },
-    "/file/upload/{idList}": {
+    "/file/upload/{idList}/{idOwner}": {
       "post": {
         "tags": [
           "list"
@@ -963,6 +963,17 @@
             "name": "idList",
             "in": "path",
             "description": "Firebase list id.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idOwner",
+            "in": "path",
+            "description": "Firebase owner id.",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -1002,6 +1013,36 @@
           },
           "400": {
             "description": "The provided file format is not allowed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The provided owner is not the list procurator.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "List or owner not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The list is already closed.",
             "content": {
               "application/json": {
                 "schema": {

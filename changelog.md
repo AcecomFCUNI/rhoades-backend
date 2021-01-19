@@ -1,5 +1,17 @@
 # Rhoades Backend
 
+## Version 0.63.0
+
+- Implemented:
+  - Owner param in the fileUpload endpoint
+  - The following validations for the fileUpload endpoint:
+    - The provided owner is the list procurator.
+    - The list is not closed.
+- Fixed:
+  - Validation error in the getData from file endpoint.
+- Updated:
+  - Packages.
+
 ## Version 0.62.0
 
 - Implemented:

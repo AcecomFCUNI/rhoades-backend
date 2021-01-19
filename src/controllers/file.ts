@@ -1,14 +1,26 @@
 /* eslint-disable no-extra-parens */
 import httpErrors from 'http-errors'
-import { IFile, FileModel } from '../database/mongo/models'
+import { CustomNodeJSGlobal } from '../custom'
+import { IFile, IList, IUser } from '../interfaces'
+import { FileModel } from '../database/mongo/models'
 import { DtoFile } from '../dto-interfaces'
-import { EFF, MFF, errorHandling } from './utils'
+import { EFF, errorHandling } from './utils'
+
+declare const global: CustomNodeJSGlobal
 
 class File {
   private _args: DtoFile
+  private _usersRef: FirebaseFirestore.CollectionReference<
+    FirebaseFirestore.DocumentData
+  >
+  private _listsRef: FirebaseFirestore.CollectionReference<
+    FirebaseFirestore.DocumentData
+  >
 
   constructor (args: DtoFile) {
     this._args = args
+    this._usersRef = global.firestoreDB.collection('users')
+    this._listsRef = global.firestoreDB.collection('lists')
   }
 
   public process (
@@ -59,18 +71,57 @@ class File {
     }
   }
 
-  private async _upload (): Promise<string> {
+  private async _upload (): Promise<IFile> {
     try {
+      const [listData, ownerData] = await Promise.all([
+        this._getDataFromListOrUser('list') as Promise<IList>,
+        this._getDataFromListOrUser('user') as Promise<IUser>
+      ])
+
+      if (listData.owner !== ownerData.id)
+        throw new httpErrors.Forbidden(EFF.forbidden1)
+
+      if (listData.closed)
+        throw new httpErrors.Conflict(EFF.listClosed)
+
       if (!(this._args.mimetype as string).includes('pdf'))
         throw new httpErrors.BadRequest(EFF.formatNotAllowed)
 
       const newFile = new FileModel({ ...this._args })
-      await newFile.save()
+      const file = await newFile.save()
 
-      return MFF.genericSuccess1
+      return file
     } catch (error) {
       return errorHandling(error, EFF.genericUpload)
     }
+  }
+
+  private async _getDataFromListOrUser (
+    value: 'list' | 'user'
+  ): Promise<IList | IUser> {
+    let result: IList | IUser
+
+    if (value === 'list') {
+      const list = await this._listsRef.doc(this._args.list as string).get()
+
+      if (!list.data()) throw new httpErrors.NotFound(EFF.listNotFound)
+
+      result = {
+        ...list.data(),
+        id: this._args.list
+      } as IList
+    } else {
+      const user = await this._usersRef.doc(this._args.owner as string).get()
+
+      if (!user.data()) throw new httpErrors.NotFound(EFF.userNotFound)
+
+      result = {
+        ...user.data(),
+        id: this._args.owner
+      }
+    }
+
+    return result
   }
 }
 

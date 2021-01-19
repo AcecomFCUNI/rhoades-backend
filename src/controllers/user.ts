@@ -1,4 +1,4 @@
-/* eslint-disable no-extra-parens */
+/* eslint-disable no-extra-parens, arrow-body-style */
 import admin from 'firebase-admin'
 import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom'

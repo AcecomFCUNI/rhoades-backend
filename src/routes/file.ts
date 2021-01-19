@@ -5,20 +5,24 @@ import { Request, Response } from '../custom'
 import { response } from '../utils'
 import { File as FileC } from '../controllers'
 import { DtoFile } from '../dto-interfaces'
-import { fileIdSchema, listIdSchema } from '../schemas'
+import {
+  fileIdSchema,
+  listFinishRegistrationSchema,
+  listIdSchema
+} from '../schemas'
 import { IFile } from '../interfaces'
 
 const File = Router()
 
-File.route('/file/upload/:list')
+File.route('/file/upload/:list/:owner')
   .post(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       if (req.files) {
-        const { files, params: { list } } = req
+        const { files, params: { list, owner } } = req
         const file = Object.keys(files)[0]
         const fileObj: upload.UploadedFile = files[file] as upload.UploadedFile
         try {
-          await listIdSchema.validateAsync({ id: list })
+          await listFinishRegistrationSchema.validateAsync({ id: list, owner })
 
           const fileToUpload: DtoFile = {
             data    : fileObj.data,
@@ -26,12 +30,14 @@ File.route('/file/upload/:list')
             list,
             mimetype: fileObj.mimetype,
             name    : fileObj.name,
+            owner,
             size    : fileObj.size
           }
           const f = new FileC(fileToUpload)
-          const result = await f.process('upload')
+          const result = await f.process('upload') as IFile
 
-          response(false, { result }, res, 201)
+          // eslint-disable-next-line no-underscore-dangle
+          response(false, { result: { id: result._id } }, res, 201)
         } catch (error) {
           if (error.isJoi) error.status = 422
           next(error)
@@ -46,8 +52,8 @@ File.route('/file/getData/:list')
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { list } } = req
       try {
+        await listIdSchema.validateAsync({ id: list })
         const file: DtoFile = { list }
-        await listIdSchema.validateAsync(file)
 
         const f = new FileC(file)
         const result = await f.process('getFilesDataByList')

@@ -38,4 +38,4 @@ const File = new Schema(
 
 const FileModel = model<IFile>('files', File)
 
-export { IFile, FileModel }
+export { FileModel }

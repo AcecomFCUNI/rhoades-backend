@@ -5,5 +5,6 @@ export interface DtoFile {
   list?    : string
   mimetype?: string
   name?    : string
+  owner?   : string
   size?    : number
 }

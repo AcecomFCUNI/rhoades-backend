@@ -1,6 +1,5 @@
-import { IFile, FileModel } from './files'
+import { FileModel } from './files'
 
 export {
-  IFile,
   FileModel
 }
