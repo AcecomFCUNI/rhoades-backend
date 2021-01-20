@@ -4,7 +4,7 @@ import { CustomNodeJSGlobal } from '../custom'
 import { IFile, IList, IUser } from '../interfaces'
 import { FileModel } from '../database/mongo/models'
 import { DtoFile } from '../dto-interfaces'
-import { EFF, errorHandling } from './utils'
+import { EFF, errorHandling, MFF } from './utils'
 
 declare const global: CustomNodeJSGlobal
 
@@ -32,6 +32,8 @@ class File {
     | undefined
   {
     switch (type) {
+      case 'delete':
+        return this._delete()
       case 'download':
         return this._download()
       case 'getFilesDataByList':
@@ -43,22 +45,36 @@ class File {
     }
   }
 
+  private async _delete (): Promise<string> {
+    try {
+      const [list] = await this._validateListAndOwner()
+
+      if (list.id !== this._args.list)
+        throw new httpErrors.BadRequest(EFF.listConflict)
+
+      if (list.closed)
+        throw new httpErrors.Conflict(EFF.listClosed)
+
+      await FileModel.findByIdAndDelete(this._args.id as string)
+
+      return MFF.genericSuccess2
+    } catch (error) {
+      return errorHandling(error, EFF.genericDownload)
+    }
+  }
+
   private async _download (): Promise<IFile> {
     try {
-      const [listData, ownerData] = await Promise.all([
-        this._getDataFromListOrUser('list') as Promise<IList>,
-        this._getDataFromListOrUser('user') as Promise<IUser>
-      ])
-
-      if (listData.owner !== ownerData.id)
-        throw new httpErrors.Forbidden(EFF.forbidden1)
-
       const result = await FileModel.findById(
         this._args.id as string,
-        '-_id data name'
+        '-_id data name list'
       )
 
       if (!result) throw new httpErrors.NotFound(EFF.fileNotFound)
+
+      this._args.list = result.list
+
+      await this._validateListAndOwner()
 
       return result
     } catch (error) {
@@ -68,13 +84,7 @@ class File {
 
   private async _getFilesDataByList (): Promise<IFile[]> {
     try {
-      const [listData, ownerData] = await Promise.all([
-        this._getDataFromListOrUser('list') as Promise<IList>,
-        this._getDataFromListOrUser('user') as Promise<IUser>
-      ])
-
-      if (listData.owner !== ownerData.id)
-        throw new httpErrors.Forbidden(EFF.forbidden1)
+      await this._validateListAndOwner()
 
       const result = await FileModel.find(
         { list: this._args.list as string },
@@ -89,13 +99,7 @@ class File {
 
   private async _upload (): Promise<IFile> {
     try {
-      const [listData, ownerData] = await Promise.all([
-        this._getDataFromListOrUser('list') as Promise<IList>,
-        this._getDataFromListOrUser('user') as Promise<IUser>
-      ])
-
-      if (listData.owner !== ownerData.id)
-        throw new httpErrors.Forbidden(EFF.forbidden1)
+      const [listData] = await this._validateListAndOwner()
 
       if (listData.closed)
         throw new httpErrors.Conflict(EFF.listClosed)
@@ -110,6 +114,21 @@ class File {
     } catch (error) {
       return errorHandling(error, EFF.genericUpload)
     }
+  }
+
+  private async _validateListAndOwner (): Promise<[IList, IUser]> {
+    const [listData, ownerData] = await Promise.all([
+      this._getDataFromListOrUser('list') as Promise<IList>,
+      this._getDataFromListOrUser('user') as Promise<IUser>
+    ])
+
+    if (!ownerData.registered)
+      throw new httpErrors.Forbidden(EFF.forbidden2)
+
+    if (listData.owner !== ownerData.id)
+      throw new httpErrors.Forbidden(EFF.forbidden1)
+
+    return [listData, ownerData]
   }
 
   private async _getDataFromListOrUser (

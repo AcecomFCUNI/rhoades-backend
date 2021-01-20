@@ -1,5 +1,13 @@
 # Rhoades Backend
 
+## Version 0.65.0
+
+- Implemented:
+  - Endpoint to delete a file.
+  - Generalization for the validation of the list and the owner in the file controller.
+- Fixed:
+  - Download file endpoint.
+
 ## Version 0.64.1
 
 - Fixed:

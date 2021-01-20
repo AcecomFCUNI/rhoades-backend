@@ -7,6 +7,7 @@ import { File as FileC } from '../controllers'
 import { DtoFile } from '../dto-interfaces'
 import {
   fileIdSchema,
+  fileIdListAndOwnerSchema,
   listFinishRegistrationSchema
 } from '../schemas'
 import { IFile } from '../interfaces'
@@ -53,7 +54,6 @@ File.route('/file/getData/:list/:owner')
       try {
         await listFinishRegistrationSchema.validateAsync({ id: list, owner })
         const file: DtoFile = { list, owner }
-
         const f = new FileC(file)
         const result = await f.process('getFilesDataByList')
 
@@ -90,6 +90,24 @@ File.route('/file/download/:id/:owner')
 
         res.setHeader('Content-Type', 'application/pdf')
         res.status(200).send(result.data)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
+File.route('/file/delete/:id/:list/:owner')
+  .patch(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { params: { id, list, owner } } = req
+      const file: DtoFile = { id, list, owner }
+      try {
+        await fileIdListAndOwnerSchema.validateAsync(file)
+        const f = new FileC(file)
+        const result = await f.process('delete')
+
+        response(false, { result }, res, 200)
       } catch (error) {
         if (error.isJoi) error.status = 422
         next(error)

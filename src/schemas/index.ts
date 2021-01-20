@@ -1,4 +1,4 @@
-import { fileIdSchema } from './file'
+import { fileIdSchema, fileIdListAndOwnerSchema } from './file'
 import {
   listCreationSchema,
   listFilterByFacultyAndType,
@@ -17,6 +17,7 @@ import {
 
 export {
   fileIdSchema,
+  fileIdListAndOwnerSchema,
   listCreationSchema,
   listFilterByFacultyAndType,
   listFinishRegistrationSchema,
