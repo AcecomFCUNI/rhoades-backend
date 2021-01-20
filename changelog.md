@@ -1,9 +1,17 @@
 # Rhoades Backend
 
+## Version 0.64.0
+
+- Implemented:
+  - Now, only the owner can download a document from his list.
+  - Now, only the owner can get the data from the documents from his lists.
+- Updated:
+  - Documentation.
+
 ## Version 0.63.0
 
 - Implemented:
-  - Owner param in the fileUpload endpoint
+  - Owner param in the fileUpload endpoint.
   - The following validations for the fileUpload endpoint:
     - The provided owner is the list procurator.
     - The list is not closed.

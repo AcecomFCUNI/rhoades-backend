@@ -45,6 +45,14 @@ class File {
 
   private async _download (): Promise<IFile> {
     try {
+      const [listData, ownerData] = await Promise.all([
+        this._getDataFromListOrUser('list') as Promise<IList>,
+        this._getDataFromListOrUser('user') as Promise<IUser>
+      ])
+
+      if (listData.owner !== ownerData.id)
+        throw new httpErrors.Forbidden(EFF.forbidden1)
+
       const result = await FileModel.findById(
         this._args.id as string,
         '-_id data name'
@@ -60,6 +68,14 @@ class File {
 
   private async _getFilesDataByList (): Promise<IFile[]> {
     try {
+      const [listData, ownerData] = await Promise.all([
+        this._getDataFromListOrUser('list') as Promise<IList>,
+        this._getDataFromListOrUser('user') as Promise<IUser>
+      ])
+
+      if (listData.owner !== ownerData.id)
+        throw new httpErrors.Forbidden(EFF.forbidden1)
+
       const result = await FileModel.find(
         { list: this._args.list as string },
         '-_id -data'

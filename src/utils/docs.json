@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.63.0"
+    "version": "0.64.0"
   },
   "servers": [
     {
@@ -1006,7 +1006,26 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DefaultSuccess"
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "default": "false"
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -1074,7 +1093,7 @@
         }
       }
     },
-    "/file/getData/{idList}": {
+    "/file/getData/{idList}/{idOwner}": {
       "get": {
         "tags": [
           "list"
@@ -1092,6 +1111,17 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "idOwner",
+            "in": "path",
+            "description": "Firebase owner id.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1101,6 +1131,26 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FilesDataByList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The provided owner is not the list procurator.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "List or owner not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }
@@ -1128,7 +1178,7 @@
         }
       }
     },
-    "/file/download/{idDocument}": {
+    "/file/download/{idDocument}/{idOwner}": {
       "get": {
         "tags": [
           "list"
@@ -1140,6 +1190,17 @@
             "name": "idDocument",
             "in": "path",
             "description": "Mongo id of the file.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idOwner",
+            "in": "path",
+            "description": "Firebase owner id.",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -1160,8 +1221,18 @@
               }
             }
           },
+          "403": {
+            "description": "The provided owner is not the list procurator.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "404": {
-            "description": "The provided id doesn't match any file.",
+            "description": "List or owner not found, or the provided id doesn't match any file..",
             "content": {
               "application/json": {
                 "schema": {

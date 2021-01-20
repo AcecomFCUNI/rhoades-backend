@@ -7,8 +7,7 @@ import { File as FileC } from '../controllers'
 import { DtoFile } from '../dto-interfaces'
 import {
   fileIdSchema,
-  listFinishRegistrationSchema,
-  listIdSchema
+  listFinishRegistrationSchema
 } from '../schemas'
 import { IFile } from '../interfaces'
 
@@ -47,13 +46,13 @@ File.route('/file/upload/:list/:owner')
     }
   )
 
-File.route('/file/getData/:list')
+File.route('/file/getData/:list/:owner')
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const { params: { list } } = req
+      const { params: { list, owner } } = req
       try {
-        await listIdSchema.validateAsync({ id: list })
-        const file: DtoFile = { list }
+        await listFinishRegistrationSchema.validateAsync({ id: list, owner })
+        const file: DtoFile = { list, owner }
 
         const f = new FileC(file)
         const result = await f.process('getFilesDataByList')
@@ -66,7 +65,7 @@ File.route('/file/getData/:list')
     }
   )
 
-File.route('/file/download/:id')
+File.route('/file/download/:id/:owner')
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { id } } = req
