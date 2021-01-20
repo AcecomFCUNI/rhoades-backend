@@ -34,7 +34,7 @@ class File {
     switch (type) {
       case 'download':
         return this._download()
-      case '_getFilesDataByList':
+      case 'getFilesDataByList':
         return this._getFilesDataByList()
       case 'upload':
         return this._upload()
@@ -78,7 +78,7 @@ class File {
 
       const result = await FileModel.find(
         { list: this._args.list as string },
-        '-_id -data'
+        '-data -__v'
       )
 
       return result

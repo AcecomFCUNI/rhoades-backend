@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.64.0"
+    "version": "0.64.1"
   },
   "servers": [
     {
@@ -1463,6 +1463,10 @@
       "FileWithoutData": {
         "type": "object",
         "properties": {
+          "_id": {
+            "type": "string",
+            "description": "Mongo id from the file"
+          },
           "encoding": {
             "type": "string",
             "description": "Encoding of the file uploaded."
