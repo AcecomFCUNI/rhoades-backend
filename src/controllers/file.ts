@@ -110,7 +110,12 @@ class File {
       const newFile = new FileModel({ ...this._args })
       const file = await newFile.save()
 
-      return file
+      return {
+        createdAt: file.createdAt,
+        // eslint-disable-next-line no-underscore-dangle
+        id       : file._id,
+        name     : file.name
+      } as IFile
     } catch (error) {
       return errorHandling(error, EFF.genericUpload)
     }

@@ -36,8 +36,7 @@ File.route('/file/upload/:list/:owner')
           const f = new FileC(fileToUpload)
           const result = await f.process('upload') as IFile
 
-          // eslint-disable-next-line no-underscore-dangle
-          response(false, { result: { id: result._id } }, res, 201)
+          response(false, { result }, res, 201)
         } catch (error) {
           if (error.isJoi) error.status = 422
           next(error)

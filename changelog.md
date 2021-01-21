@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.66.0
+
+- Implemented:
+  - The upload file endpoint now return the name and the createdAt field.
+
 ## Version 0.65.0
 
 - Implemented:
