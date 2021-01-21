@@ -78,7 +78,7 @@ class File {
 
       return result
     } catch (error) {
-      return errorHandling(error)
+      return errorHandling(error, EFF.genericDownload)
     }
   }
 

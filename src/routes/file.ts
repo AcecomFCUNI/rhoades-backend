@@ -6,7 +6,7 @@ import { response } from '../utils'
 import { File as FileC } from '../controllers'
 import { DtoFile } from '../dto-interfaces'
 import {
-  fileIdSchema,
+  fileIdAndOwnerSchema,
   fileIdListAndOwnerSchema,
   listFinishRegistrationSchema
 } from '../schemas'
@@ -67,10 +67,10 @@ File.route('/file/getData/:list/:owner')
 File.route('/file/download/:id/:owner')
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const { params: { id } } = req
+      const { params: { id, owner } } = req
       try {
-        const file: DtoFile = { id }
-        await fileIdSchema.validateAsync(file)
+        const file: DtoFile = { id, owner }
+        await fileIdAndOwnerSchema.validateAsync(file)
 
         const f = new FileC(file)
         const result = await f.process('download') as IFile

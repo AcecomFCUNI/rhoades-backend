@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.66.1
+
+- Fixed:
+  - Error when a file download was being performed.
+
 ## Version 0.66.0
 
 - Implemented:
