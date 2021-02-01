@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.67.2
+
+- Fixed:
+  - Documentation of the getAcceptedList endpoint.
+
 ## Version 0.67.1
 
 - Fixed:

@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.67.1"
+    "version": "0.67.2"
   },
   "servers": [
     {
@@ -637,7 +637,7 @@
         ],
         "summary": "Get all the accepted list for the elections",
         "operationId": "getListForMalkova",
-        "response": {
+        "responses": {
           "200": {
             "description": "The set of the accepted list for the elections has been provided.",
             "content": {
