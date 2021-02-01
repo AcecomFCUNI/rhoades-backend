@@ -19,11 +19,11 @@ List.route('/list/createList')
   .post(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args }, query: { faculty } } = req
-      const list = {
+      const list: DtoList = {
         faculty,
         owner: (args as DtoList).owner,
         type : (args as DtoList).type
-      } as DtoList
+      }
 
       try {
         await listCreationSchema.validateAsync(list)
@@ -42,9 +42,9 @@ List.route('/list/getListsOfUser/:id')
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { id } } = req
-      const list = {
+      const list: DtoList = {
         owner: id as string
-      } as DtoList
+      }
 
       try {
         await listOwnerSchema.validateAsync(list)
@@ -63,10 +63,10 @@ List.route('/list/finishRegistration')
   .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args } } = req
-      const list = {
+      const list: DtoList = {
         id   : (args as DtoList).id,
         owner: (args as DtoList).owner
-      } as DtoList
+      }
 
       try {
         await listFinishRegistrationSchema.validateAsync(list)
@@ -85,10 +85,10 @@ List.route('/list/filter')
   .get(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { query: { faculty, type } } = req
-      const list = {
+      const list: DtoList = {
         faculty,
         type
-      } as DtoList
+      }
 
       try {
         await listFilterByFacultyAndType.validateAsync(list)
@@ -107,10 +107,10 @@ List.route('/list/removeCandidate/:candidateId')
   .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args }, params: { candidateId } } = req
-      const list = {
+      const list: DtoList = {
         id   : (args as DtoList).id,
         owner: (args as DtoList).owner
-      } as DtoList
+      }
 
       try {
         await listFinishRegistrationSchema.validateAsync(list)
@@ -129,10 +129,10 @@ List.route('/list/delete')
   .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args } } = req
-      const list = {
+      const list: DtoList = {
         id   : (args as DtoList).id,
         owner: (args as DtoList).owner
-      } as DtoList
+      }
 
       try {
         await listFinishRegistrationSchema.validateAsync(list)
@@ -151,18 +151,34 @@ List.route('/list/review/:adminId/:status')
   .patch(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args }, params: { adminId, status } } = req
-      const list = {
+      const list: DtoList = {
         id         : (args as DtoList).id,
         observation: (args as DtoList).observation,
         owner      : (args as DtoList).owner,
         status
-      } as DtoList
+      }
 
       try {
         await listReviewSchema.validateAsync(list)
         await userIdSchema.validateAsync({ id: adminId })
         const lc = new ListC(list)
         const result = await lc.process('review', undefined, adminId)
+
+        response(false, { result }, res, 200)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
+List.route('/list/getListForMalkova')
+  .get(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const list = new ListC({} as DtoList)
+
+      try {
+        const result = await list.process('getAcceptedLists')
 
         response(false, { result }, res, 200)
       } catch (error) {

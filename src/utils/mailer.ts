@@ -129,11 +129,15 @@ const notifyProcuratorListReviewed = async (
   owner       : IUser,
   status      : string,
   type        : string,
-  observation?: string
+  observation?: string,
+  number?     : number
 ): Promise<void> => {
   let statusInSpanish: string
 
-  if (status === 'accepted') statusInSpanish = 'aceptada'
+  if (number && status === 'accepted')
+    statusInSpanish = `aceptada - Lista ${number}`
+  else if (status === 'accepted')
+    statusInSpanish = 'aceptada, ha pasado a la siguiente etapa'
   else if (status === 'observed') statusInSpanish = 'observada'
   else statusInSpanish = 'rechazada'
 

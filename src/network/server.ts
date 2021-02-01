@@ -2,7 +2,17 @@ import express from 'express'
 import upload from 'express-fileupload'
 import morgan from 'morgan'
 import { applyRoutes } from './routes'
-import { firebaseConnection, mongoConnection, redisConnection } from '../database'
+import {
+  firebaseConnection,
+  mongoConnection,
+  redisConnection
+} from '../database'
+import { CustomNodeJSGlobal } from '../custom'
+import { List } from '../controllers'
+import { DtoList } from '../dto-interfaces'
+import { IList } from '../interfaces'
+
+declare const global: CustomNodeJSGlobal
 
 class Server {
   public app                 : express.Application
@@ -50,6 +60,23 @@ class Server {
     applyRoutes(this.app)
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  private async _getAcceptedList (): Promise<void> {
+    const list = new List({} as DtoList)
+    try {
+      const numberOfAcceptedLists = await list.process('getAcceptedLists') as IList[]
+
+      if (numberOfAcceptedLists.length > 0)
+        global.listNumber = numberOfAcceptedLists.length
+      else
+        global.listNumber = 0
+
+    } catch (error) {
+      console.error(error)
+      global.listNumber = 0
+    }
+  }
+
   private _firebase (): void {
     this._firebaseConnection = firebaseConnection
     this._firebaseConnection()
@@ -66,19 +93,20 @@ class Server {
   }
 
   public start (): void {
-    this.app.listen(this.app.get('port'), () =>
+    this.app.listen(this.app.get('port'), () => {
       console.log(`Server running at port ${this.app.get('port')}.`)
-    )
+      try {
+        Promise.all([
+          this._firebase(),
+          this._mongo()
+          // this._redis()
+        ])
+        setTimeout(() => this._getAcceptedList(), 3000)
+      } catch (error) {
+        console.error(error)
+      }
+    })
 
-    try {
-      Promise.all([
-        this._firebase(),
-        this._mongo()
-      ])
-      // this._redis()
-    } catch (error) {
-      console.error(error)
-    }
   }
 }
 

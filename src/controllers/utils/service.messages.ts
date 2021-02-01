@@ -8,6 +8,10 @@ enum ErrorMessagesForAlban {
   missingTeachers = 'Se necesitan 6 miembros docentes para el comité electoral.'
 }
 
+enum ErrorMessagesForMalkova {
+  noListAccepted = 'Aún no se ha aceptado ninguna lista.'
+}
+
 enum MessagesForAlban {
   success1 = 'Los miembros del comité electoral han sido registrados exitosamente.',
   success2 = 'El miembro del comité electoral ha sido registrado exitosamente.'
@@ -15,5 +19,6 @@ enum MessagesForAlban {
 
 export {
   ErrorMessagesForAlban as EMFA,
+  ErrorMessagesForMalkova as EMFM,
   MessagesForAlban as MFA
 }

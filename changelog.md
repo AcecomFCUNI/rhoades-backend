@@ -1,5 +1,16 @@
 # Rhoades Backend
 
+## Version 0.67.0
+
+- Implemented:
+  - getAcceptedList endpoint for Malkova system.
+  - Number field for the lists. It is used when a list is accepted in the last review.
+  - New method in the server to set the number of accepted lists whenever the server is restarted.
+- Updated:
+  - notifyProcuratorListReviewed method signature and process, now when a list is finally accepted, in the last review, its procurator will be notified.
+- Fixed: 
+  - One line return in many HOF.
+
 ## Version 0.66.1
 
 - Fixed:

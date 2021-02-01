@@ -3,7 +3,7 @@ import firestore from '@google-cloud/firestore'
 import httpErrors from 'http-errors'
 import { CustomNodeJSGlobal } from '../custom'
 import { DtoList } from '../dto-interfaces'
-import { CFU, EFL, EFU, MFL, errorHandling } from './utils'
+import { CFU, EFL, EFU, EMFM, MFL, errorHandling } from './utils'
 import {
   PATA,
   notifyProcuratorListReviewed,
@@ -38,7 +38,8 @@ class List {
     | Promise<IList[]>
     | Promise<Record<string, unknown>>
     | Promise<void>
-    | undefined {
+    | undefined
+  {
     switch (type) {
       case 'createList':
         return this._createList()
@@ -48,6 +49,8 @@ class List {
         return this._filter()
       case 'finishRegistration':
         return this._finishRegistration()
+      case 'getAcceptedLists':
+        return this._getAcceptedLists()
       case 'getListsOfUser':
         return this._getListsOfUser()
       case 'removeCandidate':
@@ -135,9 +138,9 @@ class List {
 
       if (list.applicants && list.applicants?.length > 0)
         await Promise.all([
-          ...(list.applicants as string[]).map(id => {
-            return this._userRef.doc(id).update({ postulating: false })
-          }),
+          ...(list.applicants as string[]).map(id => (
+            this._userRef.doc(id).update({ postulating: false })
+          )),
           this._listRef.doc(this._args.id as string).delete()
         ])
       else
@@ -212,6 +215,34 @@ class List {
     }
   }
 
+  private async _getAcceptedLists (): Promise<IList[]> {
+    try {
+      const acceptedLists = await this._listRef
+        .where('status', '==', 'accepted')
+        .get()
+
+      if (acceptedLists.docs.length === 0)
+        throw new httpErrors.NotFound(EMFM.noListAccepted)
+
+      const acceptedILists = acceptedLists.docs
+        .map(doc => ({
+          ...doc,
+          id: doc.id
+        } as IList))
+        .filter(list => list.reviewedTimes === 3 && list.status === 'accepted')
+        .map(list => ({
+          faculty: list.faculty,
+          number : list.number,
+          type   : list.type
+        } as IList))
+        .sort((l1, l2) => l1.number as number - (l2.number as number))
+
+      return acceptedILists
+    } catch (error) {
+      return errorHandling(error, EFL.errorFiltering)
+    }
+  }
+
   private async _getListsOfUser (
     ownerId?: string
   ): Promise<Record<string, unknown>> {
@@ -247,12 +278,10 @@ class List {
 
       if (lists.docs.length === 0) return {}
 
-      const listsData = lists.docs.map(doc => {
-        return {
-          ...doc.data(),
-          id: doc.id
-        } as IList
-      })
+      const listsData = lists.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id
+      } as IList))
 
       const teacherLists = listsData.filter(list => {
         if (
@@ -318,34 +347,6 @@ class List {
       return {}
     } catch (error) {
       return errorHandling(error)
-    }
-  }
-
-  private async _getDetailUserData (
-    id: string
-  ): Promise<IUser> {
-    const user = await this._userRef.doc(id).get()
-
-    if (!user.data()) throw new httpErrors.NotFound(EFU.userNotFound)
-
-    return {
-      ...user.data(),
-      id
-    } as IUser
-  }
-
-  private async _getDetailUsersData (iList: IList): Promise<IUser[]> {
-    const applicants = iList.applicants as string[]
-    let users: IUser[] = []
-
-    try {
-      users = await Promise.all(
-        applicants.map(applicant => this._getDetailUserData(applicant))
-      )
-
-      return users
-    } catch (error) {
-      return errorHandling(error, EFL.errorGettingLists)
     }
   }
 
@@ -427,11 +428,14 @@ class List {
           ),
           this._listRef.doc(this._args.id as string).update({
             observation  : this._args.observation,
-            reviewedTimes: list.reviewedTimes ? list.reviewedTimes++ : 1,
+            reviewedTimes: list.reviewedTimes ? ++list.reviewedTimes : 1,
             status       : this._args.status
           })
         ])
-      else
+      else if (
+        list.reviewedTimes === 1 &&
+        (this._args.status === 'rejected' || this._args.status === 'accepted')
+      )
         await Promise.all([
           notifyProcuratorListReviewed(
             owner,
@@ -439,7 +443,22 @@ class List {
             list.type as string
           ),
           this._listRef.doc(this._args.id as string).update({
-            reviewedTimes: list.reviewedTimes ? list.reviewedTimes++ : 1,
+            reviewedTimes: list.reviewedTimes ? ++list.reviewedTimes : 1,
+            status       : this._args.status
+          })
+        ])
+      else if (list.reviewedTimes === 2 && this._args.status === 'accepted')
+        await Promise.all([
+          notifyProcuratorListReviewed(
+            owner,
+            this._args.status as string,
+            list.type as string,
+            undefined,
+            ++global.listNumber
+          ),
+          this._listRef.doc(this._args.id as string).update({
+            number       : global.listNumber,
+            reviewedTimes: list.reviewedTimes ? ++list.reviewedTimes : 1,
             status       : this._args.status
           })
         ])
@@ -447,6 +466,34 @@ class List {
       return MFL.reviewed
     } catch (error) {
       return errorHandling(error, EFL.errorReviewing)
+    }
+  }
+
+  private async _getDetailUserData (
+    id: string
+  ): Promise<IUser> {
+    const user = await this._userRef.doc(id).get()
+
+    if (!user.data()) throw new httpErrors.NotFound(EFU.userNotFound)
+
+    return {
+      ...user.data(),
+      id
+    } as IUser
+  }
+
+  private async _getDetailUsersData (iList: IList): Promise<IUser[]> {
+    const applicants = iList.applicants as string[]
+    let users: IUser[] = []
+
+    try {
+      users = await Promise.all(
+        applicants.map(applicant => this._getDetailUserData(applicant))
+      )
+
+      return users
+    } catch (error) {
+      return errorHandling(error, EFL.errorGettingLists)
     }
   }
 

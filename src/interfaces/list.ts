@@ -5,6 +5,7 @@ export interface IList {
   closed?       : boolean
   faculty?      : string
   id            : string
+  number?       : number
   observation?  : string
   owner?        : string
   reviewedTimes?: number

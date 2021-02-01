@@ -112,11 +112,9 @@ User.route('/user/setCommitteeMembers')
         await userSetCommitteeMembersSchema.validateAsync(args)
 
         // eslint-disable-next-line no-extra-parens
-        const committeeMembers = (args as DtoUser[]).map(user => {
-          return {
-            documentNumber: user
-          } as DtoUser
-        })
+        const committeeMembers = (args as DtoUser[]).map(user => ({
+          documentNumber: user
+        } as DtoUser))
 
         const uc = new UserC(committeeMembers)
         const result = await uc.process('committee')

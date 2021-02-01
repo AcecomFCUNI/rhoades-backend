@@ -24,6 +24,8 @@ const faculties = [
   'FIM'
 ]
 
+const status = ['accepted', 'observed', 'rejected']
+
 const listCreationSchema = joi.object({
   faculty: joi
     .when('type', {
@@ -89,7 +91,7 @@ const listReviewSchema = joi.object({
       ]
     }),
   owner : joi.string().length(20).required(),
-  status: joi.string().valid('accepted', 'observed', 'rejected')
+  status: joi.string().valid(...status)
 })
 
 export {

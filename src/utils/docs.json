@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.66.1"
+    "version": "0.67.0"
   },
   "servers": [
     {
@@ -623,6 +623,77 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/list/getListForMalkova": {
+      "get": {
+        "tags": [
+          "list"
+        ],
+        "summary": "Get all the accepted list for the elections",
+        "operationId": "getListForMalkova",
+        "response": {
+          "200": {
+            "description": "The set of the accepted list for the elections has been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "default": "false"
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "faculty": {
+                                "type": "string",
+                                "enum": [
+                                  "FIIS",
+                                  "FIP",
+                                  "FC",
+                                  "FIEE",
+                                  "FIGMM",
+                                  "FIEECS",
+                                  "FIC",
+                                  "FAUA",
+                                  "FIA",
+                                  "FIQT",
+                                  "FIM"
+                                ]
+                              },
+                              "number": {
+                                "type": "integer"
+                              },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "dean",
+                                  "faculty-council",
+                                  "rector",
+                                  "university-assembly",
+                                  "third-of-faculty",
+                                  "university-third-assembly",
+                                  "university-third-council"
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }

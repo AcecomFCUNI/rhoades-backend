@@ -2,7 +2,7 @@ import httpErrors from 'http-errors'
 
 import { EFF, MFF } from './file.messages'
 import { EFL, MFL } from './list.messages'
-import { EMFA, MFA } from './service.messages'
+import { EMFA, EMFM, MFA } from './service.messages'
 import { CFU, EFU, MFU } from './user.messages'
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/no-explicit-any
@@ -18,4 +18,4 @@ const errorHandling = (error: any, message?: string): never => {
   throw new httpErrors.InternalServerError(message ?? error.message)
 }
 
-export { CFU, EFF, EFL, EFU, EMFA, MFA, MFL, MFF, MFU, errorHandling }
+export { CFU, EFF, EFL, EFU, EMFA, EMFM, MFA, MFL, MFF, MFU, errorHandling }
