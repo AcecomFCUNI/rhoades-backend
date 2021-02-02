@@ -219,6 +219,7 @@ class List {
     try {
       const acceptedLists = await this._listRef
         .where('status', '==', 'accepted')
+        .where('reviewedTimes', '==', 3)
         .get()
 
       if (acceptedLists.docs.length === 0)
@@ -226,10 +227,9 @@ class List {
 
       const acceptedILists = acceptedLists.docs
         .map(doc => ({
-          ...doc,
+          ...doc.data(),
           id: doc.id
         } as IList))
-        .filter(list => list.reviewedTimes === 3 && list.status === 'accepted')
         .map(list => ({
           faculty: list.faculty,
           number : list.number,
@@ -390,7 +390,6 @@ class List {
   private async _review (adminId: string): Promise<string> {
     try {
       const adminUser = await this._getDetailUserData(adminId)
-      console.log(adminUser.condition)
 
       // Validating admin
       if (adminUser.condition !== 'admin')
@@ -404,12 +403,24 @@ class List {
       if (!list.closed)
         throw new httpErrors.Conflict(EFL.listNotClosed)
 
+      if (list.status === 'rejected')
+        throw new httpErrors.Conflict(EFL.listRejected)
+
       if (
         list.reviewedTimes &&
         list.reviewedTimes === 2 &&
         list.status === 'observed'
       )
         throw new httpErrors.Conflict(EFL.listFinalReview)
+
+      if (
+        list.reviewedTimes &&
+        list.reviewedTimes === 3
+      )
+        throw new httpErrors.Conflict(EFL.listFinalReview)
+
+      if (this._args.status === 'accepted' && this._args.observation)
+        throw new httpErrors.BadRequest(EFL.listAcceptedReview)
 
       // Validating owner registered
       const owner = await this._getDetailUserData(this._args.owner as string)
@@ -432,21 +443,6 @@ class List {
             status       : this._args.status
           })
         ])
-      else if (
-        list.reviewedTimes === 1 &&
-        (this._args.status === 'rejected' || this._args.status === 'accepted')
-      )
-        await Promise.all([
-          notifyProcuratorListReviewed(
-            owner,
-            this._args.status as string,
-            list.type as string
-          ),
-          this._listRef.doc(this._args.id as string).update({
-            reviewedTimes: list.reviewedTimes ? ++list.reviewedTimes : 1,
-            status       : this._args.status
-          })
-        ])
       else if (list.reviewedTimes === 2 && this._args.status === 'accepted')
         await Promise.all([
           notifyProcuratorListReviewed(
@@ -458,6 +454,18 @@ class List {
           ),
           this._listRef.doc(this._args.id as string).update({
             number       : global.listNumber,
+            reviewedTimes: list.reviewedTimes ? ++list.reviewedTimes : 1,
+            status       : this._args.status
+          })
+        ])
+      else
+        await Promise.all([
+          notifyProcuratorListReviewed(
+            owner,
+            this._args.status as string,
+            list.type as string
+          ),
+          this._listRef.doc(this._args.id as string).update({
             reviewedTimes: list.reviewedTimes ? ++list.reviewedTimes : 1,
             status       : this._args.status
           })

@@ -64,10 +64,10 @@ class Server {
   private async _getAcceptedList (): Promise<void> {
     const list = new List({} as DtoList)
     try {
-      const numberOfAcceptedLists = await list.process('getAcceptedLists') as IList[]
+      const acceptedLists = await list.process('getAcceptedLists') as IList[]
 
-      if (numberOfAcceptedLists.length > 0)
-        global.listNumber = numberOfAcceptedLists.length
+      if (acceptedLists.length > 0)
+        global.listNumber = acceptedLists.length
       else
         global.listNumber = 0
 
@@ -101,7 +101,7 @@ class Server {
           this._mongo()
           // this._redis()
         ])
-        setTimeout(() => this._getAcceptedList(), 3000)
+        setTimeout(() => this._getAcceptedList(), 5000)
       } catch (error) {
         console.error(error)
       }

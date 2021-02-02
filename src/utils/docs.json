@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.67.2"
+    "version": "0.68.0"
   },
   "servers": [
     {
@@ -999,6 +999,16 @@
               }
             }
           },
+          "400": {
+            "description": "A list that is being accepted can't receive an observation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "403": {
             "description": "The provided owner is not registered or the provided admin is not really an admin.",
             "content": {
@@ -1010,7 +1020,7 @@
             }
           },
           "409": {
-            "description": "The list is not closed.",
+            "description": "The list is not closed, the list was rejected or the list was reviewed thrice.",
             "content": {
               "application/json": {
                 "schema": {

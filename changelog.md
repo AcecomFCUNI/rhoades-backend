@@ -1,5 +1,14 @@
 # Rhoades Backend
 
+## Version 0.68.0
+
+- Implemented:
+  - New rules for the review endpoint:
+    - A list can't be reviewed more than thrice.
+    - A list can't be reviewed once it was rejected.
+    - A list that was accepted can't receive an observation.
+- Fixed:
+  - Return of the getAcceptedList endpoint.
 ## Version 0.67.2
 
 - Fixed:
