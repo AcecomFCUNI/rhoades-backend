@@ -96,9 +96,22 @@ class Server {
   // eslint-disable-next-line class-methods-use-this
   private async _getSchedule (): Promise<void> {
     const response = await axios.get(process.env.ALBAN_PROCESSES as string)
+
     // eslint-disable-next-line prefer-destructuring
     const data: DtoProcesses = response.data
-    console.log(data.message[0].periods)
+
+    // eslint-disable-next-line prefer-destructuring
+    global.rhoadesProcessesData = data.message
+      .filter(p => p.name === 'rhoades')[0]
+
+    if (!global.rhoadesProcessesData.established) {
+      const id = setInterval(async () => {
+        await this._getSchedule()
+
+        if (global.rhoadesProcessesData.established)
+          clearInterval(id)
+      }, 5*60*1000)
+    }
   }
 
   public start (): void {
@@ -114,7 +127,6 @@ class Server {
         console.error(error)
       }
     })
-
   }
 }
 

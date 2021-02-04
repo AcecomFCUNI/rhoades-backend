@@ -1,4 +1,4 @@
-interface ProcessesMessage {
+interface DtoProcessesMessage {
   established: boolean
   id         : string
   name       : string
@@ -7,10 +7,10 @@ interface ProcessesMessage {
 
 interface DtoProcesses {
   error    : string
-  message  : ProcessesMessage[]
+  message  : DtoProcessesMessage[]
   path     : string
   status   : number
   timestamp: Date
 }
 
-export { DtoProcesses }
+export { DtoProcesses, DtoProcessesMessage }

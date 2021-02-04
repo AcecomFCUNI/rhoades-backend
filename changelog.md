@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.71.0
+
+- Implemented:
+  - Exposed Rhoades schedule in the root route.
+
 ## Version 0.70.0
 
 - Implemented:
