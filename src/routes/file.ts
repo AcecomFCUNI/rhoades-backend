@@ -1,16 +1,18 @@
 import httpErrors from 'http-errors'
 import upload from 'express-fileupload'
 import { NextFunction, Router } from 'express'
-import { Request, Response } from '../custom'
+import { CustomNodeJSGlobal, Request, Response } from '../custom'
 import { response } from '../utils'
 import { File as FileC } from '../controllers'
 import { DtoFile } from '../dto-interfaces'
 import {
   fileIdAndOwnerSchema,
   fileIdListAndOwnerSchema,
-  listFinishRegistrationSchema
+  listValidation
 } from '../schemas'
 import { IFile } from '../interfaces'
+
+declare const global: CustomNodeJSGlobal
 
 const File = Router()
 
@@ -22,7 +24,9 @@ File.route('/file/upload/:list/:owner')
         const file = Object.keys(files)[0]
         const fileObj: upload.UploadedFile = files[file] as upload.UploadedFile
         try {
-          await listFinishRegistrationSchema.validateAsync({ id: list, owner })
+          await listValidation(global.electionCodes)
+            .listFinishRegistrationSchema
+            .validateAsync({ id: list, owner })
 
           const fileToUpload: DtoFile = {
             data    : fileObj.data,
@@ -51,7 +55,10 @@ File.route('/file/getData/:list/:owner')
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { list, owner } } = req
       try {
-        await listFinishRegistrationSchema.validateAsync({ id: list, owner })
+        await listValidation(global.electionCodes)
+          .listFinishRegistrationSchema
+          .validateAsync({ id: list, owner })
+
         const file: DtoFile = { list, owner }
         const f = new FileC(file)
         const result = await f.process('getFilesDataByList')
@@ -103,6 +110,7 @@ File.route('/file/delete/:id/:list/:owner')
       const file: DtoFile = { id, list, owner }
       try {
         await fileIdListAndOwnerSchema.validateAsync(file)
+
         const f = new FileC(file)
         const result = await f.process('delete')
 

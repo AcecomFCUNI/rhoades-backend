@@ -1,15 +1,17 @@
 import { NextFunction, Router } from 'express'
-import { Request, Response } from '../custom'
+import { CustomNodeJSGlobal, Request, Response } from '../custom'
 import { User as UserC } from '../controllers'
 import { response } from '../utils'
 import { DtoList, DtoUser } from '../dto-interfaces'
 import {
-  listFinishRegistrationSchema,
+  listValidation,
   userCodeSchema,
   userNotifySchema,
   userSetCommitteeMembersSchema,
   userVerifySchema
 } from '../schemas'
+
+declare const global: CustomNodeJSGlobal
 
 const User = Router()
 
@@ -24,6 +26,7 @@ User.route('/user/verify/:code')
 
       try {
         await userVerifySchema.validateAsync(user)
+
         const uc = new UserC(user)
         const result = await uc.process('verify')
 
@@ -42,6 +45,7 @@ User.route('/user/notify')
 
       try {
         await userNotifySchema.validateAsync(args as DtoUser)
+
         const uc = new UserC(args as DtoUser)
         const result = await uc.process('notify')
 
@@ -68,7 +72,10 @@ User.route('/user/enroll/:code')
 
       try {
         await userVerifySchema.validateAsync(user)
-        await listFinishRegistrationSchema.validateAsync(args as DtoList)
+
+        await listValidation(global.electionCodes)
+          .listFinishRegistrationSchema
+          .validateAsync(args as DtoList)
 
         const uc = new UserC(user)
         const result = await uc.process('enroll', args as DtoList)

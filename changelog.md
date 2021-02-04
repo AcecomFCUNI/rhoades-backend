@@ -1,5 +1,11 @@
 # Rhoades Backend
 
+## Version 0.72.0
+
+- Implemented:
+  - Exposed Rhoades elections in the root route.
+  - Dynamic election types validation, the elections types now comes from Alban and those available elections are being provided to validate what type of list can be created.
+
 ## Version 0.71.0
 
 - Implemented:

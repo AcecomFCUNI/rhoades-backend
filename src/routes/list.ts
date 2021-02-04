@@ -1,17 +1,15 @@
 /* eslint-disable no-extra-parens */
 import { NextFunction, Router } from 'express'
-import { Request, Response } from '../custom'
+import { CustomNodeJSGlobal, Request, Response } from '../custom'
 import { response } from '../utils'
 import { List as ListC } from '../controllers'
 import { DtoList } from '../dto-interfaces'
 import {
   userIdSchema,
-  listCreationSchema,
-  listFilterByFacultyAndType,
-  listFinishRegistrationSchema,
-  listOwnerSchema,
-  listReviewSchema
+  listValidation
 } from '../schemas'
+
+declare const global: CustomNodeJSGlobal
 
 const List = Router()
 
@@ -26,7 +24,10 @@ List.route('/list/createList')
       }
 
       try {
-        await listCreationSchema.validateAsync(list)
+        await listValidation(global.electionCodes)
+          .listCreationSchema
+          .validateAsync(list)
+
         const lc = new ListC(list)
         const result = await lc.process('createList')
 
@@ -47,7 +48,10 @@ List.route('/list/getListsOfUser/:id')
       }
 
       try {
-        await listOwnerSchema.validateAsync(list)
+        await listValidation(global.electionCodes)
+          .listOwnerSchema
+          .validateAsync(list)
+
         const lc = new ListC(list)
         const result = await lc.process('getListsOfUser')
 
@@ -69,7 +73,10 @@ List.route('/list/finishRegistration')
       }
 
       try {
-        await listFinishRegistrationSchema.validateAsync(list)
+        await listValidation(global.electionCodes)
+          .listFinishRegistrationSchema
+          .validateAsync(list)
+
         const lc = new ListC(list)
         const result = await lc.process('finishRegistration')
 
@@ -91,7 +98,10 @@ List.route('/list/filter')
       }
 
       try {
-        await listFilterByFacultyAndType.validateAsync(list)
+        await listValidation(global.electionCodes)
+          .listFilterByFacultyAndType
+          .validateAsync(list)
+
         const lc = new ListC(list)
         const result = await lc.process('filter')
 
@@ -113,7 +123,10 @@ List.route('/list/removeCandidate/:candidateId')
       }
 
       try {
-        await listFinishRegistrationSchema.validateAsync(list)
+        await listValidation(global.electionCodes)
+          .listFinishRegistrationSchema
+          .validateAsync(list)
+
         const lc = new ListC(list)
         const result = await lc.process('removeCandidate', candidateId)
 
@@ -135,7 +148,10 @@ List.route('/list/delete')
       }
 
       try {
-        await listFinishRegistrationSchema.validateAsync(list)
+        await listValidation(global.electionCodes)
+          .listFinishRegistrationSchema
+          .validateAsync(list)
+
         const lc = new ListC(list)
         const result = await lc.process('deleteList')
 
@@ -159,7 +175,10 @@ List.route('/list/review/:adminId/:status')
       }
 
       try {
-        await listReviewSchema.validateAsync(list)
+        await listValidation(global.electionCodes)
+          .listReviewSchema
+          .validateAsync(list)
+
         await userIdSchema.validateAsync({ id: adminId })
         const lc = new ListC(list)
         const result = await lc.process('review', undefined, adminId)

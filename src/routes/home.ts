@@ -12,6 +12,11 @@ Home.route('')
       false,
       {
         result: {
+          elections: global.electionCodes
+            .map((ec, index) => ({
+              code: ec,
+              name: global.electionNames[index]
+            })),
           established: global.rhoadesProcessesData.established,
           periods    : global.rhoadesProcessesData.periods
         }

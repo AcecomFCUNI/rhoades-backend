@@ -10,7 +10,7 @@ import {
 } from '../database'
 import { CustomNodeJSGlobal } from '../custom'
 import { List } from '../controllers'
-import { DtoList, DtoProcesses } from '../dto-interfaces'
+import { DtoElectionTypes, DtoList, DtoProcesses } from '../dto-interfaces'
 import { IList } from '../interfaces'
 
 declare const global: CustomNodeJSGlobal
@@ -114,13 +114,40 @@ class Server {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  private async _getElectionTypes (): Promise<void> {
+    const response = await axios.get(process.env.ALBAN_TYPE_ELECTIONS as string)
+
+    // eslint-disable-next-line prefer-destructuring
+    const data: DtoElectionTypes = response.data
+
+    global.electionCodes = data.message
+      .filter(electionType => electionType.active)
+      .map(electionType => electionType.name)
+
+    global.electionNames = data.message
+      .filter(electionType => electionType.active)
+      .map(electionType => electionType.description)
+
+    if (global.electionCodes.length === 0) {
+      const id = setInterval(async () => {
+        await this._getElectionTypes()
+
+        if (global.electionCodes.length !== 0)
+          clearInterval(id)
+      }, 5*60*1000)
+    }
+  }
+
   public start (): void {
-    this.app.listen(this.app.get('port'), () => {
+    this.app.listen(this.app.get('port'), async () => {
       console.log(`Server running at port ${this.app.get('port')}.`)
       try {
+        await this._getSchedule()
+        await this._getElectionTypes()
+
         this._firebase()
         this._mongo()
-        this._getSchedule()
         // this._redis()
         setTimeout(() => this._getAcceptedList(), 7500)
       } catch (error) {

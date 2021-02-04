@@ -4,12 +4,7 @@ import {
   fileIdListAndOwnerSchema
 } from './file'
 import {
-  listCreationSchema,
-  listFilterByFacultyAndType,
-  listFinishRegistrationSchema,
-  listIdSchema,
-  listOwnerSchema,
-  listReviewSchema
+  listValidation
 } from './list'
 import {
   userCodeSchema,
@@ -23,12 +18,7 @@ export {
   fileIdAndOwnerSchema,
   fileIdSchema,
   fileIdListAndOwnerSchema,
-  listCreationSchema,
-  listFilterByFacultyAndType,
-  listFinishRegistrationSchema,
-  listIdSchema,
-  listOwnerSchema,
-  listReviewSchema,
+  listValidation,
   userCodeSchema,
   userIdSchema,
   userNotifySchema,
