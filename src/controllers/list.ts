@@ -177,7 +177,13 @@ class List {
 
         // eslint-disable-next-line no-await-in-loop
         const owner = await this._getDetailUserData(list.owner as string)
-        list.owner = `${owner.names} ${owner.lastName} ${owner.secondLastName}`
+        list.owner = {
+          id            : owner.id,
+          lastName      : owner.lastName,
+          names         : owner.names,
+          secondLastName: owner.secondLastName
+        } as IUser
+
         listsData.push(list)
       }
 

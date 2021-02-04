@@ -1,6 +1,7 @@
+import axios from 'axios'
 import express from 'express'
-import upload from 'express-fileupload'
 import morgan from 'morgan'
+import upload from 'express-fileupload'
 import { applyRoutes } from './routes'
 import {
   firebaseConnection,
@@ -9,7 +10,7 @@ import {
 } from '../database'
 import { CustomNodeJSGlobal } from '../custom'
 import { List } from '../controllers'
-import { DtoList } from '../dto-interfaces'
+import { DtoList, DtoProcesses } from '../dto-interfaces'
 import { IList } from '../interfaces'
 
 declare const global: CustomNodeJSGlobal
@@ -92,16 +93,23 @@ class Server {
     this._redisConnection()
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  private async _getSchedule (): Promise<void> {
+    const response = await axios.get(process.env.ALBAN_PROCESSES as string)
+    // eslint-disable-next-line prefer-destructuring
+    const data: DtoProcesses = response.data
+    console.log(data.message[0].periods)
+  }
+
   public start (): void {
     this.app.listen(this.app.get('port'), () => {
       console.log(`Server running at port ${this.app.get('port')}.`)
       try {
-        Promise.all([
-          this._firebase(),
-          this._mongo()
-          // this._redis()
-        ])
-        setTimeout(() => this._getAcceptedList(), 5000)
+        this._firebase()
+        this._mongo()
+        this._getSchedule()
+        // this._redis()
+        setTimeout(() => this._getAcceptedList(), 7500)
       } catch (error) {
         console.error(error)
       }

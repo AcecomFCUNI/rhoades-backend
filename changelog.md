@@ -1,9 +1,16 @@
 # Rhoades Backend
 
+## Version 0.70.0
+
+- Implemented:
+  - Query to the Alban's backend to get the processes.
+  - The returned of the filter endpoint was populated, now it returns his full name and his id.
+
 ## Version 0.69.0
 
 - Implemented:
   - Returned owner full owner name in the response of the filter endpoint.
+
 ## Version 0.68.0
 
 - Implemented:

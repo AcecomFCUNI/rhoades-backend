@@ -7,7 +7,7 @@ export interface IList {
   id            : string
   number?       : number
   observation?  : string
-  owner?        : string
+  owner?        : string | IUser
   reviewedTimes?: number
   status?       : string
   type?         : string

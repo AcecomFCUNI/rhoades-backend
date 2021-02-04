@@ -1,6 +1,6 @@
 {
   "name": "rhoades-backend",
-  "version": "0.69.0",
+  "version": "0.70.0",
   "main": "src/index.ts",
   "description": "Backend for the application to automatize the registration of lists",
   "scripts": {
@@ -14,6 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@google-cloud/firestore": "^4.8.1",
+    "axios": "^0.21.1",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "firebase-admin": "^9.4.2",
