@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.73.0
+
+- Implemented:
+  - Endpoint to download all the uploaded files from a list in zip. This endpoint can only be used by an admin.
+
 ## Version 0.72.0
 
 - Implemented:

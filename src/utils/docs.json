@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.72.0"
+    "version": "0.73.0"
   },
   "servers": [
     {
@@ -1343,6 +1343,84 @@
           },
           "404": {
             "description": "List or owner not found, or the provided id doesn't match any file..",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "There is an error in the payload structure.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file/downloadAllDocumentsFromList/{idList}/{idOwner}": {
+      "post": {
+        "tags": [
+          "list"
+        ],
+        "summary": "Download a zip which contains all the documents of the list.",
+        "operationId": "fileDownloadZip",
+        "parameters": [
+          {
+            "name": "idDocument",
+            "in": "path",
+            "description": "Mongo id of the file.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idOwner",
+            "in": "path",
+            "description": "Firebase owner id.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/SimpleDtoUser"
+        },
+        "responses": {
+          "200": {
+            "description": "The zip was successfully downloaded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultSuccess"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The provided owner is not registered or the provided admin is not really an admin.",
             "content": {
               "application/json": {
                 "schema": {

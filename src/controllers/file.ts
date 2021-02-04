@@ -1,5 +1,6 @@
 /* eslint-disable no-extra-parens */
 import httpErrors from 'http-errors'
+import Zip from 'adm-zip'
 import { CustomNodeJSGlobal } from '../custom'
 import { IFile, IList, IUser } from '../interfaces'
 import { FileModel } from '../database/mongo/models'
@@ -7,6 +8,11 @@ import { DtoFile } from '../dto-interfaces'
 import { EFF, errorHandling, MFF } from './utils'
 
 declare const global: CustomNodeJSGlobal
+
+interface ICustomZip {
+  name: string
+  zip : Buffer
+}
 
 class File {
   private _args: DtoFile
@@ -28,6 +34,7 @@ class File {
   ):
     | Promise<IFile>
     | Promise<IFile[]>
+    | Promise<ICustomZip>
     | Promise<string>
     | undefined
   {
@@ -36,6 +43,8 @@ class File {
         return this._delete()
       case 'download':
         return this._download()
+      case 'downloadAllDocumentsFromList':
+        return this._downloadAllDocumentsFromList()
       case 'getFilesDataByList':
         return this._getFilesDataByList()
       case 'upload':
@@ -79,6 +88,29 @@ class File {
       return result
     } catch (error) {
       return errorHandling(error, EFF.genericDownload)
+    }
+  }
+
+  private async _downloadAllDocumentsFromList (): Promise<ICustomZip> {
+    try {
+      const [, owner] = await this._validateListAndOwner()
+
+      const result = await FileModel.find({
+        list: this._args.list
+      })
+
+      console.log(result)
+
+      const zip = new Zip()
+
+      result.forEach(file => zip.addFile(file.name, file.data))
+
+      return {
+        name: `${owner.names} ${owner.lastName} ${owner.secondLastName}`,
+        zip : zip.toBuffer()
+      } as ICustomZip
+    } catch (error) {
+      return errorHandling(error, EFF.genericDownload2)
     }
   }
 
@@ -165,4 +197,4 @@ class File {
   }
 }
 
-export { File }
+export { File, ICustomZip }

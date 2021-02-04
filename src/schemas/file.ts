@@ -15,8 +15,14 @@ const fileIdListAndOwnerSchema = joi.object({
   owner: joi.string().required().length(20)
 })
 
+const fileListIdAndOwnerSchema = joi.object({
+  list : joi.string().required().length(20),
+  owner: joi.string().required().length(20)
+})
+
 export {
   fileIdAndOwnerSchema,
   fileIdSchema,
-  fileIdListAndOwnerSchema
+  fileIdListAndOwnerSchema,
+  fileListIdAndOwnerSchema
 }

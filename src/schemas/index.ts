@@ -1,7 +1,8 @@
 import {
   fileIdAndOwnerSchema,
   fileIdSchema,
-  fileIdListAndOwnerSchema
+  fileIdListAndOwnerSchema,
+  fileListIdAndOwnerSchema
 } from './file'
 import {
   listValidation
@@ -18,6 +19,7 @@ export {
   fileIdAndOwnerSchema,
   fileIdSchema,
   fileIdListAndOwnerSchema,
+  fileListIdAndOwnerSchema,
   listValidation,
   userCodeSchema,
   userIdSchema,

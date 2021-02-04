@@ -3,14 +3,17 @@ import upload from 'express-fileupload'
 import { NextFunction, Router } from 'express'
 import { CustomNodeJSGlobal, Request, Response } from '../custom'
 import { response } from '../utils'
-import { File as FileC } from '../controllers'
-import { DtoFile } from '../dto-interfaces'
+import { File as FileC, ICustomZip, User as UserC } from '../controllers'
+import { DtoFile, DtoUser } from '../dto-interfaces'
 import {
   fileIdAndOwnerSchema,
   fileIdListAndOwnerSchema,
-  listValidation
+  fileListIdAndOwnerSchema,
+  listValidation,
+  userIdSchema
 } from '../schemas'
-import { IFile } from '../interfaces'
+import { IFile, IUser } from '../interfaces'
+import { EFF } from '../controllers/utils'
 
 declare const global: CustomNodeJSGlobal
 
@@ -96,6 +99,42 @@ File.route('/file/download/:id/:owner')
 
         res.setHeader('Content-Type', 'application/pdf')
         res.status(200).send(result.data)
+      } catch (error) {
+        if (error.isJoi) error.status = 422
+        next(error)
+      }
+    }
+  )
+
+File.route('/file/downloadAllDocumentsFromList/:idList/:owner')
+  .post(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const { params: { idList, owner }, body: { args } } = req
+      try {
+        const file: DtoFile = { list: idList, owner }
+        // eslint-disable-next-line no-extra-parens
+        const admin: IUser = { id: (args as DtoUser).id }
+        await fileListIdAndOwnerSchema.validateAsync(file)
+        await userIdSchema.validateAsync(admin)
+
+        const f = new FileC(file)
+        const u = new UserC(admin)
+        const { condition } = await u.process('verify') as IUser
+
+        if (condition === 'admin') {
+          const result = await f.process('downloadAllDocumentsFromList') as ICustomZip
+
+          const date = new Date().getTime()
+
+          res.setHeader(
+            'Content-Disposition',
+            `attachment; filename="${date}-${result.name}-documents.zip"`
+          )
+
+          res.setHeader('Content-Type', 'application/zip')
+          res.status(200).send(result.zip)
+        } else
+          throw new httpErrors.Forbidden(EFF.forbidden3)
       } catch (error) {
         if (error.isJoi) error.status = 422
         next(error)
