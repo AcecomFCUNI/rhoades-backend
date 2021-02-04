@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.68.0"
+    "version": "0.69.0"
   },
   "servers": [
     {
@@ -1620,7 +1620,8 @@
             }
           },
           "owner": {
-            "type": "string"
+            "type": "string",
+            "description": "Owner full name"
           },
           "type": {
             "type": "string"

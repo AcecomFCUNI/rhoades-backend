@@ -1,5 +1,9 @@
 # Rhoades Backend
 
+## Version 0.69.0
+
+- Implemented:
+  - Returned owner full owner name in the response of the filter endpoint.
 ## Version 0.68.0
 
 - Implemented:
