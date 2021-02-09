@@ -45,63 +45,63 @@ const validateRoute = (
   if (url.includes('notify'))
     args.id === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('enroll'))
     (args as DtoList).owner === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('setCommitteeMember'))
     (args.id === payload.aud && payload.aud === ALBAN_ID)
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('createList'))
     (args as DtoList).owner === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('getListsOfUser'))
     id === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('finishRegistration'))
     (args as DtoList).owner === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('filter'))
     adminId === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('removeCandidate'))
     (args as DtoList).owner === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('list/delete'))
     (args as DtoList).owner === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('review'))
     adminId === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('upload'))
     owner === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('getData'))
     owner === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('download'))
     id === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('downloadAllDocumentsFromList'))
     args.id === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('file/delete'))
     id === payload.aud
       ? next()
-      : next(new httpErrors.Forbidden())
+      : next(new httpErrors.Unauthorized())
   else if (url.includes('test'))
     next()
   else
@@ -129,7 +129,9 @@ const verifyAccessToken = (
     (error, payload): void => {
       if (error) {
         console.error(error)
-        next(new httpErrors.Unauthorized(error.name === 'JsonWebTokenError' ? undefined : error.message))
+        error.name === 'JsonWebTokenError'
+          ? next(new httpErrors.Unauthorized())
+          : next(error.message)
       }
 
       validateRoute((payload as IPayload), url, next, req)

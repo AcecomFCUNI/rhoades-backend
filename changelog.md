@@ -1,5 +1,9 @@
 # Rhoades Backend
 
+## Version 0.74.1
+
+- Fixed:
+  - Error code when the token is not provided
 ## Version 0.74.0
 
 - Implemented:
