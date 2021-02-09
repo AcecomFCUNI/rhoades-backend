@@ -32,8 +32,6 @@ class User {
     list?: DtoList
   ): Promise<IUser> | Promise<string> | undefined {
     switch (type) {
-      case 'committee':
-        return this._setCommitteeMembers()
       case 'committeeMember':
         return this._setCommitteeMember()
       case 'enroll':
@@ -44,61 +42,6 @@ class User {
         return this._verify()
       default:
         return undefined
-    }
-  }
-
-  private async _setCommitteeMembers (): Promise<string> {
-    const posibleMembers = this._args as DtoUser[]
-    const fullData: IUser[] = []
-
-    try {
-      // Verify if there aren't committee members
-      const currentCommitteeMembers = await this._usersRef
-        .where('committeeMember', '==', true)
-        .get()
-
-      if (currentCommitteeMembers.docs.length > 0)
-        throw new httpErrors.Conflict(EMFA.committeeAlreadyRegistered)
-
-      for (let i = 0; i < posibleMembers.length; i++) {
-        this._args = posibleMembers[i]
-        // eslint-disable-next-line no-await-in-loop
-        const data = await this._getUserData('UNICode')
-        const condition = data.condition === 'teacher' ? 'docente': 'estudiante'
-
-        if (data.postulating)
-          throw new httpErrors.Conflict(`El ${condition} identificado con el código: ${data.UNICode} está postulando.`)
-
-        if (data.registered)
-          throw new httpErrors.Conflict(`El ${condition} identificado con el código: ${data.UNICode} es personero.`)
-
-        fullData.push(data)
-      }
-
-      const numberOfTeachers = fullData.reduce((result, { condition }) => {
-        return condition === 'teacher' ? ++result : result
-      }, 0)
-
-      const numberOfStudents = fullData.reduce((result, { condition }) => {
-        return condition === 'student' ? ++result : result
-      }, 0)
-
-      if (numberOfTeachers !== 6)
-        throw new httpErrors.BadRequest(EMFA.missingTeachers)
-      if (numberOfStudents !== 3)
-        throw new httpErrors.BadRequest(EMFA.missingStudents)
-
-      await Promise.all(fullData.map(user => {
-        return this._usersRef
-          .doc(user.id as string)
-          .update({
-            committeeMember: true
-          })
-      }))
-
-      return MFA.success1
-    } catch (error) {
-      return errorHandling(error, EMFA.generic)
     }
   }
 

@@ -1,5 +1,16 @@
 # Rhoades Backend
 
+## Version 0.74.0
+
+- Implemented:
+  - jwt authentication.
+  - A 10 minutes jwt token to protect almost all the routes.
+  - Login route to request a token.
+  - A general dto from which the others dto inherit.
+  - A new schema to validate the id for the token.
+- Deprecated:
+  - Refresh token.
+
 ## Version 0.73.0
 
 - Implemented:

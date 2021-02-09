@@ -6,7 +6,7 @@ declare const global: CustomNodeJSGlobal
 
 const Home = Router()
 
-Home.route('')
+Home.route('/')
   .get((req: Request, res: Response): void => {
     response(
       false,

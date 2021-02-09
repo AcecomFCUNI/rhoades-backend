@@ -5,11 +5,10 @@ import { docs } from '../utils'
 import { Auth, File, Home, List, User } from '../routes'
 import { response } from '../utils/response'
 
-const routers = [File, List, User]
+const routers = [Auth, File, List, User]
 
 const applyRoutes = (app: Application): void => {
   app.use('/', Home)
-  app.use('/auth', Auth)
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(docs))
   routers.forEach((router: Router): Application => app.use('/api', router))
 

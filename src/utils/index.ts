@@ -12,9 +12,7 @@ import { decryptMessage, encryptMessage, generatePassword } from './security'
 import { response } from './response'
 import {
   signAccessToken,
-  signRefreshToken,
-  verifyAccessToken,
-  verifyRefreshToken
+  verifyAccessToken
 } from './jwt.helper'
 
 export {
@@ -33,7 +31,5 @@ export {
   notifyProcuratorWithoutMail,
   response,
   signAccessToken,
-  signRefreshToken,
-  verifyAccessToken,
-  verifyRefreshToken
+  verifyAccessToken
 }

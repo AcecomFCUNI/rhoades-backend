@@ -10,9 +10,8 @@ const ALGORITHM = process.env.ALGORITHM as string
 const IV = process.env.IV as string
 const KEY = process.env.KEY as string
 
-const generateCryptoKey = (password: string): Buffer => {
-  return crypto.scryptSync(password, KEY, 24)
-}
+// eslint-disable-next-line max-len
+const generateCryptoKey = (password: string): Buffer => crypto.scryptSync(password, KEY, 24)
 
 const encryptMessage = (message: string, password: string): string => {
   const cryptoKey = generateCryptoKey(password)

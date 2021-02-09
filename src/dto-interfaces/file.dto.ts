@@ -1,7 +1,8 @@
-export interface DtoFile {
+import { GeneralDto } from './general.dto'
+
+export interface DtoFile extends GeneralDto {
   data?    : Buffer
   encoding?: string
-  id?      : string
   list?    : string
   mimetype?: string
   name?    : string

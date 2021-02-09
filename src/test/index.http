@@ -2,8 +2,15 @@
 GET http://localhost:3000/route/that/doesNotExists
 
 ### Testing protected route
-GET http://localhost:3000/auth/test
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDU2NTY0NzcsImV4cCI6MTYwNTY1NzA3NywiYXVkIjoiMSIsImlzcyI6Imh0dHBzOi8vaW5zY3JpcGNpb25lcy1lbGVjY2lvbmVzLXVuaS0yMDIwLm5ldGxpZnkuYXBwIn0.6Zx2l4eqCc3_BjpU0fub9zebezhp_GhsQ3WtqucQ7Eo
+GET http://localhost:3000/api/auth/test
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTI4NDE4NDMsImV4cCI6MTYxMjg0MjQ0MywiYXVkIjoiQVN4VjNWVmlpQ1U4SDRMVVcyc0kiLCJpc3MiOiJodHRwczovL2luc2NyaXBjaW9uZXMtZWxlY2Npb25lcy11bmktMjAyMC5uZXRsaWZ5LmFwcCJ9.UBW-KQIfi-UvJ-9FdO_pPjzgqF864Rf0MFQuRhudzPw
+Content-Type: application/json
+
+{
+  "args": {
+    "id": "ASxV3VViiCU8H4LUW2sI"
+  }
+}
 
 ### Testing auth route
 POST http://localhost:3000/auth/register
@@ -16,12 +23,12 @@ Content-Type: application/json
 }
 
 ### Testing login route
-POST http://localhost:3000/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
   "args": {
-    "id": "1"
+    "id": "ASxV3VViiCU8H4LUW2sI"
   }
 }
 
@@ -35,16 +42,18 @@ Content-Type: application/json
   }
 }
 
-### Testing users/verify/:code route
-GET http://localhost:3000/api/user/verify/20172083F?documentType=1
+### Testing users/verify/:code
+GET http://localhost:3000/api/user/verify/20140118I?documentType=1
 
 ### Testing users/notify
 PATCH http://localhost:3000/api/user/notify
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MTI4MzkxMjMsImV4cCI6MTYxMjgzOTcyMywiYXVkIjoiQVN4VjNWVmlpQ1U4SDRMVVcyc0kiLCJpc3MiOiJodHRwczovL2luc2NyaXBjaW9uZXMtZWxlY2Npb25lcy11bmktMjAyMC5uZXRsaWZ5LmFwcCJ9.0zAm0uKDi9Q8CvnHCosXdCpQJ48it2g2PyYwtQLdgOo
 Content-Type: application/json
 
 {
   "args": {
-    "id": "DpLrOXMgtDnRkDAqU2U2"
+    "id": "ASxV3VViiCU8H4LUW2sI",
+    "gender": "M"
   }
 }
 

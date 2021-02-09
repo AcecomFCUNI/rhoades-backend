@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.73.0"
+    "version": "0.74.0"
   },
   "servers": [
     {
@@ -28,6 +28,10 @@
   ],
   "tags": [
     {
+      "name": "auth",
+      "description": "Request to get an access token to access to the protected routes."
+    },
+    {
       "name": "user",
       "description": "Operations about a teacher or student that belongs to the CEUNI's electoral roll."
     },
@@ -37,6 +41,75 @@
     }
   ],
   "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Get an access token that expires in 10 minutes.",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "args": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The access token for the requested id was provided successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "boolean",
+                      "default": "false"
+                    },
+                    "message": {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "type": "object",
+                          "properties": {
+                            "accessToken": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/user/verify/{code}": {
       "get": {
         "tags": [
@@ -137,6 +210,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Teacher or student not found.",
             "content": {
@@ -177,7 +260,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/user/enroll/{code}": {
@@ -226,6 +314,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/EnrollUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }
@@ -280,7 +378,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/user/setCommitteeMember/{code}": {
@@ -325,6 +428,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "409": {
             "description": "The user is a procurator or is postulating.",
             "content": {
@@ -355,71 +468,12 @@
               }
             }
           }
-        }
-      }
-    },
-    "/user/setCommitteeMembers": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Register the electoral committee.",
-        "operationId": "setCommitteeMembers",
-        "requestBody": {
-          "$ref": "#/components/requestBodies/DtoIdUsers"
         },
-        "responses": {
-          "200": {
-            "description": "The committee members were successfully registered.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefaultSuccess"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "The number of teachers is not 6 or the number of students is not 3.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefaultError"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "The user is a procurator or is postulating.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefaultError"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Invalid request format.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefaultError"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DefaultError"
-                }
-              }
-            }
+        "security": [
+          {
+            "bearerAuth": []
           }
-        }
+        ]
       }
     },
     "/list/createList": {
@@ -465,6 +519,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateListResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }
@@ -519,7 +583,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/list/delete": {
@@ -539,6 +608,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DefaultSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }
@@ -583,7 +662,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/list/getListsOfUser/{id}": {
@@ -612,7 +696,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetListOfUserResponse"
+                  "$ref": "#/components/schemas/GetListsOfUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }
@@ -627,7 +721,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/list/getListForMalkova": {
@@ -752,6 +851,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "The list does not exists.",
             "content": {
@@ -792,10 +901,15 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
-    "/list/filter": {
+    "/list/filter/{adminId}": {
       "get": {
         "tags": [
           "list"
@@ -803,6 +917,17 @@
         "summary": "Filter the lists by faculty and type.",
         "operationId": "filter",
         "parameters": [
+          {
+            "name": "adminId",
+            "in": "path",
+            "description": "The Firebase admin id.",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "faculty",
             "in": "query",
@@ -859,6 +984,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal server error.",
             "content": {
@@ -869,7 +1004,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/list/removeCandidate/{candidateId}": {
@@ -883,7 +1023,7 @@
           {
             "name": "candidateId",
             "in": "path",
-            "description": "Firebase candidate to remove id.",
+            "description": "Firebase id of the candidate to remove.",
             "required": true,
             "style": "simple",
             "explode": false,
@@ -902,6 +1042,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DefaultSuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
                 }
               }
             }
@@ -946,7 +1096,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/list/review/{adminId}/{status}": {
@@ -1009,6 +1164,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "403": {
             "description": "The provided owner is not registered or the provided admin is not really an admin.",
             "content": {
@@ -1049,7 +1214,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/file/upload/{idList}/{idOwner}": {
@@ -1150,6 +1320,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "403": {
             "description": "The provided owner is not the list procurator.",
             "content": {
@@ -1200,7 +1380,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/file/getData/{idList}/{idOwner}": {
@@ -1245,6 +1430,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "403": {
             "description": "The provided owner is not the list procurator.",
             "content": {
@@ -1285,7 +1480,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/file/download/{idDocument}/{idOwner}": {
@@ -1331,6 +1531,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "403": {
             "description": "The provided owner is not the list procurator.",
             "content": {
@@ -1371,7 +1581,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/file/downloadAllDocumentsFromList/{idList}/{idOwner}": {
@@ -1419,6 +1634,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "403": {
             "description": "The provided owner is not registered or the provided admin is not really an admin.",
             "content": {
@@ -1449,7 +1674,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/file/delete/{idDocument}/{idList}/{idOwner}": {
@@ -1516,6 +1746,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "403": {
             "description": "The provided owner is not the list procurator.",
             "content": {
@@ -1566,7 +1806,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -1941,7 +2186,7 @@
           }
         }
       },
-      "GetListOfUserResponse": {
+      "GetListsOfUserResponse": {
         "type": "object",
         "properties": {
           "error": {
@@ -1999,6 +2244,13 @@
             }
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     },
     "requestBodies": {

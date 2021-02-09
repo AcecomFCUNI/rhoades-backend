@@ -9,7 +9,7 @@ import { DtoFile, DtoList, DtoUser } from '../dto-interfaces'
 
 interface CustomRequest extends Request {
   body: {
-    args: DtoFile | DtoList | DtoUser | DtoUser[]
+    args: DtoFile | DtoList | DtoUser
   }
   payload?: object
   query: {

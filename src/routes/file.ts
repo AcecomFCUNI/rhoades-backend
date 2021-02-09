@@ -2,7 +2,7 @@ import httpErrors from 'http-errors'
 import upload from 'express-fileupload'
 import { NextFunction, Router } from 'express'
 import { CustomNodeJSGlobal, Request, Response } from '../custom'
-import { response } from '../utils'
+import { response, verifyAccessToken } from '../utils'
 import { File as FileC, ICustomZip, User as UserC } from '../controllers'
 import { DtoFile, DtoUser } from '../dto-interfaces'
 import {
@@ -19,8 +19,10 @@ declare const global: CustomNodeJSGlobal
 
 const File = Router()
 
+// Safe route
 File.route('/file/upload/:list/:owner')
   .post(
+    verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       if (req.files) {
         const { files, params: { list, owner } } = req
@@ -53,8 +55,10 @@ File.route('/file/upload/:list/:owner')
     }
   )
 
+// Safe route
 File.route('/file/getData/:list/:owner')
   .get(
+    verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { list, owner } } = req
       try {
@@ -74,8 +78,10 @@ File.route('/file/getData/:list/:owner')
     }
   )
 
+// Safe route
 File.route('/file/download/:id/:owner')
   .get(
+    verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { id, owner } } = req
       try {
@@ -106,8 +112,10 @@ File.route('/file/download/:id/:owner')
     }
   )
 
+// Safe route
 File.route('/file/downloadAllDocumentsFromList/:idList/:owner')
   .post(
+    verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { idList, owner }, body: { args } } = req
       try {
@@ -142,8 +150,10 @@ File.route('/file/downloadAllDocumentsFromList/:idList/:owner')
     }
   )
 
+// Safe route
 File.route('/file/delete/:id/:list/:owner')
   .patch(
+    verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { id, list, owner } } = req
       const file: DtoFile = { id, list, owner }

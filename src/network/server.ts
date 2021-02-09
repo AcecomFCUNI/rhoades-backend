@@ -17,8 +17,8 @@ declare const global: CustomNodeJSGlobal
 
 class Server {
   public app                 : express.Application
-  private _firebaseConnection: (() => void) | undefined
-  private _mongooseConnection: (() => void) | undefined
+  private _firebaseConnection: (() => (Promise<void>)) | undefined
+  private _mongooseConnection: (() => (Promise<void>)) | undefined
   private _redisConnection   : (() => void) | undefined
 
   constructor () {
@@ -38,7 +38,7 @@ class Server {
         res: express.Response,
         next: express.NextFunction
       ) => {
-        if (process.env.MODE === 'dev')
+        if (process.env.MODE === 'dev' || process.env.MODE === 'local')
           res.header('Access-Control-Allow-Origin', '*')
         else
           res.header(
@@ -78,14 +78,14 @@ class Server {
     }
   }
 
-  private _firebase (): void {
+  private async _firebase (): Promise<void> {
     this._firebaseConnection = firebaseConnection
-    this._firebaseConnection()
+    await this._firebaseConnection()
   }
 
-  private _mongo (): void {
+  private async _mongo (): Promise<void> {
     this._mongooseConnection = mongoConnection
-    this._mongooseConnection()
+    await this._mongooseConnection()
   }
 
   private _redis (): void {
@@ -139,21 +139,25 @@ class Server {
     }
   }
 
-  public start (): void {
-    this.app.listen(this.app.get('port'), async () => {
-      console.log(`Server running at port ${this.app.get('port')}.`)
-      try {
-        await this._getSchedule()
-        await this._getElectionTypes()
-
-        this._firebase()
+  public async start (): Promise<void> {
+    try {
+      await Promise.all([
+        this._getSchedule(),
+        this._getElectionTypes(),
+        this._firebase(),
         this._mongo()
-        // this._redis()
-        setTimeout(() => this._getAcceptedList(), 7500)
-      } catch (error) {
-        console.error(error)
-      }
-    })
+      ])
+
+      setTimeout(async () => {
+        await this._getAcceptedList()
+
+        this.app.listen(this.app.get('port'), () => {
+          console.log(`Server running at port ${this.app.get('port')}.`)
+        })
+      }, 7500)
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 

@@ -1,13 +1,12 @@
 import { NextFunction, Router } from 'express'
 import { CustomNodeJSGlobal, Request, Response } from '../custom'
 import { User as UserC } from '../controllers'
-import { response } from '../utils'
+import { response, verifyAccessToken } from '../utils'
 import { DtoList, DtoUser } from '../dto-interfaces'
 import {
   listValidation,
   userCodeSchema,
   userNotifySchema,
-  userSetCommitteeMembersSchema,
   userVerifySchema
 } from '../schemas'
 
@@ -38,8 +37,10 @@ User.route('/user/verify/:code')
     }
   )
 
+// Safe route
 User.route('/user/notify')
   .patch(
+    verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { body: { args } } = req
 
@@ -57,8 +58,10 @@ User.route('/user/notify')
     }
   )
 
+// Safe route
 User.route('/user/enroll/:code')
   .post(
+    verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const {
         body  : { args },
@@ -88,8 +91,10 @@ User.route('/user/enroll/:code')
     }
   )
 
+// Safe route
 User.route('/user/setCommitteeMember/:code')
   .post(
+    verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const { params: { code } } = req
       const user = {
@@ -101,30 +106,6 @@ User.route('/user/setCommitteeMember/:code')
 
         const uc = new UserC(user)
         const result = await uc.process('committeeMember')
-
-        response(false, { result }, res, 200)
-      } catch (error) {
-        if (error.isJoi) error.status = 422
-        next(error)
-      }
-    }
-  )
-
-User.route('/user/setCommitteeMembers')
-  .post(
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const { body: { args } } = req
-
-      try {
-        await userSetCommitteeMembersSchema.validateAsync(args)
-
-        // eslint-disable-next-line no-extra-parens
-        const committeeMembers = (args as DtoUser[]).map(user => ({
-          documentNumber: user
-        } as DtoUser))
-
-        const uc = new UserC(committeeMembers)
-        const result = await uc.process('committee')
 
         response(false, { result }, res, 200)
       } catch (error) {

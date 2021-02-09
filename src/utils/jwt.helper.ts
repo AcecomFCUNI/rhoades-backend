@@ -1,45 +1,111 @@
-/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, no-extra-parens */
+/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, no-extra-parens, @typescript-eslint/no-unused-expressions */
 import httpErrors from 'http-errors'
 import jwt from 'jsonwebtoken'
 import { Response, NextFunction } from 'express'
 import { Request } from '../custom/express.request'
+import { DtoList } from '../dto-interfaces'
 
-const signAccessToken = (id: string): Promise<unknown> => {
-  return new Promise((resolve, reject) => {
-    const payload = {}
+// const MODE = process.env.MODE as string
+const ALBAN_ID = process.env.ALBAN_ID as string
+
+interface IPayload {
+  aud: string,
+  exp: Date,
+  iat: Date,
+  iss: string
+}
+
+const signAccessToken = (id: string): Promise<unknown> => (
+  new Promise((resolve, reject) => {
     const secret = process.env.ACCESS_TOKEN_SECRET as string
-
     const options = {
       audience : id,
       expiresIn: '10m',
       issuer   : process.env.RHOADES_FRONT_URL as string
     }
-    jwt.sign(payload, secret, options, (error, token): void => {
+
+    jwt.sign({}, secret, options, (error, token): void => {
       if (error) {
         console.error(error)
         reject(new httpErrors.InternalServerError('Ups! Something went wrong'))
       } else resolve(token)
     })
   })
-}
+)
 
-const signRefreshToken = (id: string): Promise<unknown> => {
-  return new Promise((resolve, reject) => {
-    const payload = {}
-    const secret = process.env.REFRESH_TOKEN_SECRET as string
+const validateRoute = (
+  payload: IPayload,
+  url    : string,
+  next   : NextFunction,
+  req    : Request
+): void => {
+  const { body: { args }, params: { adminId, id, owner } } = req
 
-    const options = {
-      audience : id,
-      expiresIn: '1d',
-      issuer   : process.env.RHOADES_FRONT_URL as string
-    }
-    jwt.sign(payload, secret, options, (error, token): void => {
-      if (error) {
-        console.error(error)
-        reject(new httpErrors.InternalServerError('Ups! Something went wrong'))
-      } else resolve(token)
-    })
-  })
+  // TODO: validate from where the request is coming from using the issuer
+  if (url.includes('notify'))
+    args.id === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('enroll'))
+    (args as DtoList).owner === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('setCommitteeMember'))
+    (args.id === payload.aud && payload.aud === ALBAN_ID)
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('createList'))
+    (args as DtoList).owner === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('getListsOfUser'))
+    id === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('finishRegistration'))
+    (args as DtoList).owner === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('filter'))
+    adminId === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('removeCandidate'))
+    (args as DtoList).owner === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('list/delete'))
+    (args as DtoList).owner === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('review'))
+    adminId === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('upload'))
+    owner === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('getData'))
+    owner === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('download'))
+    id === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('downloadAllDocumentsFromList'))
+    args.id === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('file/delete'))
+    id === payload.aud
+      ? next()
+      : next(new httpErrors.Forbidden())
+  else if (url.includes('test'))
+    next()
+  else
+    next(new httpErrors.NotFound())
 }
 
 const verifyAccessToken = (
@@ -47,9 +113,11 @@ const verifyAccessToken = (
   res : Response,
   next: NextFunction
 ): void => {
-  const {
-    headers: { authorization }
-  } = req
+  const { headers, url } = req
+  const { authorization } = headers
+
+  console.log(headers.host)
+
   if (!authorization) next(new httpErrors.Unauthorized())
 
   const bearerToken = (authorization as string).split(' ')
@@ -63,30 +131,13 @@ const verifyAccessToken = (
         console.error(error)
         next(new httpErrors.Unauthorized(error.name === 'JsonWebTokenError' ? undefined : error.message))
       }
-      req.payload = payload
-      next()
+
+      validateRoute((payload as IPayload), url, next, req)
     }
   )
 }
 
-const verifyRefreshToken = (refreshToken: string): Promise<unknown> => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET as string,
-      (error, payload) => {
-        if (error) reject(new httpErrors.Unauthorized())
-        const userId = (payload as any).aud
-
-        resolve(userId)
-      }
-    )
-  })
-}
-
 export {
   signAccessToken,
-  signRefreshToken,
-  verifyAccessToken,
-  verifyRefreshToken
+  verifyAccessToken
 }

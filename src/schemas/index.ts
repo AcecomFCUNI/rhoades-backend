@@ -1,3 +1,4 @@
+import { validationSchema } from './auth'
 import {
   fileIdAndOwnerSchema,
   fileIdSchema,
@@ -11,7 +12,6 @@ import {
   userCodeSchema,
   userIdSchema,
   userNotifySchema,
-  userSetCommitteeMembersSchema,
   userVerifySchema
 } from './user'
 
@@ -24,6 +24,6 @@ export {
   userCodeSchema,
   userIdSchema,
   userNotifySchema,
-  userSetCommitteeMembersSchema,
-  userVerifySchema
+  userVerifySchema,
+  validationSchema
 }
