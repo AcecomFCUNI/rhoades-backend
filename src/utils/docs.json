@@ -10,7 +10,7 @@
       "name": "MIT",
       "url": "https://opensource.org/licenses/MIT"
     },
-    "version": "0.74.1"
+    "version": "0.75.0"
   },
   "servers": [
     {
@@ -797,6 +797,16 @@
               }
             }
           },
+          "401": {
+            "description": "Access token not provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultError"
+                }
+              }
+            }
+          },
           "404": {
             "description": "There isn't any list accepted yet.",
             "content": {
@@ -817,7 +827,12 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/list/finishRegistration": {

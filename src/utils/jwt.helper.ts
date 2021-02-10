@@ -1,12 +1,13 @@
-/* eslint-disable @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any, no-extra-parens, @typescript-eslint/no-unused-expressions */
+/* eslint-disable no-extra-parens, @typescript-eslint/no-unused-expressions */
 import httpErrors from 'http-errors'
 import jwt from 'jsonwebtoken'
 import { Response, NextFunction } from 'express'
 import { Request } from '../custom/express.request'
 import { DtoList } from '../dto-interfaces'
 
-// const MODE = process.env.MODE as string
+const MODE = process.env.MODE as string
 const ALBAN_ID = process.env.ALBAN_ID as string
+const MALKOVA_ID = process.env.MALKOVA_ID as string
 
 interface IPayload {
   aud: string,
@@ -102,7 +103,11 @@ const validateRoute = (
     id === payload.aud
       ? next()
       : next(new httpErrors.Unauthorized())
-  else if (url.includes('test'))
+  else if (url.includes('getListForMalkova'))
+    (args.id === payload.aud && payload.aud === MALKOVA_ID)
+      ? next()
+      : next(new httpErrors.Unauthorized())
+  else if (url.includes('test') && MODE === 'local')
     next()
   else
     next(new httpErrors.NotFound())

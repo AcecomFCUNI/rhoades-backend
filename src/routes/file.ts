@@ -19,7 +19,7 @@ declare const global: CustomNodeJSGlobal
 
 const File = Router()
 
-// Safe route
+// Private route
 File.route('/file/upload/:list/:owner')
   .post(
     verifyAccessToken,
@@ -55,7 +55,7 @@ File.route('/file/upload/:list/:owner')
     }
   )
 
-// Safe route
+// Private route
 File.route('/file/getData/:list/:owner')
   .get(
     verifyAccessToken,
@@ -78,7 +78,7 @@ File.route('/file/getData/:list/:owner')
     }
   )
 
-// Safe route
+// Private route
 File.route('/file/download/:id/:owner')
   .get(
     verifyAccessToken,
@@ -112,7 +112,7 @@ File.route('/file/download/:id/:owner')
     }
   )
 
-// Safe route
+// Private route
 File.route('/file/downloadAllDocumentsFromList/:idList/:owner')
   .post(
     verifyAccessToken,
@@ -150,7 +150,7 @@ File.route('/file/downloadAllDocumentsFromList/:idList/:owner')
     }
   )
 
-// Safe route
+// Private route
 File.route('/file/delete/:id/:list/:owner')
   .patch(
     verifyAccessToken,

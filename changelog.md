@@ -1,9 +1,16 @@
 # Rhoades Backend
 
+## Version 0.75.0
+
+- Implemented:
+  - Secured the endpoint getListsForMalkova.
+  - The test endpoint now only works in local.
+
 ## Version 0.74.1
 
 - Fixed:
-  - Error code when the token is not provided
+  - Error code when the token is not provided.
+
 ## Version 0.74.0
 
 - Implemented:

@@ -13,6 +13,7 @@ const Auth = Router()
 
 // TODO: Encrypt responses for the client
 
+// Private route only in local
 Auth.route('/auth/test')
   .get(
     verifyAccessToken,

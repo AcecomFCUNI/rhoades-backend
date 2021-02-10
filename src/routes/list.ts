@@ -13,7 +13,7 @@ declare const global: CustomNodeJSGlobal
 
 const List = Router()
 
-// Safe route
+// Private route
 List.route('/list/createList')
   .post(
     verifyAccessToken,
@@ -41,7 +41,7 @@ List.route('/list/createList')
     }
   )
 
-// Safe route
+// Private route
 List.route('/list/delete')
   .patch(
     verifyAccessToken,
@@ -68,7 +68,7 @@ List.route('/list/delete')
     }
   )
 
-// Safe route
+// Private route
 List.route('/list/getListsOfUser/:id')
   .get(
     verifyAccessToken,
@@ -94,9 +94,10 @@ List.route('/list/getListsOfUser/:id')
     }
   )
 
-// Public route
+// Private route
 List.route('/list/getListForMalkova')
   .get(
+    verifyAccessToken,
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const list = new ListC({} as DtoList)
 
@@ -111,7 +112,7 @@ List.route('/list/getListForMalkova')
     }
   )
 
-// Safe route
+// Private route
 List.route('/list/finishRegistration')
   .patch(
     verifyAccessToken,
@@ -138,7 +139,7 @@ List.route('/list/finishRegistration')
     }
   )
 
-// Safe route
+// Private route
 List.route('/list/filter/:adminId')
   .get(
     verifyAccessToken,
@@ -165,7 +166,7 @@ List.route('/list/filter/:adminId')
     }
   )
 
-// Safe route
+// Private route
 List.route('/list/removeCandidate/:candidateId')
   .patch(
     verifyAccessToken,

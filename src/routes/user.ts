@@ -37,7 +37,7 @@ User.route('/user/verify/:code')
     }
   )
 
-// Safe route
+// Private route
 User.route('/user/notify')
   .patch(
     verifyAccessToken,
@@ -58,7 +58,7 @@ User.route('/user/notify')
     }
   )
 
-// Safe route
+// Private route
 User.route('/user/enroll/:code')
   .post(
     verifyAccessToken,
@@ -91,7 +91,7 @@ User.route('/user/enroll/:code')
     }
   )
 
-// Safe route
+// Private route
 User.route('/user/setCommitteeMember/:code')
   .post(
     verifyAccessToken,
