@@ -52,7 +52,7 @@ const validateRoute = (
       ? next()
       : next(new httpErrors.Unauthorized())
   else if (url.includes('setCommitteeMember'))
-    (args.id === payload.aud && payload.aud === ALBAN_ID)
+    payload.aud === ALBAN_ID
       ? next()
       : next(new httpErrors.Unauthorized())
   else if (url.includes('createList'))
@@ -104,7 +104,7 @@ const validateRoute = (
       ? next()
       : next(new httpErrors.Unauthorized())
   else if (url.includes('getListForMalkova'))
-    (args.id === payload.aud && payload.aud === MALKOVA_ID)
+    payload.aud === MALKOVA_ID
       ? next()
       : next(new httpErrors.Unauthorized())
   else if (url.includes('test') && MODE === 'local')
@@ -118,10 +118,7 @@ const verifyAccessToken = (
   res : Response,
   next: NextFunction
 ): void => {
-  const { headers, url } = req
-  const { authorization } = headers
-
-  console.log(headers.host)
+  const { headers: { authorization }, url } = req
 
   if (!authorization) next(new httpErrors.Unauthorized())
 
@@ -134,9 +131,10 @@ const verifyAccessToken = (
     (error, payload): void => {
       if (error) {
         console.error(error)
+
         error.name === 'JsonWebTokenError'
           ? next(new httpErrors.Unauthorized())
-          : next(error.message)
+          : next(new httpErrors.InternalServerError())
       }
 
       validateRoute((payload as IPayload), url, next, req)

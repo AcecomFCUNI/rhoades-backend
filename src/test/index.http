@@ -12,16 +12,6 @@ Content-Type: application/json
   }
 }
 
-### Testing auth route
-POST http://localhost:3000/auth/register
-Content-Type: application/json
-
-{
-  "args": {
-    "id": "1"
-  }
-}
-
 ### Testing login route
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json

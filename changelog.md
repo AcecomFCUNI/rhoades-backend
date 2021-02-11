@@ -1,5 +1,11 @@
 # Rhoades Backend
 
+## Version 0.75.1
+
+- Fixed:
+  - Validation of the Malkova and Alban request.
+  - Call to next without an error in the token verification.
+
 ## Version 0.75.0
 
 - Implemented:

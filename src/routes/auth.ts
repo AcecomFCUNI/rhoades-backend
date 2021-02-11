@@ -31,7 +31,7 @@ Auth.route('/auth/login')
         await validationSchema.validateAsync(args)
         const accessToken = await signAccessToken((args as DtoUser).id as string)
 
-        response(false, { result: { accessToken } }, res, 200 )
+        response(false, { result: { accessToken } }, res, 200)
       } catch (error) {
         if (error.isJoi) error.status = 422
         next(error)
