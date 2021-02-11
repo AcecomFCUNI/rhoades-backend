@@ -448,6 +448,7 @@ class List {
             this._args.observation,
           ),
           this._listRef.doc(this._args.id as string).update({
+            closed       : false,
             observation  : this._args.observation,
             reviewedTimes: list.reviewedTimes ? ++list.reviewedTimes : 1,
             status       : this._args.status
@@ -463,6 +464,7 @@ class List {
             ++global.listNumber
           ),
           this._listRef.doc(this._args.id as string).update({
+            closed       : true,
             number       : global.listNumber,
             reviewedTimes: list.reviewedTimes ? ++list.reviewedTimes : 1,
             status       : this._args.status
@@ -476,6 +478,7 @@ class List {
             list.type as string
           ),
           this._listRef.doc(this._args.id as string).update({
+            closed       : this._args.status === 'rejected',
             reviewedTimes: list.reviewedTimes ? ++list.reviewedTimes : 1,
             status       : this._args.status
           })

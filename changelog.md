@@ -1,5 +1,10 @@
 # Rhoades Backend
 
+## Version 0.71.1
+
+- Fixed:
+  - Changing list status after a review.
+
 ## Version 0.71.0
 
 - Implemented:
